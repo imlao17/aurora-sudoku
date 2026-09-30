@@ -13,17 +13,51 @@ describe('<App /> Integration Test Suite', () => {
     localStorage.clear();
   });
 
-  it('renders App cleanly without crashing', async () => {
+  it('renders HomeScreen by default and starts a game when selecting difficulty', async () => {
     await act(async () => {
       render(<App />);
     });
     expect(screen.getByText('极光数独')).toBeDefined();
+    expect(screen.getByText('经典自由对局')).toBeDefined();
+    expect(screen.getByText('每日一题挑战')).toBeDefined();
+    expect(screen.getByText('解题技巧百科')).toBeDefined();
+
+    // Click medium difficulty to start game
+    const medBtn = screen.getByText('中等');
+    await act(async () => {
+      fireEvent.click(medBtn);
+    });
+    expect(screen.getByRole('grid')).toBeDefined();
+  });
+
+  it('supports navigating back to Home and resuming active game', async () => {
+    await act(async () => {
+      render(<App initialScreen="game" />);
+    });
+
+    expect(screen.getByRole('grid')).toBeDefined();
+
+    // Click '首页' in Header to return to Home
+    const homeBtn = screen.getByRole('button', { name: '返回首页大厅' });
+    await act(async () => {
+      fireEvent.click(homeBtn);
+    });
+
+    expect(screen.getByText('检测到进行中对局')).toBeDefined();
+    expect(screen.getByText('继续对局')).toBeDefined();
+
+    // Click '继续对局' to resume
+    const resumeBtn = screen.getByText('继续对局');
+    await act(async () => {
+      fireEvent.click(resumeBtn);
+    });
+
     expect(screen.getByRole('grid')).toBeDefined();
   });
 
   it('allows clicking a cell and entering a number via NumberPad', async () => {
     await act(async () => {
-      render(<App />);
+      render(<App initialScreen="game" />);
     });
 
     const cells = screen.getAllByRole('gridcell');
@@ -46,7 +80,7 @@ describe('<App /> Integration Test Suite', () => {
 
   it('supports toggling pencil notes mode and adding candidates', async () => {
     await act(async () => {
-      render(<App />);
+      render(<App initialScreen="game" />);
     });
 
     const noteToggle = screen.getByText('笔记');
@@ -72,7 +106,7 @@ describe('<App /> Integration Test Suite', () => {
 
   it('supports Undo, Redo, Erase, and Hint actions', async () => {
     await act(async () => {
-      render(<App />);
+      render(<App initialScreen="game" />);
     });
 
     const cells = screen.getAllByRole('gridcell');
@@ -128,7 +162,7 @@ describe('<App /> Integration Test Suite', () => {
 
   it('handles keyboard navigation and inputs', async () => {
     await act(async () => {
-      render(<App />);
+      render(<App initialScreen="game" />);
     });
 
     await act(async () => {
@@ -152,7 +186,7 @@ describe('<App /> Integration Test Suite', () => {
 
   it('handles pause and resume overlay', async () => {
     await act(async () => {
-      render(<App />);
+      render(<App initialScreen="game" />);
     });
 
     const pauseBtn = screen.getByRole('timer');
@@ -172,7 +206,7 @@ describe('<App /> Integration Test Suite', () => {
 
   it('opens StatsModal and SettingsModal, and switches difficulty', async () => {
     await act(async () => {
-      render(<App />);
+      render(<App initialScreen="game" />);
     });
 
     // Open Stats
@@ -216,7 +250,7 @@ describe('<App /> Integration Test Suite', () => {
 
   it('enters, interacts with, and exits the Visual Solver tutorial mode', async () => {
     await act(async () => {
-      render(<App />);
+      render(<App initialScreen="game" />);
     });
 
     const visualBtn = screen.getByLabelText('进入逐步演算教学模式');

@@ -23,8 +23,11 @@ import {
   loadActiveGame,
   saveActiveGame,
   clearActiveGame,
+  loadMasteredTechniques,
 } from './utils/storage';
+import type { ThemeType } from './types/sudoku';
 
+import { HomeScreen } from './components/HomeScreen';
 import { Header } from './components/Header';
 import { StatusBar } from './components/StatusBar';
 import { Board } from './components/Board';
@@ -44,7 +47,11 @@ import { generateVisualSolveSteps, type VisualSolveStep } from './utils/visualSo
 import { evaluateAchievements, type AchievementDef } from './utils/achievements';
 import { Zap } from 'lucide-react';
 
-export function App() {
+export interface AppProps {
+  initialScreen?: 'home' | 'game';
+}
+
+export function App({ initialScreen = 'home' }: AppProps = {}) {
   // Current Date String for Daily Challenge (formatted as YYYY-MM-DD)
   const getTodayDateStr = () => {
     const d = new Date();
@@ -59,6 +66,9 @@ export function App() {
   // Settings & Stats
   const [settings, setSettings] = useState<GameSettings>(() => loadSettings());
   const [stats, setStats] = useState<GameStats>(() => loadStats());
+
+  // Navigation Screen State: default to landing screen 'home'
+  const [currentScreen, setCurrentScreen] = useState<'home' | 'game'>(initialScreen);
 
   // Game configuration
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
@@ -96,7 +106,7 @@ export function App() {
   const [currentHint, setCurrentHint] = useState<SmartHint | null>(null);
   const [isNewBestRecord, setIsNewBestRecord] = useState(false);
   const [unlockedAchievementsQueue, setUnlockedAchievementsQueue] = useState<AchievementDef[]>([]);
-  const [statsModalTab, setStatsModalTab] = useState<'stats' | 'achievements'>('stats');
+  const [statsModalTab, setStatsModalTab] = useState<'stats' | 'history' | 'achievements'>('stats');
   const [completedHouseCells, setCompletedHouseCells] = useState<Record<string, boolean>>({});
   const [activePaintDigit, setActivePaintDigit] = useState<number | null>(null);
   const houseWaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -125,6 +135,7 @@ export function App() {
 
   // Keep a ref of all reactive states so handleKeyDown never suffers from stale closures
   const stateRef = useRef({
+    currentScreen,
     board,
     selectedCell,
     isNoteMode,
@@ -155,6 +166,7 @@ export function App() {
 
   useEffect(() => {
     stateRef.current = {
+      currentScreen,
       board,
       selectedCell,
       isNoteMode,
@@ -296,7 +308,7 @@ export function App() {
 
   // Timer interval
   useEffect(() => {
-    if (isPaused || isCompleted || board.length === 0 || isVisualSolverActive) return;
+    if (currentScreen === 'home' || isPaused || isCompleted || board.length === 0 || isVisualSolverActive) return;
 
     const timer = setInterval(() => {
       setElapsedTime((prev) => {
@@ -322,7 +334,7 @@ export function App() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isPaused, isCompleted, board.length, isVisualSolverActive]);
+  }, [currentScreen, isPaused, isCompleted, board.length, isVisualSolverActive]);
 
   // Pause and persist when the tab goes to the background. Without this the
   // clock keeps counting while the player is away from the board, and the last
@@ -886,6 +898,48 @@ export function App() {
     }
   }, []);
 
+  const handleStartGameFromHome = useCallback(
+    (diff: Difficulty, mode: GameMode, forceReset: boolean = true) => {
+      setDifficulty(diff);
+      setGameMode(mode);
+      initGame(diff, mode, forceReset);
+      setIsPaused(false);
+      setCurrentScreen('game');
+    },
+    [initGame]
+  );
+
+  const handleResumeGameFromHome = useCallback(() => {
+    setIsPaused(false);
+    setCurrentScreen('game');
+  }, []);
+
+  const handleBackHome = useCallback(() => {
+    setIsPaused(true);
+    if (board.length > 0 && !isCompleted) {
+      saveActiveGame({
+        difficulty,
+        gameMode,
+        dateStr: activeDateStr,
+        board,
+        elapsedTime,
+        mistakesCount,
+        hintsRemaining,
+        hintsUsed,
+        isPaused: true,
+        isCompleted,
+      });
+    }
+    setCurrentScreen('home');
+  }, [board, isCompleted, difficulty, gameMode, activeDateStr, elapsedTime, mistakesCount, hintsRemaining, hintsUsed]);
+
+  const handleCycleTheme = useCallback(() => {
+    const THEME_CYCLE: ThemeType[] = ['nordic', 'zen', 'matcha', 'aurora', 'cyberpunk', 'twilight'];
+    const currentIndex = THEME_CYCLE.indexOf(settings.theme);
+    const nextTheme = THEME_CYCLE[(currentIndex + 1) % THEME_CYCLE.length];
+    updateSettings({ theme: nextTheme });
+  }, [settings.theme, updateSettings]);
+
   const handlePracticeTechnique = useCallback((techniqueId: string) => {
     const tech = TECHNIQUES_DATA.find((t) => t.id === techniqueId);
     let diff: Difficulty = 'medium';
@@ -896,7 +950,42 @@ export function App() {
     }
     setShowTechniquesModal(false);
     initGame(diff, 'random', true);
+    setIsPaused(false);
+    setCurrentScreen('game');
   }, [initGame]);
+
+  const activeGameSummary = useMemo(() => {
+    if (board.length === 0 || isCompleted) {
+      const saved = loadActiveGame();
+      if (saved && !saved.isCompleted && Array.isArray(saved.board) && saved.board.length === 9) {
+        let filled = 0;
+        for (const row of saved.board) {
+          for (const cell of row) {
+            if (cell.value !== 0) filled++;
+          }
+        }
+        return {
+          difficulty: saved.difficulty,
+          gameMode: saved.gameMode,
+          elapsedTime: saved.elapsedTime,
+          filledCount: filled,
+        };
+      }
+      return null;
+    }
+    let filled = 0;
+    for (const row of board) {
+      for (const cell of row) {
+        if (cell.value !== 0) filled++;
+      }
+    }
+    return {
+      difficulty,
+      gameMode,
+      elapsedTime,
+      filledCount: filled,
+    };
+  }, [board, isCompleted, difficulty, gameMode, elapsedTime]);
 
   // Keyboard navigation & inputs
   useEffect(() => {
@@ -922,6 +1011,21 @@ export function App() {
       if (isFormElement(e.target)) return;
 
       const key = e.key;
+
+      // When on Home Screen, only allow opening help or techniques
+      if (s.currentScreen === 'home') {
+        if (key.toLowerCase() === 'm') {
+          handleOpenTechnique();
+          e.preventDefault();
+          return;
+        }
+        if (key === '?' || key === '？') {
+          setShowHelpModal(true);
+          e.preventDefault();
+          return;
+        }
+        return;
+      }
 
       // Undo/Redo are the only modifier combinations we own, and must be
       // checked before the plain-key shortcuts below so that Ctrl/Cmd+Z does
@@ -1077,146 +1181,174 @@ export function App() {
         ? 'bg-[#090514] text-purple-100'
         : 'bg-slate-950 text-slate-100'
     }`}>
-      {/* Top Header */}
-      <div>
-        <Header
-          difficulty={difficulty}
-          gameMode={gameMode}
-          dateStr={activeDateStr}
-          isDailyCompleted={isDailyCompletedToday}
+      {currentScreen === 'home' ? (
+        <HomeScreen
+          onStartGame={handleStartGameFromHome}
+          onResumeGame={handleResumeGameFromHome}
+          hasActiveGame={!!activeGameSummary}
+          activeGameSummary={activeGameSummary}
+          dailyStreak={stats.dailyStreak}
+          isDailyCompletedToday={isDailyCompletedToday}
+          todayDateStr={activeDateStr}
+          masteredTechniquesCount={loadMasteredTechniques().length}
+          totalTechniquesCount={TECHNIQUES_DATA.length}
           soundEnabled={settings.soundEnabled}
-          onSelectDifficulty={(diff) => {
-            setDifficulty(diff);
-            setGameMode('random');
-            initGame(diff, 'random', true);
-          }}
-          onSelectMode={(mode) => {
-            setGameMode(mode);
-            initGame(difficulty, mode, false);
-          }}
-          onNewGame={() => initGame(difficulty, gameMode, true)}
-          onStartVisualSolver={handleStartVisualSolver}
-          onOpenStats={() => {
-            setStatsModalTab('stats');
+          theme={settings.theme}
+          onToggleSound={() => updateSettings({ soundEnabled: !settings.soundEnabled })}
+          onCycleTheme={handleCycleTheme}
+          onOpenSettings={() => setShowSettingsModal(true)}
+          onOpenStats={(tab = 'stats') => {
+            setStatsModalTab(tab);
             setShowStatsModal(true);
           }}
-          onOpenSettings={() => setShowSettingsModal(true)}
-          onOpenHelp={() => setShowHelpModal(true)}
           onOpenTechniques={() => handleOpenTechnique()}
-          onToggleSound={() => updateSettings({ soundEnabled: !settings.soundEnabled })}
+          onOpenHelp={() => setShowHelpModal(true)}
         />
+      ) : (
+        <>
+          {/* Top Header */}
+          <div>
+            <Header
+              difficulty={difficulty}
+              gameMode={gameMode}
+              dateStr={activeDateStr}
+              isDailyCompleted={isDailyCompletedToday}
+              soundEnabled={settings.soundEnabled}
+              onBackHome={handleBackHome}
+              onSelectDifficulty={(diff) => {
+                setDifficulty(diff);
+                setGameMode('random');
+                initGame(diff, 'random', true);
+              }}
+              onSelectMode={(mode) => {
+                setGameMode(mode);
+                initGame(difficulty, mode, false);
+              }}
+              onNewGame={() => initGame(difficulty, gameMode, true)}
+              onStartVisualSolver={handleStartVisualSolver}
+              onOpenStats={() => {
+                setStatsModalTab('stats');
+                setShowStatsModal(true);
+              }}
+              onOpenSettings={() => setShowSettingsModal(true)}
+              onOpenHelp={() => setShowHelpModal(true)}
+              onOpenTechniques={() => handleOpenTechnique()}
+              onToggleSound={() => updateSettings({ soundEnabled: !settings.soundEnabled })}
+            />
 
-        {/* Status Bar */}
-        <StatusBar
-          difficulty={difficulty}
-          gameMode={gameMode}
-          elapsedTime={elapsedTime}
-          isPaused={isPaused}
-          mistakesCount={mistakesCount}
-          hintsRemaining={hintsRemaining}
-          onTogglePause={() => setIsPaused((p) => !p)}
-        />
-
-        {/* 9x9 Board */}
-        <main className="mt-0.5 sm:mt-1 mb-1 sm:mb-2 flex items-center justify-center">
-          <Board
-            board={board}
-            selectedCell={selectedCell}
-            conflicts={conflicts}
-            settings={settings}
-            isPaused={isPaused && !isVisualSolverActive}
-            targetHighlightCells={
-              isVisualSolverActive
-                ? currentVisualStep?.targetCells
-                : currentHint
-                ? [{ row: currentHint.row, col: currentHint.col }]
-                : undefined
-            }
-            causeHighlightCells={
-              isVisualSolverActive
-                ? currentVisualStep?.causeCells
-                : currentHint?.causeCells
-            }
-            scopeHighlight={
-              isVisualSolverActive
-                ? currentVisualStep?.scope
-                : currentHint?.scope
-            }
-            completedHouseCells={completedHouseCells}
-            customValuesGrid={isVisualSolverActive ? currentVisualStep?.gridSnapshot : undefined}
-            customCandidatesMap={isVisualSolverActive ? currentVisualStep?.candidatesSnapshot : undefined}
-            onSelectCell={handleSelectCell}
-            onResume={() => setIsPaused(false)}
-          />
-        </main>
-      </div>
-
-      {/* Bottom Controls & Number Pad or Visual Solver Bar */}
-      <div className="w-full flex flex-col justify-end">
-        {isVisualSolverActive ? (
-          <VisualSolverBar
-            steps={visualSteps}
-            currentStepIndex={visualStepIndex}
-            isPlaying={isVisualPlaying}
-            speed={visualSpeed}
-            onStepChange={setVisualStepIndex}
-            onTogglePlay={() => setIsVisualPlaying((p) => !p)}
-            onSpeedChange={setVisualSpeed}
-            onExit={handleExitVisualSolver}
-            onOpenTechnique={handleOpenTechnique}
-          />
-        ) : (
-          <>
-            <Controls
-              isNoteMode={isNoteMode}
-              canUndo={historyIndex >= 0}
-              canRedo={historyIndex < history.length - 1}
+            {/* Status Bar */}
+            <StatusBar
+              difficulty={difficulty}
+              gameMode={gameMode}
+              elapsedTime={elapsedTime}
+              isPaused={isPaused}
+              mistakesCount={mistakesCount}
               hintsRemaining={hintsRemaining}
-              onToggleNoteMode={() => setIsNoteMode((p) => !p)}
-              onUndo={handleUndo}
-              onRedo={handleRedo}
-              onErase={handleErase}
-              onHint={handleHint}
+              onTogglePause={() => setIsPaused((p) => !p)}
             />
 
-            {/* Fast Input Mode Indicator on mobile */}
-            {settings.fastInputMode && (
-              <div className="w-full max-w-xl mx-auto px-3 sm:px-4 pb-1 flex items-center justify-between text-[11px] text-amber-700 dark:text-amber-300 select-none animate-fadeIn">
-                <span className="flex items-center gap-1 font-medium">
-                  <Zap className="w-3.5 h-3.5 fill-amber-500 text-amber-600" />
-                  <span>
-                    数字先行模式：
-                    {activePaintDigit ? (
-                      <strong>已选【{activePaintDigit}】，点空格填入</strong>
-                    ) : (
-                      '轻点下方数字激活'
+            {/* 9x9 Board */}
+            <main className="mt-0.5 sm:mt-1 mb-1 sm:mb-2 flex items-center justify-center">
+              <Board
+                board={board}
+                selectedCell={selectedCell}
+                conflicts={conflicts}
+                settings={settings}
+                isPaused={isPaused && !isVisualSolverActive}
+                targetHighlightCells={
+                  isVisualSolverActive
+                    ? currentVisualStep?.targetCells
+                    : currentHint
+                    ? [{ row: currentHint.row, col: currentHint.col }]
+                    : undefined
+                }
+                causeHighlightCells={
+                  isVisualSolverActive
+                    ? currentVisualStep?.causeCells
+                    : currentHint?.causeCells
+                }
+                scopeHighlight={
+                  isVisualSolverActive
+                    ? currentVisualStep?.scope
+                    : currentHint?.scope
+                }
+                completedHouseCells={completedHouseCells}
+                customValuesGrid={isVisualSolverActive ? currentVisualStep?.gridSnapshot : undefined}
+                customCandidatesMap={isVisualSolverActive ? currentVisualStep?.candidatesSnapshot : undefined}
+                onSelectCell={handleSelectCell}
+                onResume={() => setIsPaused(false)}
+              />
+            </main>
+          </div>
+
+          {/* Bottom Controls & Number Pad or Visual Solver Bar */}
+          <div className="w-full flex flex-col justify-end">
+            {isVisualSolverActive ? (
+              <VisualSolverBar
+                steps={visualSteps}
+                currentStepIndex={visualStepIndex}
+                isPlaying={isVisualPlaying}
+                speed={visualSpeed}
+                onStepChange={setVisualStepIndex}
+                onTogglePlay={() => setIsVisualPlaying((p) => !p)}
+                onSpeedChange={setVisualSpeed}
+                onExit={handleExitVisualSolver}
+                onOpenTechnique={handleOpenTechnique}
+              />
+            ) : (
+              <>
+                <Controls
+                  isNoteMode={isNoteMode}
+                  canUndo={historyIndex >= 0}
+                  canRedo={historyIndex < history.length - 1}
+                  hintsRemaining={hintsRemaining}
+                  onToggleNoteMode={() => setIsNoteMode((p) => !p)}
+                  onUndo={handleUndo}
+                  onRedo={handleRedo}
+                  onErase={handleErase}
+                  onHint={handleHint}
+                />
+
+                {/* Fast Input Mode Indicator on mobile */}
+                {settings.fastInputMode && (
+                  <div className="w-full max-w-xl mx-auto px-3 sm:px-4 pb-1 flex items-center justify-between text-[11px] text-amber-700 dark:text-amber-300 select-none animate-fadeIn">
+                    <span className="flex items-center gap-1 font-medium">
+                      <Zap className="w-3.5 h-3.5 fill-amber-500 text-amber-600" />
+                      <span>
+                        数字先行模式：
+                        {activePaintDigit ? (
+                          <strong>已选【{activePaintDigit}】，点空格填入</strong>
+                        ) : (
+                          '轻点下方数字激活'
+                        )}
+                      </span>
+                    </span>
+                    {activePaintDigit && (
+                      <button
+                        onClick={() => setActivePaintDigit(null)}
+                        className="text-[10px] text-slate-500 hover:text-slate-800 underline dark:text-slate-400 dark:hover:text-slate-200 cursor-pointer"
+                      >
+                        取消选择
+                      </button>
                     )}
-                  </span>
-                </span>
-                {activePaintDigit && (
-                  <button
-                    onClick={() => setActivePaintDigit(null)}
-                    className="text-[10px] text-slate-500 hover:text-slate-800 underline dark:text-slate-400 dark:hover:text-slate-200 cursor-pointer"
-                  >
-                    取消选择
-                  </button>
+                  </div>
                 )}
-              </div>
-            )}
 
-            <NumberPad
-              numberCounts={numberCounts}
-              selectedNumber={
-                settings.fastInputMode && activePaintDigit !== null
-                  ? activePaintDigit
-                  : selectedCellValue
-              }
-              isNoteMode={isNoteMode}
-              onNumberClick={handleInputNumber}
-            />
-          </>
-        )}
-      </div>
+                <NumberPad
+                  numberCounts={numberCounts}
+                  selectedNumber={
+                    settings.fastInputMode && activePaintDigit !== null
+                      ? activePaintDigit
+                      : selectedCellValue
+                  }
+                  isNoteMode={isNoteMode}
+                  onNumberClick={handleInputNumber}
+                />
+              </>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Modals */}
       <VictoryModal
