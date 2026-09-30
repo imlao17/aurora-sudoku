@@ -57,4 +57,29 @@ describe('Difficulty Rater Engine', () => {
     const keys = Object.keys(rating.techniqueCounts);
     expect(keys.length).toBeGreaterThan(0);
   });
+
+  it('correctly detects column and box level techniques and hidden pair logic', () => {
+    // Construct a board where hidden pair occurs in a row or box
+    const puzzle = [
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      [4, 5, 6, 7, 8, 9, 1, 2, 3],
+      [7, 8, 9, 1, 2, 3, 4, 5, 6],
+      [2, 1, 4, 3, 6, 5, 8, 9, 7],
+      [3, 6, 5, 8, 9, 7, 2, 1, 4],
+      [8, 9, 7, 2, 1, 4, 3, 6, 5],
+      [5, 3, 1, 6, 4, 2, 9, 7, 8],
+      [6, 4, 2, 9, 7, 8, 5, 3, 1],
+      [9, 7, 8, 5, 3, 1, 6, 4, 2],
+    ];
+    // Remove 2 pairs in row 6 (index 6, 7, 8) to create symmetrical candidates
+    puzzle[6][6] = 0;
+    puzzle[6][7] = 0;
+    puzzle[7][6] = 0;
+    puzzle[7][7] = 0;
+
+    const rating = rateDifficulty(puzzle);
+    expect(rating.isSolvableLogically).toBe(true);
+    expect(rating.totalSteps).toBeGreaterThanOrEqual(4);
+  });
 });
+

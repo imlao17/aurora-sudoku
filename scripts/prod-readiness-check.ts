@@ -39,18 +39,20 @@ assert(fs.existsSync(path.join(distDir, 'manifest.json')), 'dist/manifest.json W
 assert(fs.existsSync(path.join(distDir, 'sw.js')), 'dist/sw.js Service Worker 离线缓存脚本存在');
 
 const htmlContent = fs.readFileSync(path.join(distDir, 'index.html'), 'utf-8');
-const jsMatch = htmlContent.match(/src="(\/assets\/[^"]+\.js)"/);
-const cssMatch = htmlContent.match(/href="(\/assets\/[^"]+\.css)"/);
+const jsMatch = htmlContent.match(/src="(\.?\/assets\/[^"]+\.js)"/);
+const cssMatch = htmlContent.match(/href="(\.?\/assets\/[^"]+\.css)"/);
 
 assert(!!jsMatch, `index.html 包含主 JS 资源引用: ${jsMatch?.[1]}`);
 assert(!!cssMatch, `index.html 包含主 CSS 资源引用: ${cssMatch?.[1]}`);
 
 if (jsMatch) {
-  const jsPath = path.join(distDir, jsMatch[1]);
+  const relPath = jsMatch[1].replace(/^\.?\//, '');
+  const jsPath = path.join(distDir, relPath);
   assert(fs.existsSync(jsPath) && fs.statSync(jsPath).size > 10000, `JS 资源文件非空且尺寸健康 (${(fs.statSync(jsPath).size / 1024).toFixed(1)} kB)`);
 }
 if (cssMatch) {
-  const cssPath = path.join(distDir, cssMatch[1]);
+  const relPath = cssMatch[1].replace(/^\.?\//, '');
+  const cssPath = path.join(distDir, relPath);
   assert(fs.existsSync(cssPath) && fs.statSync(cssPath).size > 1000, `CSS 资源文件非空且尺寸健康 (${(fs.statSync(cssPath).size / 1024).toFixed(1)} kB)`);
 }
 

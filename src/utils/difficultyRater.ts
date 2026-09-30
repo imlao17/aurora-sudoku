@@ -150,6 +150,18 @@ export function rateDifficulty(initialGrid: number[][]): DifficultyAnalysis {
       continue;
     }
 
+    // 5b. Hidden Pairs
+    const hp = findHiddenPair(grid, candidates);
+    if (hp) {
+      recordStep(hp, steps, techniqueCounts);
+      if (hp.weight > peakWeight) {
+        peakWeight = hp.weight;
+        peakTechniqueName = hp.name;
+      }
+      progress = true;
+      continue;
+    }
+
     // 6. X-Wing
     const xw = findXWing(grid, candidates);
     if (xw) {
@@ -421,7 +433,7 @@ function findPointingPair(grid: number[][], candidates: Set<number>[][]): StepRe
 // 4. Box-Line Reduction (行列对宫排除)
 function findBoxLineReduction(grid: number[][], candidates: Set<number>[][]): StepRecord | null {
   for (let num = 1; num <= GRID_SIZE; num++) {
-    // In Rows
+    // In Rows: candidates confined to one box let us clear the rest of that box
     for (let r = 0; r < GRID_SIZE; r++) {
       const cols: number[] = [];
       for (let c = 0; c < GRID_SIZE; c++) {
@@ -456,13 +468,49 @@ function findBoxLineReduction(grid: number[][], candidates: Set<number>[][]): St
         }
       }
     }
+
+    // In Columns: same idea with rows and columns swapped
+    for (let c = 0; c < GRID_SIZE; c++) {
+      const rows: number[] = [];
+      for (let r = 0; r < GRID_SIZE; r++) {
+        if (grid[r][c] === 0 && candidates[r][c].has(num)) {
+          rows.push(r);
+        }
+      }
+      if (rows.length >= 2 && rows.length <= 3) {
+        const firstBox = Math.floor(rows[0] / BOX_SIZE);
+        if (rows.every((r) => Math.floor(r / BOX_SIZE) === firstBox)) {
+          const startR = firstBox * BOX_SIZE;
+          const startC = Math.floor(c / BOX_SIZE) * BOX_SIZE;
+          let eliminated = false;
+          for (let br = 0; br < BOX_SIZE; br++) {
+            for (let bc = 0; bc < BOX_SIZE; bc++) {
+              const cr = startR + br;
+              const cc = startC + bc;
+              if (cc !== c && grid[cr][cc] === 0 && candidates[cr][cc].has(num)) {
+                candidates[cr][cc].delete(num);
+                eliminated = true;
+              }
+            }
+          }
+          if (eliminated) {
+            return {
+              technique: 'box-line-reduction',
+              name: TECHNIQUE_WEIGHTS['box-line-reduction'].name,
+              weight: TECHNIQUE_WEIGHTS['box-line-reduction'].weight,
+              description: `第 ${c + 1} 列数字 【${num}】 局限在第 ${getBoxIndex(rows[0], c) + 1} 宫，排除该宫其它列的候选数`,
+            };
+          }
+        }
+      }
+    }
   }
   return null;
 }
 
 // 5. Naked Pair
 function findNakedPair(grid: number[][], candidates: Set<number>[][]): StepRecord | null {
-  // Check rows
+  // Rows
   for (let r = 0; r < GRID_SIZE; r++) {
     const pairs: { c: number; nums: string }[] = [];
     for (let c = 0; c < GRID_SIZE; c++) {
@@ -493,6 +541,185 @@ function findNakedPair(grid: number[][], candidates: Set<number>[][]): StepRecor
               description: `第 ${r + 1} 行出现显性数对 【${n1}, ${n2}】，已排除该行其它格相应候选数`,
             };
           }
+        }
+      }
+    }
+  }
+
+  // Columns
+  for (let c = 0; c < GRID_SIZE; c++) {
+    const pairs: { r: number; nums: string }[] = [];
+    for (let r = 0; r < GRID_SIZE; r++) {
+      if (grid[r][c] === 0 && candidates[r][c].size === 2) {
+        const sorted = Array.from(candidates[r][c]).sort().join(',');
+        pairs.push({ r, nums: sorted });
+      }
+    }
+    for (let i = 0; i < pairs.length; i++) {
+      for (let j = i + 1; j < pairs.length; j++) {
+        if (pairs[i].nums === pairs[j].nums) {
+          const [n1, n2] = pairs[i].nums.split(',').map(Number);
+          let eliminated = false;
+          for (let r = 0; r < GRID_SIZE; r++) {
+            if (r !== pairs[i].r && r !== pairs[j].r && grid[r][c] === 0) {
+              if (candidates[r][c].has(n1) || candidates[r][c].has(n2)) {
+                candidates[r][c].delete(n1);
+                candidates[r][c].delete(n2);
+                eliminated = true;
+              }
+            }
+          }
+          if (eliminated) {
+            return {
+              technique: 'naked-pair',
+              name: TECHNIQUE_WEIGHTS['naked-pair'].name,
+              weight: TECHNIQUE_WEIGHTS['naked-pair'].weight,
+              description: `第 ${c + 1} 列出现显性数对 【${n1}, ${n2}】，已排除该列其它格相应候选数`,
+            };
+          }
+        }
+      }
+    }
+  }
+
+  // Boxes
+  for (let b = 0; b < GRID_SIZE; b++) {
+    const startR = Math.floor(b / BOX_SIZE) * BOX_SIZE;
+    const startC = (b % BOX_SIZE) * BOX_SIZE;
+    const pairs: { r: number; c: number; nums: string }[] = [];
+    for (let br = 0; br < BOX_SIZE; br++) {
+      for (let bc = 0; bc < BOX_SIZE; bc++) {
+        const r = startR + br;
+        const c = startC + bc;
+        if (grid[r][c] === 0 && candidates[r][c].size === 2) {
+          const sorted = Array.from(candidates[r][c]).sort().join(',');
+          pairs.push({ r, c, nums: sorted });
+        }
+      }
+    }
+    for (let i = 0; i < pairs.length; i++) {
+      for (let j = i + 1; j < pairs.length; j++) {
+        if (pairs[i].nums === pairs[j].nums) {
+          const [n1, n2] = pairs[i].nums.split(',').map(Number);
+          let eliminated = false;
+          for (let br = 0; br < BOX_SIZE; br++) {
+            for (let bc = 0; bc < BOX_SIZE; bc++) {
+              const r = startR + br;
+              const c = startC + bc;
+              const isPairCell =
+                (r === pairs[i].r && c === pairs[i].c) || (r === pairs[j].r && c === pairs[j].c);
+              if (!isPairCell && grid[r][c] === 0) {
+                if (candidates[r][c].has(n1) || candidates[r][c].has(n2)) {
+                  candidates[r][c].delete(n1);
+                  candidates[r][c].delete(n2);
+                  eliminated = true;
+                }
+              }
+            }
+          }
+          if (eliminated) {
+            return {
+              technique: 'naked-pair',
+              name: TECHNIQUE_WEIGHTS['naked-pair'].name,
+              weight: TECHNIQUE_WEIGHTS['naked-pair'].weight,
+              description: `第 ${b + 1} 宫出现显性数对 【${n1}, ${n2}】，已排除该宫其它格相应候选数`,
+            };
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+// 5b. Hidden Pair
+function findHiddenPair(grid: number[][], candidates: Set<number>[][]): StepRecord | null {
+  type Unit = { label: string; cells: { r: number; c: number }[] };
+
+  const units: Unit[] = [];
+
+  // 1. Rows
+  for (let r = 0; r < GRID_SIZE; r++) {
+    units.push({
+      label: `第 ${r + 1} 行`,
+      cells: Array.from({ length: GRID_SIZE }, (_, c) => ({ r, c })),
+    });
+  }
+
+  // 2. Columns
+  for (let c = 0; c < GRID_SIZE; c++) {
+    units.push({
+      label: `第 ${c + 1} 列`,
+      cells: Array.from({ length: GRID_SIZE }, (_, r) => ({ r, c })),
+    });
+  }
+
+  // 3. Boxes
+  for (let b = 0; b < GRID_SIZE; b++) {
+    const startR = Math.floor(b / BOX_SIZE) * BOX_SIZE;
+    const startC = (b % BOX_SIZE) * BOX_SIZE;
+    const cells: { r: number; c: number }[] = [];
+    for (let br = 0; br < BOX_SIZE; br++) {
+      for (let bc = 0; bc < BOX_SIZE; bc++) {
+        cells.push({ r: startR + br, c: startC + bc });
+      }
+    }
+    units.push({
+      label: `第 ${b + 1} 宫`,
+      cells,
+    });
+  }
+
+  return findHiddenPairInUnits(grid, candidates, units);
+}
+
+/**
+ * Shared hidden-pair scan. A "unit" is any set of nine cells that must contain
+ * the digits 1-9 exactly once (row, column or box).
+ */
+function findHiddenPairInUnits(
+  grid: number[][],
+  candidates: Set<number>[][],
+  units: { label: string; cells: { r: number; c: number }[] }[]
+): StepRecord | null {
+  for (const unit of units) {
+    const emptyCells = unit.cells.filter(({ r, c }) => grid[r][c] === 0);
+    // Digit -> the empty cells of this unit that still allow it
+    const positions = new Map<number, { r: number; c: number }[]>();
+    for (let num = 1; num <= GRID_SIZE; num++) {
+      const cells = emptyCells.filter(({ r, c }) => candidates[r][c].has(num));
+      positions.set(num, cells);
+    }
+
+    const digits = Array.from(positions.keys());
+    for (let i = 0; i < digits.length; i++) {
+      for (let j = i + 1; j < digits.length; j++) {
+        const d1 = digits[i];
+        const d2 = digits[j];
+        const p1 = positions.get(d1)!;
+        const p2 = positions.get(d2)!;
+        if (p1.length !== 2 || p2.length !== 2) continue;
+        if (!p1.every((a) => p2.some((b) => a.r === b.r && a.c === b.c))) continue;
+
+        // d1 and d2 both live in exactly these two cells, so those cells hold
+        // nothing else.
+        let eliminated = false;
+        for (const { r, c } of p1) {
+          const before = candidates[r][c].size;
+          for (const n of Array.from(candidates[r][c])) {
+            if (n !== d1 && n !== d2) candidates[r][c].delete(n);
+          }
+          if (candidates[r][c].size !== before) eliminated = true;
+        }
+
+        if (eliminated) {
+          return {
+            technique: 'hidden-pair',
+            name: TECHNIQUE_WEIGHTS['hidden-pair'].name,
+            weight: TECHNIQUE_WEIGHTS['hidden-pair'].weight,
+            description: `${unit.label}中数字 【${d1}】 与 【${d2}】 仅出现在同两格，清除这两格内的其它候选数`,
+          };
         }
       }
     }
