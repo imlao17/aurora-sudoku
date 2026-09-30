@@ -1,6 +1,6 @@
 {
   "name": "aurora-sudoku",
-  "description": "极光数独 - 纯粹·优雅·极致手感的现代数独 Web 单页应用",
+  "description": "知数 - 纯粹·专注·逻辑之美的现代纸墨数独 Web 单页应用",
   "private": true,
   "version": "1.0.0",
   "type": "module",

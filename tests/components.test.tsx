@@ -101,7 +101,7 @@ describe('React Components Test Suite', () => {
         />
       );
 
-      expect(screen.getByText('极光数独')).toBeDefined();
+      expect(screen.getByText('知数')).toBeDefined();
       const hardBtn = screen.getByText('困难');
       fireEvent.click(hardBtn);
       expect(onSelectDiff).toHaveBeenCalledWith('hard');

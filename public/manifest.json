@@ -1,7 +1,7 @@
 {
-  "name": "极光数独 - 纯粹·优雅·极致手感",
-  "short_name": "极光数独",
-  "description": "好玩、好看、手感极佳的现代数独 Web 单页应用，支持离线畅玩与唯一解题目保证。",
+  "name": "知数 - 纯粹·专注·逻辑之美",
+  "short_name": "知数",
+  "description": "纯粹·专注·逻辑之美的现代纸墨数独，支持离线畅玩与严格唯一解保证。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",

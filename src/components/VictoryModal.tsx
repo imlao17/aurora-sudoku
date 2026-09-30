@@ -136,7 +136,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   const diffLabel = DIFFICULTY_PRESETS[difficulty].label;
 
   const handleShare = async () => {
-    const text = `🎉 我在【极光数独】中成功通关！\n` +
+    const text = `🎉 我在【知数】中成功通关！\n` +
       `📅 模式: ${gameMode === 'daily' ? `每日一题 (${dateStr})` : diffLabel + '难度'}\n` +
       `⏱️ 耗时: ${formatTime(timeTaken)}${isNewBest ? ' (新纪录🏆)' : ''}\n` +
       `❌ 失误: ${mistakesCount}次 | 💡 提示: ${hintsUsed}次\n` +

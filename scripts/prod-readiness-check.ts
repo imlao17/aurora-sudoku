@@ -14,7 +14,7 @@ import {
 } from '../src/utils/storage';
 
 console.log('====================================================');
-console.log('🚀 极光数独（Aurora Sudoku）生产级严苛验收与自检套件');
+console.log('🚀 知数（ZhiShu Sudoku）生产级严苛验收与自检套件');
 console.log('====================================================\n');
 
 let allPassed = true;

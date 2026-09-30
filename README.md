@@ -1,6 +1,6 @@
-# 极光数独 (Aurora Sudoku) 🌌
+# 知数 (ZhiShu Sudoku) 📜
 
-一款好玩、好看、手感极佳的现代数独 Web 单页应用。采用 **Vite + React + TypeScript + Tailwind CSS** 开发，无后端依赖，所有进度与历史战绩保存在浏览器的 `localStorage` 中。
+一款纯粹·专注·逻辑之美的现代纸墨数独 Web 单页应用。采用 **Vite + React + TypeScript + Tailwind CSS** 开发，无后端依赖，所有进度与历史战绩保存在浏览器的 `localStorage` 中。
 
 ---
 

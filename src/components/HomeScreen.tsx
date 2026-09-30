@@ -91,10 +91,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-950 dark:text-white font-sans">
-          极光数独
+          知数
         </h1>
         <p className="text-[11px] uppercase tracking-widest text-slate-400 dark:text-slate-400 font-semibold mt-1">
-          AURORA SUDOKU · {todayDateStr}
+          ZHISHU SUDOKU · {todayDateStr}
         </p>
       </div>
 

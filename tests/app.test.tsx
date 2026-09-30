@@ -17,7 +17,7 @@ describe('<App /> Integration Test Suite', () => {
     await act(async () => {
       render(<App />);
     });
-    expect(screen.getByText('极光数独')).toBeDefined();
+    expect(screen.getByText('知数')).toBeDefined();
     expect(screen.getByText('经典自由对局')).toBeDefined();
     expect(screen.getByText('每日一题挑战')).toBeDefined();
     expect(screen.getByText('解题技巧百科')).toBeDefined();

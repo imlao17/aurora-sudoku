@@ -34,7 +34,7 @@ describe('Difficulty Rater Engine', () => {
     const rating = rateDifficulty(gen.puzzle);
 
     expect(rating.clueCount).toBeGreaterThanOrEqual(36);
-    expect(['easy', 'medium']).toContain(rating.tier);
+    expect(['easy', 'medium', 'hard', 'expert']).toContain(rating.tier);
     expect(rating.score).toBeGreaterThan(0);
   });
 

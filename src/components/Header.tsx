@@ -69,7 +69,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="flex items-baseline gap-2 min-w-0">
             <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-950 dark:text-white m-0 truncate">
-              极光数独
+              知数
             </h1>
             <span className="text-[11px] text-slate-400 dark:text-slate-400 font-mono hidden sm:inline">
               {gameMode === 'daily' ? `· 每日 ${dateStr}` : ''}
