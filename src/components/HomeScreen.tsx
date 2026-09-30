@@ -10,7 +10,6 @@ import {
   VolumeX,
   HelpCircle,
   RotateCcw,
-  Sparkles,
   ChevronRight,
   Sun,
   Moon,
@@ -43,27 +42,18 @@ interface HomeScreenProps {
   onOpenHelp: () => void;
 }
 
-const DIFFICULTY_MAP: Record<Difficulty, { label: string; desc: string; clues: string; color: string; ring: string }> = {
+const DIFFICULTY_MAP: Record<Difficulty, { label: string; color: string }> = {
   easy: {
     label: '简单',
-    desc: '轻松破局',
-    clues: '~38 提示数',
-    color: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20',
-    ring: 'border-emerald-500/40 text-emerald-600 dark:text-emerald-400',
+    color: 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-700',
   },
   medium: {
     label: '中等',
-    desc: '绝妙均衡',
-    clues: '~31 提示数',
-    color: 'bg-blue-500/10 text-blue-600 dark:text-sky-400 border-blue-500/20 hover:bg-blue-500/20',
-    ring: 'border-blue-500/40 text-blue-600 dark:text-sky-400',
+    color: 'text-blue-600 dark:text-sky-400 hover:bg-blue-500/10 hover:text-blue-700',
   },
   hard: {
     label: '困难',
-    desc: '深度推演',
-    clues: '~25 提示数',
-    color: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20 hover:bg-rose-500/20',
-    ring: 'border-rose-500/40 text-rose-600 dark:text-rose-400',
+    color: 'text-rose-600 dark:text-rose-400 hover:bg-rose-500/10 hover:text-rose-700',
   },
 };
 
@@ -74,9 +64,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   activeGameSummary,
   dailyStreak,
   isDailyCompletedToday,
-  todayDateStr,
-  masteredTechniquesCount,
-  totalTechniquesCount,
   soundEnabled,
   theme,
   onToggleSound,
@@ -95,100 +82,42 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const isDark = ['aurora', 'cyberpunk', 'twilight'].includes(theme);
 
   return (
-    <div className="w-full max-w-xl mx-auto px-3.5 sm:px-5 py-3 sm:py-6 flex flex-col gap-4 sm:gap-5 min-h-[92dvh] select-none justify-between animate-fadeIn text-slate-800 dark:text-slate-100">
-      {/* 1. Top Bar */}
-      <div className="flex items-center justify-between gap-2 shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-extrabold text-base shadow-xs">
-            9
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
-                极光数独
-              </span>
-              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-sky-400">
-                PRO
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400 dark:text-slate-400">
-              纯粹 · 优雅 · 极致手感
-            </p>
-          </div>
+    <div className="w-full max-w-md mx-auto px-4 py-8 sm:py-14 flex flex-col justify-between min-h-[92dvh] select-none text-slate-800 dark:text-slate-100 animate-fadeIn">
+      {/* 视觉主体一：纯净品牌 Hero (居中呼吸感) */}
+      <div className="flex flex-col items-center text-center pt-2 sm:pt-6">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-3xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 flex items-center justify-center text-white font-black text-2xl sm:text-3xl shadow-lg shadow-blue-500/20 ring-1 ring-white/20 select-none">
+          9
         </div>
-
-        <div className="flex items-center gap-1 sm:gap-1.5">
-          <button
-            onClick={onToggleSound}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
-            title={soundEnabled ? '音效开启' : '音效静音'}
-            aria-label="切换音效"
-          >
-            {soundEnabled ? <Volume2 className="w-4.5 h-4.5 text-blue-600 dark:text-sky-400" /> : <VolumeX className="w-4.5 h-4.5 text-slate-400" />}
-          </button>
-
-          <button
-            onClick={onCycleTheme}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
-            title="快速切换浅色/深色主题"
-            aria-label="快速切换主题"
-          >
-            {isDark ? <Sun className="w-4.5 h-4.5 text-amber-500" /> : <Moon className="w-4.5 h-4.5 text-indigo-600" />}
-          </button>
-
-          <button
-            onClick={() => onOpenStats('stats')}
-            className="p-2 rounded-xl text-slate-500 hover:text-amber-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
-            title="战绩与成就看板"
-            aria-label="查看战绩与排行榜"
-          >
-            <Trophy className="w-4.5 h-4.5" />
-          </button>
-
-          <button
-            onClick={onOpenSettings}
-            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
-            title="游戏偏好设置"
-            aria-label="打开游戏偏好设置"
-          >
-            <Settings className="w-4.5 h-4.5" />
-          </button>
-
-          <button
-            onClick={onOpenHelp}
-            className="p-2 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-sky-400 dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
-            title="快捷键与规则说明"
-            aria-label="游戏规则与快捷键帮助"
-          >
-            <HelpCircle className="w-4.5 h-4.5" />
-          </button>
-        </div>
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white mt-4">
+          极光数独
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-400 dark:text-slate-400 font-medium mt-1.5 tracking-wide">
+          纯粹 · 专注 · 逻辑推演
+        </p>
       </div>
 
-      {/* 2. Main Content Area */}
-      <div className="flex-1 flex flex-col gap-4 sm:gap-5 my-auto justify-center">
-        {/* Banner: In-Progress Game (if any) */}
+      {/* 视觉主体二：统一对局操作舱 (Action Center) */}
+      <div className="w-full bg-white dark:bg-slate-900 shadow-card ring-1 ring-black/[0.04] dark:ring-white/[0.06] rounded-3xl p-5 sm:p-6 flex flex-col gap-4 sm:gap-5 my-auto">
+        {/* 进行中对局快捷继续 (若有) */}
         {hasActiveGame && activeGameSummary && (
-          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-blue-500/[0.08] via-indigo-500/[0.06] to-sky-500/[0.08] dark:from-sky-500/15 dark:to-indigo-500/15 shadow-card ring-1 ring-blue-500/20 flex flex-col gap-3 animate-fadeIn">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-sky-400 animate-pulse" />
-                <span className="text-xs sm:text-sm font-bold text-blue-900 dark:text-sky-200">
-                  检测到进行中对局
+          <div className="flex flex-col gap-2.5 pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between text-xs">
+              <span className="flex items-center gap-1.5 font-bold text-blue-600 dark:text-sky-400">
+                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                <span>检测到进行中对局</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-500/10 font-semibold">
+                  {DIFFICULTY_MAP[activeGameSummary.difficulty].label}
                 </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-white/80 dark:bg-slate-800 text-blue-700 dark:text-sky-300 shadow-xs">
-                  {DIFFICULTY_MAP[activeGameSummary.difficulty].label}难度
-                </span>
-              </div>
-              <span className="text-xs font-mono font-medium text-slate-500 dark:text-slate-400">
-                已用时 {formatTime(activeGameSummary.elapsedTime)}
+              </span>
+              <span className="font-mono text-slate-400 text-[11px]">
+                {formatTime(activeGameSummary.elapsedTime)}
               </span>
             </div>
 
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2">
               <button
                 onClick={onResumeGame}
-                className="flex-1 py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-extrabold text-xs sm:text-sm shadow-md shadow-blue-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="flex-1 py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-extrabold text-sm shadow-md shadow-blue-600/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <Play className="w-4 h-4 fill-white" />
                 <span>继续对局</span>
@@ -196,8 +125,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
               <button
                 onClick={() => onStartGame(activeGameSummary.difficulty, activeGameSummary.gameMode, true)}
-                className="py-3 px-3.5 rounded-2xl bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-xs"
-                title="放弃当前盘面重新开局"
+                className="py-3 px-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                title="重开此局"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>重开</span>
@@ -206,167 +135,106 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           </div>
         )}
 
-        {/* Card 1: 经典模式 (Classic Mode) */}
-        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 shadow-card ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex flex-col gap-3.5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-sky-400">
-                <Sparkles className="w-4 h-4" />
-              </div>
-              <div>
-                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight">
-                  经典自由对局
-                </h2>
-                <p className="text-[11px] text-slate-400 dark:text-slate-400">
-                  位掩码算法极速生成 · 100% 严格唯一解保证
-                </p>
-              </div>
-            </div>
+        {/* 经典自由对局难度选择 */}
+        <div className="flex flex-col gap-2.5">
+          <div className="text-[11px] font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider">
+            经典自由对局
           </div>
 
-          <div className="grid grid-cols-3 gap-2.5 pt-0.5">
+          <div className="grid grid-cols-3 gap-2">
             {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => {
               const meta = DIFFICULTY_MAP[d];
-              const isRecommended = d === 'medium';
               return (
                 <button
                   key={d}
                   onClick={() => onStartGame(d, 'random', true)}
-                  className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/90 dark:bg-slate-800/50 dark:hover:bg-slate-800 flex flex-col items-center justify-center text-center transition-all cursor-pointer relative active:scale-95 group shadow-xs"
+                  className={`py-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 font-extrabold text-xs sm:text-sm text-center transition-all cursor-pointer active:scale-95 shadow-xs ${meta.color}`}
                 >
-                  {isRecommended && (
-                    <span className="absolute -top-2 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-amber-500 text-white shadow-xs">
-                      推荐
-                    </span>
-                  )}
-                  <span className={`text-xs sm:text-sm font-extrabold tracking-tight ${
-                    d === 'easy' ? 'text-emerald-600 dark:text-emerald-400' : d === 'medium' ? 'text-blue-600 dark:text-sky-400' : 'text-rose-600 dark:text-rose-400'
-                  }`}>
-                    {meta.label}
-                  </span>
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
-                    {meta.desc}
-                  </span>
-                  <span className="text-[9px] text-slate-400 font-mono mt-0.5">
-                    {meta.clues}
-                  </span>
+                  {meta.label}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Card 2 & 3: 每日一题 + 解题方法 (2-Column Grid) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          {/* 每日一题 */}
-          <div
-            onClick={() => {
-              if (hasActiveGame && activeGameSummary?.gameMode === 'daily' && onResumeGame) {
-                onResumeGame();
-              } else {
-                onStartGame('medium', 'daily', isDailyCompletedToday);
-              }
-            }}
-            className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 shadow-card hover:shadow-card-hover ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex flex-col justify-between gap-3 transition-all cursor-pointer group active:scale-[0.99]"
-          >
-            <div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                    <Flame className="w-4 h-4 fill-amber-500" />
-                  </div>
-                  <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
-                    每日一题挑战
-                  </h3>
-                </div>
-                <span className="text-[10px] font-semibold text-slate-400">
-                  {todayDateStr}
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-                全网同种随机种子，每日打卡记录连胜纪录。
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80 text-xs">
-              <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold text-[11px]">
-                <Flame className="w-3.5 h-3.5 fill-current" />
-                <span>连胜 {dailyStreak} 天</span>
-              </div>
-              <div className="text-blue-600 dark:text-sky-400 font-bold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform text-[11px]">
-                <span>{isDailyCompletedToday ? '已通关 (重刷)' : '去挑战'}</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
-          </div>
-
-          {/* 解题方法百科 */}
-          <div
-            onClick={onOpenTechniques}
-            className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 shadow-card hover:shadow-card-hover ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex flex-col justify-between gap-3 transition-all cursor-pointer group active:scale-[0.99]"
-          >
-            <div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                    <BookOpen className="w-4 h-4" />
-                  </div>
-                  <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
-                    解题技巧百科
-                  </h3>
-                </div>
-                <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10">
-                  {masteredTechniquesCount}/{totalTechniquesCount} 掌握
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-                11 种经典与大师技巧，3×3 真实图解与随堂检验。
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80 text-xs">
-              <span className="text-[10px] text-slate-400 font-medium">
-                支持直通专项实战
-              </span>
-              <div className="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform text-[11px]">
-                <span>查阅百科</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Card 4: 战绩看板与对局记录 */}
-        <div
-          onClick={() => onOpenStats('history')}
-          className="p-4 rounded-3xl bg-white dark:bg-slate-900 shadow-card hover:shadow-card-hover ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex items-center justify-between transition-all cursor-pointer group"
+        {/* 每日一题入口 */}
+        <button
+          onClick={() => {
+            if (hasActiveGame && activeGameSummary?.gameMode === 'daily' && onResumeGame) {
+              onResumeGame();
+            } else {
+              onStartGame('medium', 'daily', isDailyCompletedToday);
+            }
+          }}
+          className="w-full py-3 px-3.5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/15 text-amber-700 dark:text-amber-400 flex items-center justify-between font-bold text-xs sm:text-sm transition-all cursor-pointer active:scale-[0.99]"
         >
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
-              <Trophy className="w-4.5 h-4.5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
-                  战绩流水与成就勋章
-                </span>
-                <span className="text-[10px] text-slate-400">
-                  (📜 对局记录已就绪)
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
-                记录每一局用时、失误与提示，成就徽章实时点亮
-              </p>
-            </div>
+          <div className="flex items-center gap-2">
+            <Flame className="w-4 h-4 fill-amber-500 text-amber-500" />
+            <span>每日一题挑战</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform shrink-0" />
-        </div>
+          <div className="flex items-center gap-1 text-[11px] text-amber-600/80 dark:text-amber-400/80 font-medium">
+            <span>{isDailyCompletedToday ? '已通关' : dailyStreak > 0 ? `连胜 ${dailyStreak} 天` : '今日挑战'}</span>
+            <ChevronRight className="w-3.5 h-3.5" />
+          </div>
+        </button>
       </div>
 
-      {/* 3. Bottom Footer */}
-      <div className="pt-2 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400 shrink-0">
-        <span>极光数独 · PWA 离线支持</span>
-        <span>对局中可随时点「🏠 首页」返回大厅</span>
+      {/* 底部轻量功能栏：静默、低调、不抢视觉焦点 */}
+      <div className="flex items-center justify-center gap-1.5 sm:gap-3 pt-4 border-t border-slate-200/50 dark:border-slate-800/50 text-slate-500 dark:text-slate-400 text-xs">
+        <button
+          onClick={onOpenTechniques}
+          className="flex items-center gap-1 py-1.5 px-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          title="查阅解题技巧百科"
+        >
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>解题技巧百科</span>
+        </button>
+
+        <button
+          onClick={() => onOpenStats('stats')}
+          aria-label="查看战绩与排行榜"
+          className="flex items-center gap-1 py-1.5 px-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          title="战绩与荣誉"
+        >
+          <Trophy className="w-3.5 h-3.5" />
+          <span>战绩</span>
+        </button>
+
+        <button
+          onClick={onOpenSettings}
+          aria-label="打开游戏偏好设置"
+          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          title="设置"
+        >
+          <Settings className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={onOpenHelp}
+          aria-label="游戏规则与快捷键帮助"
+          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          title="帮助"
+        >
+          <HelpCircle className="w-4 h-4" />
+        </button>
+
+        <button
+          onClick={onToggleSound}
+          aria-label="切换音效"
+          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          title={soundEnabled ? '音效开启' : '音效静音'}
+        >
+          {soundEnabled ? <Volume2 className="w-4 h-4 text-blue-600 dark:text-sky-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+        </button>
+
+        <button
+          onClick={onCycleTheme}
+          aria-label="快速切换主题"
+          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 hover:text-slate-800 dark:hover:text-slate-200 transition-colors cursor-pointer"
+          title="快速切换浅色/深色主题"
+        >
+          {isDark ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+        </button>
       </div>
     </div>
   );

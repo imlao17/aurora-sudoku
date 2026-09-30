@@ -63,9 +63,6 @@ export const Header: React.FC<HeaderProps> = ({
               <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-1 m-0 truncate">
                 极光数独
               </h1>
-              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-sky-400 shrink-0">
-                PRO
-              </span>
             </div>
             <p className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-400 m-0 truncate">
               {gameMode === 'daily' ? `每日一题 · ${dateStr}` : '自由开局模式'}
