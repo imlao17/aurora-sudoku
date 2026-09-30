@@ -1,0 +1,18 @@
+{
+  "name": "极光数独 - 纯粹·优雅·极致手感",
+  "short_name": "极光数独",
+  "description": "好玩、好看、手感极佳的现代数独 Web 单页应用，支持离线畅玩与唯一解题目保证。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#f8fafc",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

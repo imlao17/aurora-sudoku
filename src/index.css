@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply select-none min-h-[100dvh] overflow-x-hidden antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: none;
+  }
+}
+
+@layer utilities {
+  .safe-pt {
+    padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+  }
+  .safe-pb {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+  }
+  .safe-pl {
+    padding-left: max(0.5rem, env(safe-area-inset-left, 0px));
+  }
+  .safe-pr {
+    padding-right: max(0.5rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+@keyframes pop {
+  0% { transform: scale(0.82); }
+  60% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+@keyframes houseWave {
+  0% {
+    transform: scale(0.96);
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 16px 4px rgba(251, 191, 36, 0.85);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0);
+  }
+}
+
+.animate-pop {
+  animation: pop 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-house-wave {
+  animation: houseWave 0.65s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ==========================================================================
+   Theme 1: Nordic Glacier White (Default Light - 纯净极简浅色)
+   ========================================================================== */
+.theme-nordic,
+[data-theme="nordic"] {
+  --bg-primary: #f8fafc;
+  --bg-surface: #ffffff;
+  --border-color: #e2e8f0;
+  --accent-color: #2563eb;
+  background-color: var(--bg-primary);
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   Theme 2: Zen Paper Warm Cream (极简和纸 - 柔和暖光浅色)
+   ========================================================================== */
+.theme-zen,
+[data-theme="zen"] {
+  --bg-primary: #faf8f5;
+  --bg-surface: #ffffff;
+  --border-color: #ded5c5;
+  --accent-color: #c2410c;
+  background-color: var(--bg-primary);
+  color: #292524;
+}
+
+.theme-zen button[role="gridcell"] span.text-blue-600 {
+  color: #c2410c !important;
+}
+
+/* ==========================================================================
+   Theme 3: Fresh Matcha (清爽抹茶 - 清新草木绿浅色)
+   ========================================================================== */
+.theme-matcha,
+[data-theme="matcha"] {
+  --bg-primary: #f4f8f5;
+  --bg-surface: #ffffff;
+  --border-color: #d1e5d9;
+  --accent-color: #059669;
+  background-color: var(--bg-primary);
+  color: #064e3b;
+}
+
+.theme-matcha button[role="gridcell"] span.text-blue-600 {
+  color: #059669 !important;
+}
+
+/* ==========================================================================
+   Theme 4: Aurora Obsidian (极光幻夜 - 曜石深色)
+   ========================================================================== */
+.theme-aurora,
+[data-theme="aurora"] {
+  --bg-primary: #020617;
+  --bg-surface: #0f172a;
+  --border-color: #334155;
+  --accent-color: #38bdf8;
+  background-color: var(--bg-primary);
+  color: #f8fafc;
+}
+
+/* ==========================================================================
+   Theme 5: Cyberpunk Neon Matrix (赛博霓虹 - 硬核黑绿)
+   ========================================================================== */
+.theme-cyberpunk,
+[data-theme="cyberpunk"] {
+  --bg-primary: #020806;
+  --bg-surface: #05140d;
+  --border-color: #064e3b;
+  --accent-color: #10b981;
+  background-color: var(--bg-primary);
+  color: #ecfdf5;
+}
+
+.theme-cyberpunk button[role="gridcell"] span.dark\:text-sky-400 {
+  color: #34d399 !important;
+}
+
+/* ==========================================================================
+   Theme 6: Twilight Nebula (暮光魅紫 - 星云深色)
+   ========================================================================== */
+.theme-twilight,
+[data-theme="twilight"] {
+  --bg-primary: #090514;
+  --bg-surface: #140b2b;
+  --border-color: #3b1d60;
+  --accent-color: #c084fc;
+  background-color: var(--bg-primary);
+  color: #f5f3ff;
+}
+
+.theme-twilight button[role="gridcell"] span.dark\:text-sky-400 {
+  color: #c084fc !important;
+}
+
+/* ==========================================================================
+   Ambient Lighting Meshes
+   ========================================================================== */
+.aurora-mesh {
+  background-image: 
+    radial-gradient(at 50% 0%, rgba(56, 189, 248, 0.12) 0px, transparent 65%),
+    radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.1) 0px, transparent 55%),
+    radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.06) 0px, transparent 45%);
+}
+
+.zen-mesh {
+  background-image:
+    radial-gradient(at 50% 0%, rgba(217, 119, 6, 0.08) 0px, transparent 70%),
+    radial-gradient(at 100% 100%, rgba(120, 53, 15, 0.05) 0px, transparent 60%);
+}
+
+.cyberpunk-mesh {
+  background-image:
+    radial-gradient(at 50% 0%, rgba(16, 185, 129, 0.14) 0px, transparent 60%),
+    radial-gradient(at 0% 100%, rgba(5, 150, 105, 0.1) 0px, transparent 50%);
+}
+
+.twilight-mesh {
+  background-image:
+    radial-gradient(at 50% 0%, rgba(168, 85, 247, 0.16) 0px, transparent 65%),
+    radial-gradient(at 100% 100%, rgba(244, 114, 182, 0.12) 0px, transparent 55%),
+    radial-gradient(at 0% 40%, rgba(99, 102, 241, 0.08) 0px, transparent 50%);
+}
+
+/* ==========================================================================
+   Custom scrollbars & interactive resets
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.4);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+.sudoku-cell {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
