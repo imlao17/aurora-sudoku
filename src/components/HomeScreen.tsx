@@ -99,7 +99,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       {/* 1. Top Bar */}
       <div className="flex items-center justify-between gap-2 shrink-0">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 flex items-center justify-center text-white font-extrabold text-base shadow-md shadow-blue-500/20">
+          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-extrabold text-base shadow-xs">
             9
           </div>
           <div>
@@ -107,11 +107,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">
                 极光数独
               </span>
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20">
+              <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-sky-400">
                 PRO
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            <p className="text-[11px] text-slate-400 dark:text-slate-400">
               纯粹 · 优雅 · 极致手感
             </p>
           </div>
@@ -120,63 +120,63 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <div className="flex items-center gap-1 sm:gap-1.5">
           <button
             onClick={onToggleSound}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
             title={soundEnabled ? '音效开启' : '音效静音'}
             aria-label="切换音效"
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-blue-600 dark:text-sky-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            {soundEnabled ? <Volume2 className="w-4.5 h-4.5 text-blue-600 dark:text-sky-400" /> : <VolumeX className="w-4.5 h-4.5 text-slate-400" />}
           </button>
 
           <button
             onClick={onCycleTheme}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
             title="快速切换浅色/深色主题"
             aria-label="快速切换主题"
           >
-            {isDark ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-600" />}
+            {isDark ? <Sun className="w-4.5 h-4.5 text-amber-500" /> : <Moon className="w-4.5 h-4.5 text-indigo-600" />}
           </button>
 
           <button
             onClick={() => onOpenStats('stats')}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+            className="p-2 rounded-xl text-slate-500 hover:text-amber-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-amber-400 dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
             title="战绩与成就看板"
             aria-label="查看战绩与排行榜"
           >
-            <Trophy className="w-4 h-4 text-amber-500" />
+            <Trophy className="w-4.5 h-4.5" />
           </button>
 
           <button
             onClick={onOpenSettings}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
             title="游戏偏好设置"
             aria-label="打开游戏偏好设置"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-4.5 h-4.5" />
           </button>
 
           <button
             onClick={onOpenHelp}
-            className="p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-colors cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
+            className="p-2 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-sky-400 dark:hover:bg-slate-800 active:scale-90 transition-all cursor-pointer"
             title="快捷键与规则说明"
             aria-label="游戏规则与快捷键帮助"
           >
-            <HelpCircle className="w-4 h-4" />
+            <HelpCircle className="w-4.5 h-4.5" />
           </button>
         </div>
       </div>
 
       {/* 2. Main Content Area */}
-      <div className="flex-1 flex flex-col gap-3.5 sm:gap-4 my-auto justify-center">
+      <div className="flex-1 flex flex-col gap-4 sm:gap-5 my-auto justify-center">
         {/* Banner: In-Progress Game (if any) */}
         {hasActiveGame && activeGameSummary && (
-          <div className="p-3.5 sm:p-4 rounded-3xl bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-sky-500/10 border-2 border-blue-500/30 dark:border-sky-500/40 shadow-sm flex flex-col gap-2.5 animate-fadeIn">
+          <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-blue-500/[0.08] via-indigo-500/[0.06] to-sky-500/[0.08] dark:from-sky-500/15 dark:to-indigo-500/15 shadow-card ring-1 ring-blue-500/20 flex flex-col gap-3 animate-fadeIn">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="inline-block w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse" />
-                <span className="text-xs font-bold text-blue-700 dark:text-sky-300">
+                <span className="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 dark:bg-sky-400 animate-pulse" />
+                <span className="text-xs sm:text-sm font-bold text-blue-900 dark:text-sky-200">
                   检测到进行中对局
                 </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-semibold bg-white/80 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
+                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-white/80 dark:bg-slate-800 text-blue-700 dark:text-sky-300 shadow-xs">
                   {DIFFICULTY_MAP[activeGameSummary.difficulty].label}难度
                 </span>
               </div>
@@ -185,10 +185,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               <button
                 onClick={onResumeGame}
-                className="flex-1 py-2.5 px-4 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-600/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                className="flex-1 py-3 px-4 rounded-2xl bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-extrabold text-xs sm:text-sm shadow-md shadow-blue-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
               >
                 <Play className="w-4 h-4 fill-white" />
                 <span>继续对局</span>
@@ -196,7 +196,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
               <button
                 onClick={() => onStartGame(activeGameSummary.difficulty, activeGameSummary.gameMode, true)}
-                className="py-2.5 px-3 rounded-2xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                className="py-3 px-3.5 rounded-2xl bg-white/90 dark:bg-slate-800/90 hover:bg-white dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1 shrink-0 shadow-xs"
                 title="放弃当前盘面重新开局"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -207,24 +207,24 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         )}
 
         {/* Card 1: 经典模式 (Classic Mode) */}
-        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-3">
+        <div className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 shadow-card ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex flex-col gap-3.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-sky-500/10 border border-blue-200 dark:border-sky-500/20 flex items-center justify-center text-blue-600 dark:text-sky-400">
+              <div className="w-8 h-8 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-sky-400">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white leading-tight">
+                <h2 className="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white leading-tight">
                   经典自由对局
                 </h2>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                <p className="text-[11px] text-slate-400 dark:text-slate-400">
                   位掩码算法极速生成 · 100% 严格唯一解保证
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 pt-1">
+          <div className="grid grid-cols-3 gap-2.5 pt-0.5">
             {(['easy', 'medium', 'hard'] as Difficulty[]).map((d) => {
               const meta = DIFFICULTY_MAP[d];
               const isRecommended = d === 'medium';
@@ -232,20 +232,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <button
                   key={d}
                   onClick={() => onStartGame(d, 'random', true)}
-                  className={`p-2.5 sm:p-3 rounded-2xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer relative active:scale-95 group ${meta.color}`}
+                  className="p-3 sm:p-3.5 rounded-2xl bg-slate-50 hover:bg-slate-100/90 dark:bg-slate-800/50 dark:hover:bg-slate-800 flex flex-col items-center justify-center text-center transition-all cursor-pointer relative active:scale-95 group shadow-xs"
                 >
                   {isRecommended && (
                     <span className="absolute -top-2 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-amber-500 text-white shadow-xs">
                       推荐
                     </span>
                   )}
-                  <span className="text-xs sm:text-sm font-bold tracking-tight">
+                  <span className={`text-xs sm:text-sm font-extrabold tracking-tight ${
+                    d === 'easy' ? 'text-emerald-600 dark:text-emerald-400' : d === 'medium' ? 'text-blue-600 dark:text-sky-400' : 'text-rose-600 dark:text-rose-400'
+                  }`}>
                     {meta.label}
                   </span>
-                  <span className="text-[10px] opacity-80 mt-0.5">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
                     {meta.desc}
                   </span>
-                  <span className="text-[9px] opacity-60 font-mono mt-0.5">
+                  <span className="text-[9px] text-slate-400 font-mono mt-0.5">
                     {meta.clues}
                   </span>
                 </button>
@@ -255,7 +257,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </div>
 
         {/* Card 2 & 3: 每日一题 + 解题方法 (2-Column Grid) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           {/* 每日一题 */}
           <div
             onClick={() => {
@@ -265,15 +267,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 onStartGame('medium', 'daily', isDailyCompletedToday);
               }
             }}
-            className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-3 hover:border-amber-400/60 dark:hover:border-amber-500/40 transition-all cursor-pointer group active:scale-[0.99]"
+            className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 shadow-card hover:shadow-card-hover ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex flex-col justify-between gap-3 transition-all cursor-pointer group active:scale-[0.99]"
           >
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                    <Flame className="w-3.5 h-3.5 fill-amber-500" />
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                    <Flame className="w-4 h-4 fill-amber-500" />
                   </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
                     每日一题挑战
                   </h3>
                 </div>
@@ -286,12 +288,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/80 text-xs">
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80 text-xs">
               <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-bold text-[11px]">
                 <Flame className="w-3.5 h-3.5 fill-current" />
                 <span>连胜 {dailyStreak} 天</span>
               </div>
-              <div className="text-blue-600 dark:text-sky-400 font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform text-[11px]">
+              <div className="text-blue-600 dark:text-sky-400 font-bold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform text-[11px]">
                 <span>{isDailyCompletedToday ? '已通关 (重刷)' : '去挑战'}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </div>
@@ -301,19 +303,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           {/* 解题方法百科 */}
           <div
             onClick={onOpenTechniques}
-            className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-3 hover:border-indigo-400/60 dark:hover:border-indigo-500/40 transition-all cursor-pointer group active:scale-[0.99]"
+            className="p-4 sm:p-5 rounded-3xl bg-white dark:bg-slate-900 shadow-card hover:shadow-card-hover ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex flex-col justify-between gap-3 transition-all cursor-pointer group active:scale-[0.99]"
           >
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                    <BookOpen className="w-3.5 h-3.5" />
+                  <div className="w-8 h-8 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                    <BookOpen className="w-4 h-4" />
                   </div>
-                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                  <h3 className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
                     解题技巧百科
                   </h3>
                 </div>
-                <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-500/10">
+                <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-full bg-indigo-500/10">
                   {masteredTechniquesCount}/{totalTechniquesCount} 掌握
                 </span>
               </div>
@@ -322,11 +324,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </p>
             </div>
 
-            <div className="flex items-center justify-between pt-1 border-t border-slate-100 dark:border-slate-800/80 text-xs">
-              <span className="text-[10px] text-slate-400">
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80 text-xs">
+              <span className="text-[10px] text-slate-400 font-medium">
                 支持直通专项实战
               </span>
-              <div className="text-indigo-600 dark:text-indigo-400 font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform text-[11px]">
+              <div className="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform text-[11px]">
                 <span>查阅百科</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </div>
@@ -337,22 +339,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* Card 4: 战绩看板与对局记录 */}
         <div
           onClick={() => onOpenStats('history')}
-          className="p-3.5 sm:p-4 rounded-3xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800/80 flex items-center justify-between hover:bg-slate-100 dark:hover:bg-slate-900 transition-colors cursor-pointer group"
+          className="p-4 rounded-3xl bg-white dark:bg-slate-900 shadow-card hover:shadow-card-hover ring-1 ring-black/[0.04] dark:ring-white/[0.06] flex items-center justify-between transition-all cursor-pointer group"
         >
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-amber-100 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-500/30 flex items-center justify-center text-amber-700 dark:text-amber-400 shrink-0">
-              <Trophy className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-2xl bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+              <Trophy className="w-4.5 h-4.5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
+                <span className="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">
                   战绩流水与成就勋章
                 </span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400">
+                <span className="text-[10px] text-slate-400">
                   (📜 对局记录已就绪)
                 </span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium">
                 记录每一局用时、失误与提示，成就徽章实时点亮
               </p>
             </div>

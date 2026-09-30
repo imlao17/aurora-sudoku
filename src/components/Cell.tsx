@@ -41,31 +41,35 @@ export const Cell: React.FC<CellProps> = memo(({
 
   // 3x3 box boundary styling: Crisp 3x3 dividers with clean outer boundary
   const borderRight = (col === 2 || col === 5)
-    ? 'border-r-2 border-r-slate-400 dark:border-r-slate-500'
-    : 'border-r border-r-slate-200 dark:border-r-slate-800';
+    ? 'border-r-2 border-r-slate-400/90 dark:border-r-slate-600'
+    : col === 8
+    ? ''
+    : 'border-r border-r-slate-200/70 dark:border-r-slate-800/50';
   const borderBottom = (row === 2 || row === 5)
-    ? 'border-b-2 border-b-slate-400 dark:border-b-slate-500'
-    : 'border-b border-b-slate-200 dark:border-b-slate-800';
+    ? 'border-b-2 border-b-slate-400/90 dark:border-b-slate-600'
+    : row === 8
+    ? ''
+    : 'border-b border-b-slate-200/70 dark:border-b-slate-800/50';
 
   // Determine cell background styling based on priority
-  let bgClass = 'bg-transparent hover:bg-slate-100/70 dark:hover:bg-slate-800/40';
+  let bgClass = 'bg-transparent hover:bg-slate-100/50 dark:hover:bg-slate-800/30';
 
   if (isHouseCompleted) {
-    bgClass = 'bg-amber-100 ring-2 ring-amber-400 animate-house-wave z-20 dark:bg-amber-400/25 dark:ring-amber-400';
+    bgClass = 'bg-amber-100/90 ring-2 ring-amber-400 animate-house-wave z-20 dark:bg-amber-400/25 dark:ring-amber-400';
   } else if (isTarget) {
-    bgClass = 'bg-amber-100 ring-2 ring-amber-500 animate-pulse z-20 dark:bg-amber-500/25 dark:ring-amber-400';
+    bgClass = 'bg-amber-100/90 ring-2 ring-amber-500 animate-pulse z-20 dark:bg-amber-500/25 dark:ring-amber-400';
   } else if (isCause) {
-    bgClass = 'bg-sky-100 ring-1 ring-sky-400 z-10 dark:bg-sky-500/20 dark:ring-sky-400';
+    bgClass = 'bg-sky-100/80 ring-1 ring-sky-400 z-10 dark:bg-sky-500/20 dark:ring-sky-400';
   } else if (isSelected) {
-    bgClass = 'bg-sky-100 ring-2 ring-sky-500 z-10 dark:bg-sky-500/25 dark:ring-sky-400';
+    bgClass = 'bg-blue-100/90 ring-2 ring-blue-500 dark:bg-sky-500/30 dark:ring-sky-400 z-10';
   } else if (isConflict) {
-    bgClass = 'bg-rose-100 ring-1 ring-rose-500 animate-shake z-10 dark:bg-rose-950/70 dark:ring-rose-500';
+    bgClass = 'bg-rose-100/90 ring-1.5 ring-rose-500 animate-shake z-10 dark:bg-rose-950/70 dark:ring-rose-500';
   } else if (isSameNumber && value !== 0) {
-    bgClass = 'bg-sky-100/70 ring-1 ring-sky-400/40 dark:bg-sky-500/15 dark:ring-sky-400/40';
+    bgClass = 'bg-blue-50/90 dark:bg-sky-500/15';
   } else if (isScope) {
-    bgClass = 'bg-slate-100 ring-1 ring-slate-300 dark:bg-slate-800/60 dark:ring-slate-600';
+    bgClass = 'bg-slate-100/70 ring-1 ring-slate-200 dark:bg-slate-800/60 dark:ring-slate-700';
   } else if (isRelated) {
-    bgClass = 'bg-slate-100/60 dark:bg-slate-800/35';
+    bgClass = 'bg-slate-50/80 dark:bg-slate-800/25';
   }
 
   // Determine text color and styling (flat, crisp)
@@ -80,9 +84,9 @@ export const Cell: React.FC<CellProps> = memo(({
     } else if (showError && cell.isError) {
       textColorClass = 'text-rose-600 font-bold dark:text-rose-500';
     } else if (isInitial) {
-      textColorClass = 'text-slate-900 font-bold dark:text-slate-100';
+      textColorClass = 'text-slate-900 font-extrabold dark:text-slate-50';
     } else {
-      textColorClass = 'text-blue-600 font-semibold dark:text-sky-400';
+      textColorClass = 'text-blue-600 font-bold dark:text-sky-400';
     }
   }
 
@@ -106,7 +110,7 @@ export const Cell: React.FC<CellProps> = memo(({
     >
       {value !== 0 ? (
         <span
-          className={`text-xl sm:text-2xl md:text-3xl font-sans tracking-tight leading-none transition-transform select-none ${textColorClass} ${
+          className={`text-xl sm:text-2xl md:text-3xl font-sans font-bold tabular-nums tracking-tight leading-none transition-transform select-none ${textColorClass} ${
             !isInitial ? 'animate-pop' : ''
           }`}
         >

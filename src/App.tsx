@@ -1182,16 +1182,16 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   return (
     <div className={`min-h-[100dvh] flex flex-col justify-between selection:bg-sky-500/30 transition-colors duration-200 relative overflow-x-hidden safe-pt theme-${settings.theme} ${
       settings.theme === 'nordic'
-        ? 'bg-slate-50 text-slate-900'
+        ? 'bg-[#f5f5f7] text-slate-900'
         : settings.theme === 'zen'
-        ? 'bg-[#faf7f2] text-stone-900'
+        ? 'bg-[#faf8f5] text-stone-900'
         : settings.theme === 'matcha'
         ? 'bg-[#f2f7f4] text-emerald-950'
         : settings.theme === 'cyberpunk'
         ? 'bg-[#020806] text-emerald-100'
         : settings.theme === 'twilight'
         ? 'bg-[#090514] text-purple-100'
-        : 'bg-slate-950 text-slate-100'
+        : 'bg-[#0a0f1d] text-slate-100'
     }`}>
       {currentScreen === 'home' ? (
         <HomeScreen

@@ -30,29 +30,31 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
               type="button"
               onClick={() => onNumberClick(num)}
               aria-disabled={isComplete}
-              className={`relative flex flex-col items-center justify-center py-1.5 sm:py-3 min-h-[46px] sm:min-h-[52px] rounded-xl border transition-all active:scale-95 select-none touch-manipulation ${
+              className={`relative flex flex-col items-center justify-center py-1.5 sm:py-2.5 min-h-[48px] sm:min-h-[54px] rounded-2xl transition-all active:scale-95 select-none touch-manipulation ${
                 isComplete
-                  ? 'bg-slate-100/60 border-slate-200 text-slate-400 opacity-40 cursor-default dark:bg-slate-950/40 dark:border-slate-900 dark:text-slate-500'
+                  ? 'bg-slate-100/40 text-slate-300 dark:bg-slate-900/20 dark:text-slate-600 opacity-30 cursor-default shadow-none'
                   : isMatched
-                  ? 'bg-blue-50 border-2 border-blue-500 text-blue-600 font-bold dark:bg-sky-500/20 dark:border-sky-400 dark:text-sky-300'
+                  ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25 font-extrabold'
                   : isNoteMode
-                  ? 'bg-amber-50/60 border-amber-200 text-amber-700 hover:bg-amber-50 dark:bg-slate-900 dark:border-slate-800 dark:text-amber-300 dark:hover:bg-slate-850'
-                  : 'bg-white border-slate-200 text-slate-900 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:text-white dark:hover:bg-slate-850 shadow-xs cursor-pointer'
+                  ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 ring-1 ring-amber-500/20'
+                  : 'bg-white hover:bg-slate-50 dark:bg-slate-900 dark:hover:bg-slate-850 text-slate-900 dark:text-white shadow-xs ring-1 ring-black/[0.04] dark:ring-white/[0.06] cursor-pointer'
               }`}
               aria-label={`填入数字 ${num}，剩余 ${remaining} 个`}
               title={`填入数字 ${num} (剩余 ${remaining} 个)`}
             >
               {/* Digit */}
-              <span className="text-base sm:text-2xl font-sans font-bold tracking-tight leading-none mb-0.5 sm:mb-1">
+              <span className={`text-lg sm:text-2xl font-sans font-extrabold tabular-nums tracking-tight leading-none mb-0.5 sm:mb-1 ${
+                isMatched ? 'text-white' : ''
+              }`}>
                 {num}
               </span>
 
               {/* Remaining count badge / Completed badge */}
-              <span className="text-[9px] sm:text-[11px] font-medium leading-none">
+              <span className="text-[9px] sm:text-[10px] font-semibold leading-none">
                 {isComplete ? (
-                  <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 dark:text-emerald-400 stroke-[3]" />
+                  <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400 stroke-[3]" />
                 ) : (
-                  <span className={remaining <= 2 ? 'text-blue-600 dark:text-sky-400 font-bold bg-blue-50 dark:bg-sky-500/10 px-1 py-0.5 rounded-full' : 'text-slate-500 dark:text-slate-400'}>
+                  <span className={isMatched ? 'text-white/80' : remaining <= 2 ? 'text-blue-600 dark:text-sky-400 font-bold' : 'text-slate-400 dark:text-slate-400'}>
                     {remaining}
                   </span>
                 )}
