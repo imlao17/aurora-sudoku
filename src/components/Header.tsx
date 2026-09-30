@@ -13,6 +13,8 @@ import {
   GraduationCap,
   Home,
 } from 'lucide-react';
+import type { UserProfile } from '../types/user';
+import { AVATAR_PRESETS } from '../utils/auth';
 
 interface HeaderProps {
   difficulty: Difficulty;
@@ -20,6 +22,7 @@ interface HeaderProps {
   dateStr: string;
   isDailyCompleted: boolean;
   soundEnabled: boolean;
+  user?: UserProfile;
   onSelectDifficulty: (diff: Difficulty) => void;
   onSelectMode: (mode: GameMode) => void;
   onNewGame: () => void;
@@ -27,6 +30,7 @@ interface HeaderProps {
   onOpenSettings: () => void;
   onOpenHelp: () => void;
   onOpenTechniques?: () => void;
+  onOpenProfile?: () => void;
   onToggleSound: () => void;
   onStartVisualSolver?: () => void;
   onBackHome?: () => void;
@@ -38,6 +42,7 @@ export const Header: React.FC<HeaderProps> = ({
   dateStr,
   isDailyCompleted,
   soundEnabled,
+  user,
   onSelectDifficulty,
   onSelectMode,
   onNewGame,
@@ -45,6 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   onOpenHelp,
   onOpenTechniques,
+  onOpenProfile,
   onToggleSound,
   onStartVisualSolver,
   onBackHome,
@@ -121,6 +127,23 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Settings className="w-4 h-4" />
           </button>
+
+          {onOpenProfile && (
+            <button
+              type="button"
+              onClick={onOpenProfile}
+              aria-label="打开个人中心与账号数据"
+              className="px-1.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer flex items-center gap-1"
+              title={user ? `账号: ${user.username} (${user.isGuest ? '游客' : '已登录'})` : '个人账号'}
+            >
+              <span className="text-xs">
+                {user ? (AVATAR_PRESETS.find((p) => p.id === user.avatar)?.icon || '👤') : '👤'}
+              </span>
+              <span className="text-[11px] font-semibold hidden md:inline max-w-[56px] truncate">
+                {user ? user.username : '账号'}
+              </span>
+            </button>
+          )}
 
           <button
             type="button"

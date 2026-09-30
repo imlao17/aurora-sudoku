@@ -41,10 +41,14 @@ import { HintDialog } from './components/HintDialog';
 import { VisualSolverBar } from './components/VisualSolverBar';
 import { TechniquesModal } from './components/TechniquesModal';
 import { AchievementToast } from './components/AchievementToast';
+import { UserAuthModal } from './components/UserAuthModal';
+import { UserProfileModal } from './components/UserProfileModal';
 import { TECHNIQUES_DATA } from './constants/techniques';
 import { analyzeNextHint, type SmartHint } from './utils/hint';
 import { generateVisualSolveSteps, type VisualSolveStep } from './utils/visualSolver';
 import { evaluateAchievements, type AchievementDef } from './utils/achievements';
+import { getCurrentUser, logoutToGuest } from './utils/auth';
+import type { UserProfile } from './types/user';
 
 export interface AppProps {
   initialScreen?: 'home' | 'game';
@@ -108,6 +112,12 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   const [statsModalTab, setStatsModalTab] = useState<'stats' | 'history' | 'achievements'>('stats');
   const [completedHouseCells, setCompletedHouseCells] = useState<Record<string, boolean>>({});
   const [activePaintDigit, setActivePaintDigit] = useState<number | null>(null);
+
+  // User Account & Profile States
+  const [currentUser, setCurrentUser] = useState<UserProfile>(getCurrentUser);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | 'switch'>('login');
   const houseWaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   // True when the tab was hidden mid-game and should resume on return, so a
   // deliberate pause is not undone by switching tabs.
@@ -483,6 +493,48 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
       }
     }
   }, [checkVictory]);
+
+  // User account handlers
+  const handleOpenAuth = useCallback((mode: 'login' | 'register' | 'switch' = 'login') => {
+    setAuthModalMode(mode);
+    setShowAuthModal(true);
+  }, []);
+
+  const handleAuthSuccess = useCallback((user: UserProfile) => {
+    setCurrentUser(user);
+    setStats(loadStats());
+    setSettings(loadSettings());
+    const active = loadActiveGame();
+    if (active) {
+      setDifficulty(active.difficulty);
+      setGameMode(active.gameMode);
+      setBoard(active.board);
+      setElapsedTime(active.elapsedTime);
+      setMistakesCount(active.mistakesCount);
+      setHintsRemaining(active.hintsRemaining);
+      setHintsUsed(active.hintsUsed);
+    }
+  }, []);
+
+  const handleLogout = useCallback(() => {
+    const guest = logoutToGuest();
+    setCurrentUser(guest);
+    setShowProfileModal(false);
+    setStats(loadStats());
+    setSettings(loadSettings());
+  }, []);
+
+  const handleDataRestored = useCallback(() => {
+    setCurrentUser(getCurrentUser());
+    setStats(loadStats());
+    setSettings(loadSettings());
+    const active = loadActiveGame();
+    if (active) {
+      setDifficulty(active.difficulty);
+      setGameMode(active.gameMode);
+      setBoard(active.board);
+    }
+  }, []);
 
   // Fill number or notes into the selected cell (or specified target cell)
   const handleInputNumber = useCallback(
@@ -1205,6 +1257,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
           totalTechniquesCount={TECHNIQUES_DATA.length}
           soundEnabled={settings.soundEnabled}
           theme={settings.theme}
+          user={currentUser}
+          onOpenProfile={() => setShowProfileModal(true)}
           onToggleSound={() => updateSettings({ soundEnabled: !settings.soundEnabled })}
           onCycleTheme={handleCycleTheme}
           onOpenSettings={() => setShowSettingsModal(true)}
@@ -1225,6 +1279,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
               dateStr={activeDateStr}
               isDailyCompleted={isDailyCompletedToday}
               soundEnabled={settings.soundEnabled}
+              user={currentUser}
+              onOpenProfile={() => setShowProfileModal(true)}
               onBackHome={handleBackHome}
               onSelectDifficulty={(diff) => {
                 setDifficulty(diff);
@@ -1423,6 +1479,26 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
           setStatsModalTab('achievements');
           setShowStatsModal(true);
         }}
+      />
+
+      {/* User Authentication & Login Modal */}
+      <UserAuthModal
+        isOpen={showAuthModal}
+        initialMode={authModalMode}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
+
+      {/* User Profile & Cloud Data Center Modal */}
+      <UserProfileModal
+        isOpen={showProfileModal}
+        user={currentUser}
+        stats={stats}
+        masteredTechsCount={loadMasteredTechniques().length}
+        onClose={() => setShowProfileModal(false)}
+        onLogout={handleLogout}
+        onOpenAuth={handleOpenAuth}
+        onDataRestored={handleDataRestored}
       />
     </div>
   );

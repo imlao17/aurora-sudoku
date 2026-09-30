@@ -1,5 +1,7 @@
 import React from 'react';
 import type { Difficulty, GameMode } from '../types/sudoku';
+import type { UserProfile } from '../types/user';
+import { AVATAR_PRESETS } from '../utils/auth';
 import {
   Play,
   RotateCcw,
@@ -34,6 +36,8 @@ interface HomeScreenProps {
   totalTechniquesCount: number;
   soundEnabled: boolean;
   theme: string;
+  user?: UserProfile;
+  onOpenProfile?: () => void;
   onToggleSound: () => void;
   onCycleTheme: () => void;
   onOpenSettings: () => void;
@@ -58,6 +62,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   todayDateStr,
   soundEnabled,
   theme,
+  user,
+  onOpenProfile,
   onToggleSound,
   onCycleTheme,
   onOpenSettings,
@@ -72,11 +78,56 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   const isDark = ['aurora', 'cyberpunk', 'twilight'].includes(theme);
+  const avatarIcon = user
+    ? AVATAR_PRESETS.find((p) => p.id === user.avatar)?.icon || '👤'
+    : '👤';
 
   return (
-    <div className="w-full max-w-sm mx-auto px-4 py-8 sm:py-16 flex flex-col justify-between min-h-[90dvh] select-none text-slate-900 dark:text-slate-100 animate-fadeIn">
+    <div className="w-full max-w-sm mx-auto px-4 py-4 sm:py-12 flex flex-col justify-between min-h-[90dvh] select-none text-slate-900 dark:text-slate-100 animate-fadeIn">
+      {/* 顶部账号状态与快速控制栏 */}
+      <div className="w-full flex items-center justify-between pb-2">
+        <button
+          type="button"
+          onClick={onOpenProfile}
+          className="flex items-center gap-2 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-850 backdrop-blur-xs shadow-xs active:scale-95 transition-all cursor-pointer"
+          title="个人中心与账号"
+          aria-label="打开个人中心"
+        >
+          <span className="text-sm">{avatarIcon}</span>
+          <span className="text-xs font-bold text-slate-800 dark:text-slate-200 max-w-[100px] truncate">
+            {user ? user.username : '我的账号'}
+          </span>
+          {user?.isGuest ? (
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-medium">
+              游客
+            </span>
+          ) : (
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          )}
+        </button>
+
+        <div className="flex items-center gap-1 text-slate-600 dark:text-slate-400">
+          <button
+            type="button"
+            onClick={onCycleTheme}
+            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+            title="切换视觉主题"
+          >
+            {isDark ? <Moon className="w-4 h-4 text-purple-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
+          </button>
+          <button
+            type="button"
+            onClick={onToggleSound}
+            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+            title={soundEnabled ? '音效开启' : '音效静音'}
+          >
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-blue-600 dark:text-sky-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+          </button>
+        </div>
+      </div>
+
       {/* 1. 经典报刊纸墨风格顶头 (Newspaper / Editorial Header) */}
-      <div className="flex flex-col items-center text-center pt-2 sm:pt-4">
+      <div className="flex flex-col items-center text-center pt-1 sm:pt-2">
         {/* 极简 3x3 纯墨线条 Logo */}
         <div className="w-12 h-12 rounded-xl border-2 border-slate-900 dark:border-slate-100 grid grid-cols-3 grid-rows-3 p-1 gap-0.5 mb-3">
           <div className="bg-slate-900 dark:bg-slate-100 rounded-sm" />

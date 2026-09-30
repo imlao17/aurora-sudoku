@@ -185,9 +185,12 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label="通关结算"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
     >
-      <div className="relative w-full max-w-sm max-h-[92dvh] overflow-y-auto rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-4 sm:p-6 flex flex-col items-center text-center text-slate-900 dark:text-slate-100">
+      <div className="relative w-full max-w-sm max-h-[92dvh] overflow-y-auto rounded-t-[28px] sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-5 sm:p-6 flex flex-col items-center text-center text-slate-900 dark:text-slate-100 safe-pb">
+        {/* Mobile Drag Indicator */}
+        <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-slate-700 mx-auto mb-2 shrink-0 sm:hidden" />
+
         {/* Close Button */}
         <button
           onClick={onClose}

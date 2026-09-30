@@ -158,9 +158,12 @@ export const StatsModal: React.FC<StatsModalProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label="战绩与成就"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-sm animate-fadeIn select-none"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 dark:bg-slate-950/80 backdrop-blur-sm animate-fadeIn select-none"
     >
-      <div className="relative w-full max-w-lg max-h-[92dvh] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-4 sm:p-6 flex flex-col overflow-hidden text-slate-900 dark:text-slate-100">
+      <div className="relative w-full max-w-lg max-h-[92dvh] rounded-t-[28px] sm:rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 shadow-2xl p-4 sm:p-6 flex flex-col overflow-hidden text-slate-900 dark:text-slate-100 safe-pb">
+        {/* Mobile Drag Indicator */}
+        <div className="w-10 h-1 rounded-full bg-slate-300 dark:bg-slate-700 mx-auto mb-3 shrink-0 sm:hidden" />
+
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 shrink-0">
           <div className="flex items-center gap-2.5">

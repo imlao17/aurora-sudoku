@@ -46,12 +46,54 @@ export const Board: React.FC<BoardProps> = ({
     return new Set(causeHighlightCells.map((p) => `${p.row}-${p.col}`));
   }, [causeHighlightCells]);
 
+  const touchStartRef = React.useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length === 1) {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStartRef.current || !selectedCell || e.changedTouches.length === 0) {
+      touchStartRef.current = null;
+      return;
+    }
+
+    const touchEnd = e.changedTouches[0];
+    const dx = touchEnd.clientX - touchStartRef.current.x;
+    const dy = touchEnd.clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    const threshold = 28;
+    if (Math.hypot(dx, dy) < threshold) return;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 0 && selectedCell.col < 8) {
+        onSelectCell(selectedCell.row, selectedCell.col + 1);
+      } else if (dx < 0 && selectedCell.col > 0) {
+        onSelectCell(selectedCell.row, selectedCell.col - 1);
+      }
+    } else {
+      if (dy > 0 && selectedCell.row < 8) {
+        onSelectCell(selectedCell.row + 1, selectedCell.col);
+      } else if (dy < 0 && selectedCell.row > 0) {
+        onSelectCell(selectedCell.row - 1, selectedCell.col);
+      }
+    }
+  };
+
   return (
     <div className="w-full max-w-[min(480px,calc(100dvh-290px))] aspect-square mx-auto px-1.5 sm:px-0 select-none touch-manipulation">
       {/* 9x9 Classic Ink Board Frame */}
       <div
         role="grid"
         aria-label="数独棋盘 9乘9"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         className="relative w-full aspect-square bg-white dark:bg-slate-900 rounded-lg overflow-hidden border-2 sm:border-[2.5px] border-slate-900 dark:border-slate-100 flex flex-col transition-colors duration-200 touch-manipulation"
       >
         {board.map((rowCells, r) => (
