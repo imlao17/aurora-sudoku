@@ -273,7 +273,20 @@ export function loadActiveGame(): ActiveGameState | null {
     if (!data) return null;
     const parsed = JSON.parse(data);
     if (!parsed || typeof parsed !== 'object') return null;
+    // Validate the shape enough that a corrupt save is discarded rather than
+    // crashing the render (e.g. a row that is not an array of 9 cells).
     if (!Array.isArray(parsed.board) || parsed.board.length !== 9) return null;
+    const boardOk = parsed.board.every(
+      (row: unknown) =>
+        Array.isArray(row) &&
+        row.length === 9 &&
+        row.every((cell: unknown) => cell && typeof cell === 'object')
+    );
+    if (!boardOk) return null;
+    if (parsed.difficulty !== 'easy' && parsed.difficulty !== 'medium' && parsed.difficulty !== 'hard') {
+      return null;
+    }
+    if (parsed.gameMode !== 'random' && parsed.gameMode !== 'daily') return null;
     return parsed as ActiveGameState;
   } catch {
     return null;

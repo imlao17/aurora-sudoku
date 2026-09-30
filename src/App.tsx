@@ -395,6 +395,19 @@ export function App() {
       const s = stateRef.current;
       const effectiveHints = pendingHintsUsed ?? s.hintsUsed;
       const effectiveMistakes = pendingMistakes ?? s.mistakesCount;
+
+      // A daily puzzle is fixed, so replaying today's solved board would let
+      // players farm best time, win counts and "three dailies in one day".
+      // Show the victory screen but skip re-recording.
+      const isDailyReplay =
+        s.gameMode === 'daily' && s.stats.completedDailies.includes(s.activeDateStr);
+
+      if (isDailyReplay) {
+        setShowVictoryModal(true);
+        setIsNewBestRecord(false);
+        return;
+      }
+
       const { isNewBest, updatedStats } = recordGameResult(
         s.difficulty,
         s.elapsedTime,

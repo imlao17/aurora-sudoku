@@ -113,7 +113,17 @@ describe('Storage & Time Formatting Suite', () => {
       const mockState = {
         difficulty: 'medium' as const,
         gameMode: 'random' as const,
-        board: Array.from({ length: 9 }, () => []),
+        board: Array.from({ length: 9 }, (_, r) =>
+          Array.from({ length: 9 }, (_, c) => ({
+            row: r,
+            col: c,
+            value: 0,
+            solution: 0,
+            isInitial: false,
+            notes: [],
+            isError: false,
+          }))
+        ),
         elapsedTime: 45,
         mistakesCount: 1,
         hintsRemaining: 2,
