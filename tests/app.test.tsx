@@ -21,6 +21,7 @@ describe('<App /> Integration Test Suite', () => {
     expect(screen.getByText('经典自由对局')).toBeDefined();
     expect(screen.getByText('每日一题挑战')).toBeDefined();
     expect(screen.getByText('解题技巧百科')).toBeDefined();
+    expect(screen.queryByText('检测到进行中对局')).toBeNull();
 
     // Click medium difficulty to start game
     const medBtn = screen.getByText('中等');

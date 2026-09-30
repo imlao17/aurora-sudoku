@@ -278,9 +278,10 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   }, []);
 
   // Mount initialization
-  // Restore the in-progress game *before* the first initGame call, so a reload
-  // resumes the saved difficulty/mode instead of silently starting a new medium
-  // game and wiping the save.
+  // Restore the in-progress game if present.
+  // If initialScreen is 'game', initialize a new game immediately.
+  // If initialScreen is 'home' and there is no active save, we do not prematurely
+  // generate a board or increment gamesPlayed until the user chooses to start.
   useEffect(() => {
     const saved = loadActiveGame();
     if (saved && !saved.isCompleted) {
@@ -297,14 +298,16 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
         };
       }
     }
-    initGame(difficulty, gameMode);
+    if (initialScreen === 'game') {
+      initGame(difficulty, gameMode);
+    }
     return () => {
       if (houseWaveTimerRef.current) {
         clearTimeout(houseWaveTimerRef.current);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialScreen]);
 
   // Timer interval
   useEffect(() => {
@@ -371,7 +374,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
 
   // Conflicts calculation
   const conflicts = useMemo(() => {
-    if (board.length === 0) return Array.from({ length: 9 }, () => Array(9).fill(false));
+    if (board.length < 9) return Array.from({ length: 9 }, () => Array(9).fill(false));
     const numGrid = board.map((row) => row.map((c) => c.value));
     return findConflicts(numGrid);
   }, [board]);
@@ -379,7 +382,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   // Accurate number counts: excludes erroneous cells so completion isn't spoofed
   const numberCounts = useMemo(() => {
     const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
-    if (board.length === 0) return counts;
+    if (board.length < 9) return counts;
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
         const cell = board[r][c];
@@ -694,7 +697,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
     const s = stateRef.current;
     if (!s.selectedCell || s.isPaused || s.isCompleted) return;
     const { row, col } = s.selectedCell;
-    const targetCell = s.board[row][col];
+    const targetCell = s.board[row]?.[col];
+    if (!targetCell) return;
 
     if (targetCell.isInitial) return;
     if (targetCell.value === 0 && targetCell.notes.length === 0) return;
@@ -910,9 +914,17 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   );
 
   const handleResumeGameFromHome = useCallback(() => {
+    if (board.length === 0) {
+      const saved = loadActiveGame();
+      if (saved && !saved.isCompleted) {
+        initGame(saved.difficulty, saved.gameMode, false);
+      } else {
+        initGame(difficulty, gameMode, true);
+      }
+    }
     setIsPaused(false);
     setCurrentScreen('game');
-  }, []);
+  }, [board.length, difficulty, gameMode, initGame]);
 
   const handleBackHome = useCallback(() => {
     setIsPaused(true);

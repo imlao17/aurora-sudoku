@@ -258,7 +258,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* 每日一题 */}
           <div
-            onClick={() => onStartGame('medium', 'daily')}
+            onClick={() => {
+              if (hasActiveGame && activeGameSummary?.gameMode === 'daily' && onResumeGame) {
+                onResumeGame();
+              } else {
+                onStartGame('medium', 'daily', isDailyCompletedToday);
+              }
+            }}
             className="p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col justify-between gap-3 hover:border-amber-400/60 dark:hover:border-amber-500/40 transition-all cursor-pointer group active:scale-[0.99]"
           >
             <div>

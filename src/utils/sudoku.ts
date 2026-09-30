@@ -380,6 +380,7 @@ export function generatePuzzle(
  */
 export function findConflicts(grid: Grid): boolean[][] {
   const conflicts: boolean[][] = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(false));
+  if (!Array.isArray(grid) || grid.length < GRID_SIZE) return conflicts;
 
   // Check rows
   for (let r = 0; r < GRID_SIZE; r++) {
