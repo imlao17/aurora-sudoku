@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
 import type { AchievementDef } from '../utils/achievements';
 import {
@@ -41,6 +41,13 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
 }) => {
   const current = achievements[0];
   const currentId = current?.id;
+  // Ref, not a dependency: the parent re-renders every second while the clock
+  // runs, which would otherwise re-fire the confetti and restart the 5s timer
+  // on every tick, so the toast would never auto-dismiss.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!currentId) return;
@@ -53,11 +60,11 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
     });
 
     const timer = setTimeout(() => {
-      onClose();
+      onCloseRef.current();
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, [currentId, onClose]);
+  }, [currentId]);
 
   if (!current) return null;
   const IconComponent = ICON_MAP[current.icon] || Trophy;

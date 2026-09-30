@@ -185,8 +185,15 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
   }
 
   const modalRef = useRef<HTMLDivElement>(null);
+  // Ref, not a dependency: the parent re-renders every second while the clock
+  // runs, and re-running this effect would steal focus back out of the search
+  // box mid-typing.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
-  // Focus trap and Escape handling
+  // Escape handling
   useEffect(() => {
     if (!isOpen) return;
     const previouslyFocused = document.activeElement as HTMLElement | null;
@@ -196,7 +203,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
         if (mobileDetailView) {
           setMobileDetailView(false);
         } else {
-          onClose();
+          onCloseRef.current();
         }
       }
     };
@@ -206,7 +213,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
       previouslyFocused?.focus?.();
     };
-  }, [isOpen, mobileDetailView, onClose]);
+  }, [isOpen, mobileDetailView]);
 
   // Reset quiz state when active technique changes
   const [prevActiveId, setPrevActiveId] = useState(activeTechniqueId);

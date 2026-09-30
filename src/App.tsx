@@ -210,7 +210,10 @@ export function App() {
     // Generate puzzle
     let rng = Math.random;
     if (mode === 'daily') {
-      const seed = hashStringToSeed(today);
+      // Seed must include the difficulty: with a date-only seed all three
+      // difficulties produce the same solution grid, so a player who did the
+      // easy daily already knows the answer to the medium and hard ones.
+      const seed = hashStringToSeed(`${today}:${diff}`);
       rng = createPRNG(seed);
     }
 
@@ -246,7 +249,25 @@ export function App() {
   }, []);
 
   // Mount initialization
+  // Restore the in-progress game *before* the first initGame call, so a reload
+  // resumes the saved difficulty/mode instead of silently starting a new medium
+  // game and wiping the save.
   useEffect(() => {
+    const saved = loadActiveGame();
+    if (saved && !saved.isCompleted) {
+      const isStaleDaily = saved.gameMode === 'daily' && saved.dateStr !== getTodayDateStr();
+      if (!isStaleDaily) {
+        setDifficulty(saved.difficulty);
+        setGameMode(saved.gameMode);
+        setActiveDateStr(saved.dateStr ?? getTodayDateStr());
+        initGame(saved.difficulty, saved.gameMode);
+        return () => {
+          if (houseWaveTimerRef.current) {
+            clearTimeout(houseWaveTimerRef.current);
+          }
+        };
+      }
+    }
     initGame(difficulty, gameMode);
     return () => {
       if (houseWaveTimerRef.current) {
@@ -308,8 +329,12 @@ export function App() {
     return counts;
   }, [board]);
 
-  // Check victory condition
-  const checkVictory = useCallback((currentBoard: CellData[][]) => {
+  // Check victory condition.
+  // `pendingHintsUsed` lets a caller that is *simultaneously* incrementing
+  // hintsUsed (i.e. applying a hint) report the up-to-date count, since the
+  // state update has not been committed yet at this point.
+  const checkVictory = useCallback(
+    (currentBoard: CellData[][], pendingHintsUsed?: number, pendingMistakes?: number) => {
     const numGrid = currentBoard.map((row) => row.map((c) => c.value));
     if (isBoardCompleted(numGrid)) {
       setIsCompleted(true);
@@ -318,13 +343,15 @@ export function App() {
 
       // Record in storage
       const s = stateRef.current;
+      const effectiveHints = pendingHintsUsed ?? s.hintsUsed;
+      const effectiveMistakes = pendingMistakes ?? s.mistakesCount;
       const { isNewBest, updatedStats } = recordGameResult(
         s.difficulty,
         s.elapsedTime,
         s.gameMode === 'daily',
         s.activeDateStr,
-        s.mistakesCount,
-        s.hintsUsed
+        effectiveMistakes,
+        effectiveHints
       );
 
       // Evaluate achievements
@@ -332,8 +359,8 @@ export function App() {
         difficulty: s.difficulty,
         gameMode: s.gameMode,
         timeTaken: s.elapsedTime,
-        mistakesCount: s.mistakesCount,
-        hintsUsed: s.hintsUsed,
+        mistakesCount: effectiveMistakes,
+        hintsUsed: effectiveHints,
         todayStr: s.activeDateStr,
         actionType: 'win',
       });
@@ -381,7 +408,12 @@ export function App() {
   }, [checkVictory]);
 
   // Fill number or notes into the selected cell (or specified target cell)
-  const handleInputNumber = useCallback((num: number, targetPos?: CellPosition) => {
+  const handleInputNumber = useCallback(
+    (
+      num: number,
+      targetPos?: CellPosition,
+      opts: { forceValue?: boolean; hintsUsedAfter?: number } = {}
+    ) => {
     const s = stateRef.current;
     setActivePaintDigit(num);
 
@@ -396,7 +428,7 @@ export function App() {
       return;
     }
 
-    if (s.isNoteMode) {
+    if (s.isNoteMode && !opts.forceValue) {
       // Pencil marks mode
       const currentNotes = [...targetCell.notes];
       const noteIdx = currentNotes.indexOf(num);
@@ -441,7 +473,9 @@ export function App() {
       soundManager.playNote();
     } else {
       // Primary number placement
-      const nextValue = targetCell.value === num ? 0 : num;
+      // `forceValue` (used by the hint system) always places the digit instead
+      // of toggling it off, and ignores note mode.
+      const nextValue = opts.forceValue ? num : targetCell.value === num ? 0 : num;
       const isError = nextValue !== 0 && nextValue !== targetCell.solution;
 
       if (isError) {
@@ -555,7 +589,7 @@ export function App() {
         }
       }
 
-      checkVictory(finalBoard);
+      checkVictory(finalBoard, opts.hintsUsedAfter, s.mistakesCount + (isError ? 1 : 0));
     }
   }, [checkVictory, numberCounts]);
 
@@ -713,9 +747,15 @@ export function App() {
 
   const handleApplyHint = useCallback(() => {
     if (!currentHint) return;
-    handleInputNumber(currentHint.suggestedValue, { row: currentHint.row, col: currentHint.col });
+    const nextHintsUsed = stateRef.current.hintsUsed + 1;
+    // Place the digit as a value even in note mode, and remember that this
+    // move consumed a hint so a winning hint cannot unlock hint-free achievements.
+    handleInputNumber(currentHint.suggestedValue, { row: currentHint.row, col: currentHint.col }, {
+      forceValue: true,
+      hintsUsedAfter: nextHintsUsed,
+    });
     setHintsRemaining((h) => Math.max(0, h - 1));
-    setHintsUsed((h) => h + 1);
+    setHintsUsed(nextHintsUsed);
     setCurrentHint(null);
   }, [currentHint, handleInputNumber]);
 

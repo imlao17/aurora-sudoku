@@ -97,7 +97,9 @@ export function loadStats(): GameStats {
           : {},
     };
   } catch {
-    return DEFAULT_STATS;
+    // Must be a fresh, mutable copy: callers mutate the returned object
+    // (e.g. `stats.dailyStreak = 1`), which throws on a frozen constant.
+    return getDefaultStats();
   }
 }
 

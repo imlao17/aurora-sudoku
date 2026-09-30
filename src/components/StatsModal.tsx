@@ -49,6 +49,12 @@ export const StatsModal: React.FC<StatsModalProps> = ({
   onClose,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  // Held in a ref so the listener below is created once per open rather than
+  // on every parent render (the parent re-renders each second while playing).
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
   const [activeMainTab, setActiveMainTab] = useState<'stats' | 'history' | 'achievements'>(initialTab);
   const [activeDiffTab, setActiveDiffTab] = useState<Difficulty>('medium');
   const [historyFilter, setHistoryFilter] = useState<'all' | 'daily' | 'random' | 'techniques'>('all');
@@ -80,7 +86,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key === 'Tab' && modalRef.current) {
@@ -108,7 +114,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
       previouslyFocused?.focus?.();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

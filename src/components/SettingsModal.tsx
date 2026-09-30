@@ -16,6 +16,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   onClose,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  // Kept in a ref: callers pass an inline arrow and the app re-renders every
+  // second while the clock runs, so depending on `onClose` directly would
+  // re-create this listener (and re-steal focus) on every tick.
+  const onCloseRef = useRef(onClose);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -30,7 +37,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (e.key === 'Tab' && modalRef.current) {
@@ -58,7 +65,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
       previouslyFocused?.focus?.();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
