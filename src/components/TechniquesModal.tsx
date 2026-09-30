@@ -491,12 +491,12 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                           {tech.name}
                         </span>
                         {techMastered ? (
-                          <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 font-bold text-[9px]">
+                          <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 font-bold text-[9px]">
                             <Check className="w-2.5 h-2.5" />
                             <span>已掌握</span>
                           </span>
                         ) : (
-                          <span className="shrink-0 inline-flex items-center px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 font-medium text-[9px]">
+                          <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500 font-medium text-[9px]">
                             待学
                           </span>
                         )}
@@ -509,7 +509,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                         {tech.englishName}
                       </span>
                       <span
-                        className={`px-1.5 py-0.2 rounded-full font-semibold ${
+                        className={`px-1.5 py-0.5 rounded-full font-semibold ${
                           tech.category === 'basic'
                             ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
                             : tech.category === 'intermediate'

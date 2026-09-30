@@ -433,7 +433,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
                     <div className="flex flex-col gap-0.5 min-w-0">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span
-                          className={`px-1.5 py-0.2 rounded font-bold text-[10px] ${
+                          className={`px-1.5 py-0.5 rounded font-bold text-[10px] ${
                             rec.mode === 'daily'
                               ? 'bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300'
                               : rec.difficulty === 'easy'

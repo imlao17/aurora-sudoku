@@ -19,6 +19,7 @@ import {
   loadStats,
   saveStats,
   recordGameResult,
+  recordGameStarted,
   loadActiveGame,
   saveActiveGame,
   clearActiveGame,
@@ -99,6 +100,9 @@ export function App() {
   const [completedHouseCells, setCompletedHouseCells] = useState<Record<string, boolean>>({});
   const [activePaintDigit, setActivePaintDigit] = useState<number | null>(null);
   const houseWaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // True when the tab was hidden mid-game and should resume on return, so a
+  // deliberate pause is not undone by switching tabs.
+  const resumeOnVisibleRef = useRef(false);
 
   // Synchronize soundManager
   useEffect(() => {
@@ -146,6 +150,7 @@ export function App() {
     visualSteps,
     visualStepIndex,
     isVisualPlaying,
+    currentHint,
   });
 
   useEffect(() => {
@@ -175,6 +180,7 @@ export function App() {
       visualSteps,
       visualStepIndex,
       isVisualPlaying,
+      currentHint,
     };
   });
 
@@ -245,7 +251,18 @@ export function App() {
     setHintsUsed(0);
     setHistory([]);
     setHistoryIndex(-1);
+    // Clear anything tied to the previous puzzle, or the board keeps showing
+    // the old solver snapshot and the clock stays frozen.
+    setIsVisualSolverActive(false);
+    setIsVisualPlaying(false);
+    setVisualSteps([]);
+    setVisualStepIndex(0);
+    setCurrentHint(null);
+    setCompletedHouseCells({});
     clearActiveGame();
+    // Count the attempt here (on a genuinely new puzzle) rather than on
+    // victory, so the win rate reflects games started, not only games won.
+    recordGameStarted(diff);
   }, []);
 
   // Mount initialization
@@ -306,6 +323,39 @@ export function App() {
 
     return () => clearInterval(timer);
   }, [isPaused, isCompleted, board.length, isVisualSolverActive]);
+
+  // Pause and persist when the tab goes to the background. Without this the
+  // clock keeps counting while the player is away from the board, and the last
+  // few moves can be lost if the OS kills a backgrounded page (iOS Safari).
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      const s = stateRef.current;
+      if (s.isCompleted || s.board.length === 0) return;
+
+      if (document.visibilityState === 'hidden') {
+        resumeOnVisibleRef.current = !s.isPaused;
+        saveActiveGame({
+          difficulty: s.difficulty,
+          gameMode: s.gameMode,
+          dateStr: s.activeDateStr,
+          board: s.board,
+          elapsedTime: s.elapsedTime,
+          mistakesCount: s.mistakesCount,
+          hintsRemaining: s.hintsRemaining,
+          hintsUsed: s.hintsUsed,
+          isPaused: s.isPaused,
+          isCompleted: false,
+        });
+        if (!s.isPaused) setIsPaused(true);
+      } else if (resumeOnVisibleRef.current) {
+        resumeOnVisibleRef.current = false;
+        setIsPaused(false);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   // Conflicts calculation
   const conflicts = useMemo(() => {
@@ -415,7 +465,9 @@ export function App() {
       opts: { forceValue?: boolean; hintsUsedAfter?: number } = {}
     ) => {
     const s = stateRef.current;
-    setActivePaintDigit(num);
+    // Only track a "paint" digit when fast input is on; otherwise the digit
+    // lingers and the first tap after enabling the mode fills it unexpectedly.
+    if (s.settings.fastInputMode) setActivePaintDigit(num);
 
     const cellPos = targetPos || s.selectedCell;
     if (!cellPos || s.isPaused || s.isCompleted) return;
@@ -835,13 +887,49 @@ export function App() {
 
   // Keyboard navigation & inputs
   useEffect(() => {
+    const isFormElement = (target: EventTarget | null): boolean =>
+      target instanceof HTMLElement &&
+      (target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement ||
+        target instanceof HTMLSelectElement ||
+        target.isContentEditable);
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const s = stateRef.current;
       // Don't intercept if an active modal is open or target is form element
-      if (s.showVictoryModal || s.showStatsModal || s.showSettingsModal || s.showHelpModal || s.showTechniquesModal) return;
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (
+        s.showVictoryModal ||
+        s.showStatsModal ||
+        s.showSettingsModal ||
+        s.showHelpModal ||
+        s.showTechniquesModal ||
+        s.currentHint
+      )
+        return;
+      if (isFormElement(e.target)) return;
 
       const key = e.key;
+
+      // Undo/Redo are the only modifier combinations we own, and must be
+      // checked before the plain-key shortcuts below so that Ctrl/Cmd+Z does
+      // not fall through to the letter-key handlers.
+      if ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'z' && !e.shiftKey) {
+        handleUndo();
+        e.preventDefault();
+        return;
+      }
+      if (
+        ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'y') ||
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && key.toLowerCase() === 'z')
+      ) {
+        handleRedo();
+        e.preventDefault();
+        return;
+      }
+
+      // Everything else is a bare key: leave browser shortcuts (Cmd+S, Cmd+P,
+      // Cmd+A, …) and Alt/Option combos to the browser.
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
 
       // Handle Visual Solver hotkeys
       if (s.isVisualSolverActive) {
@@ -947,23 +1035,6 @@ export function App() {
         e.preventDefault();
         return;
       }
-
-      // Undo (Ctrl+Z or Z)
-      if ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'z' && !e.shiftKey) {
-        handleUndo();
-        e.preventDefault();
-        return;
-      }
-
-      // Redo (Ctrl+Y or Ctrl+Shift+Z)
-      if (
-        ((e.ctrlKey || e.metaKey) && key.toLowerCase() === 'y') ||
-        ((e.ctrlKey || e.metaKey) && e.shiftKey && key.toLowerCase() === 'z')
-      ) {
-        handleRedo();
-        e.preventDefault();
-        return;
-      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -980,7 +1051,7 @@ export function App() {
   const currentVisualStep = isVisualSolverActive ? visualSteps[visualStepIndex] : null;
 
   return (
-    <div className={`min-h-[100dvh] min-h-screen flex flex-col justify-between selection:bg-sky-500/30 transition-colors duration-200 relative overflow-x-hidden safe-pt theme-${settings.theme} ${
+    <div className={`min-h-[100dvh] flex flex-col justify-between selection:bg-sky-500/30 transition-colors duration-200 relative overflow-x-hidden safe-pt theme-${settings.theme} ${
       settings.theme === 'nordic'
         ? 'bg-slate-50 text-slate-900'
         : settings.theme === 'zen'

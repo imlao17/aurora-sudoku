@@ -49,7 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
               <h1 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-1 m-0 truncate">
                 极光数独
               </h1>
-              <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.2 sm:py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 shrink-0">
+              <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 sm:py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 shrink-0">
                 Pro
               </span>
             </div>

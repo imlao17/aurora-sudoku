@@ -52,7 +52,7 @@ export const Board: React.FC<BoardProps> = ({
       <div
         role="grid"
         aria-label="数独棋盘 9乘9"
-        className="w-full aspect-square bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 flex flex-col transition-colors duration-200 shadow-sm touch-manipulation"
+        className="relative w-full aspect-square bg-white dark:bg-slate-900 rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 flex flex-col transition-colors duration-200 shadow-sm touch-manipulation"
       >
         {board.map((rowCells, r) => (
           <div key={`row-${r}`} role="row" className="flex-1 grid grid-cols-9 w-full">
@@ -107,6 +107,7 @@ export const Board: React.FC<BoardProps> = ({
                   isSelected={isSelected}
                   isRelated={isRelated}
                   isSameNumber={isSameNumber}
+                  highlightDigit={selectedValue}
                   isConflict={isConflict}
                   showError={settings.realtimeErrorCheck}
                   isTarget={isTarget}

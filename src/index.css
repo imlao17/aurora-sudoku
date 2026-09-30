@@ -204,3 +204,12 @@
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
+
+/* Horizontal tab strips that scroll but should not show a scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

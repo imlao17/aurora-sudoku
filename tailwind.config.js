@@ -8,6 +8,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        // `slate-850` is not part of Tailwind's default palette; several
+        // components reference it for hover/background states.
+        slate: {
+          850: '#172033',
+        },
         board: {
           bg: '#0f172a',
           surface: '#1e293b',
@@ -29,7 +34,16 @@ export default {
         sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'Fira Code', 'monospace'],
       },
+      boxShadow: {
+        // Tailwind v3 has no `shadow-xs` (that name only exists in v4), but the
+        // components use it for subtle elevation.
+        xs: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+      },
       keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
         pop: {
           '0%': { transform: 'scale(0.85)' },
           '50%': { transform: 'scale(1.12)' },
@@ -46,6 +60,7 @@ export default {
         }
       },
       animation: {
+        fadeIn: 'fadeIn 0.2s ease-out',
         pop: 'pop 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
         shake: 'shake 0.3s ease-in-out',
         glow: 'glow 2s infinite ease-in-out',

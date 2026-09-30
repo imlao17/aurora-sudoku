@@ -298,8 +298,12 @@ describe('React Components Test Suite', () => {
       fireEvent.keyDown(window, { key: 'Escape' });
       expect(onClose).toHaveBeenCalled();
 
+      // Enter is intentionally not a global shortcut: it used to trigger
+      // "play again" even while focus was on Close or Share, so activation is
+      // left to the focused button instead.
+      onPlayAgain.mockClear();
       fireEvent.keyDown(window, { key: 'Enter' });
-      expect(onPlayAgain).toHaveBeenCalled();
+      expect(onPlayAgain).not.toHaveBeenCalled();
 
       const playAgainBtn = screen.getByText('再来一局');
       fireEvent.click(playAgainBtn);

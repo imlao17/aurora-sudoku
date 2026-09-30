@@ -93,7 +93,7 @@ export const Controls: React.FC<ControlsProps> = memo(({
         <div className="relative">
           <Edit3 className={`w-4 h-4 sm:w-5 sm:h-5 mb-0.5 ${isNoteMode ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'}`} />
           <span
-            className={`absolute -top-1 -right-3.5 sm:-right-4 px-1 py-0.2 rounded-full text-[8px] sm:text-[9px] font-bold uppercase ${
+            className={`absolute -top-1 -right-3.5 sm:-right-4 px-1 py-0.5 rounded-full text-[8px] sm:text-[9px] font-bold uppercase ${
               isNoteMode ? 'bg-amber-500 text-white font-bold' : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
             }`}
           >

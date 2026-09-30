@@ -6,6 +6,8 @@ interface CellProps {
   isSelected: boolean;
   isRelated: boolean;
   isSameNumber: boolean;
+  /** Digit the player has selected, so only that pencil mark is highlighted. */
+  highlightDigit?: number | null;
   isConflict: boolean;
   showError: boolean;
   isTarget?: boolean;
@@ -22,6 +24,7 @@ export const Cell: React.FC<CellProps> = memo(({
   isSelected,
   isRelated,
   isSameNumber,
+  highlightDigit = null,
   isConflict,
   showError,
   isTarget = false,
@@ -122,7 +125,7 @@ export const Cell: React.FC<CellProps> = memo(({
                 {hasNote && (
                   <span
                     className={`font-semibold ${
-                      isSameNumber
+                      highlightDigit === num
                         ? 'text-blue-600 font-bold scale-110 dark:text-sky-300'
                         : isTarget
                         ? 'text-amber-600 font-bold dark:text-amber-300'

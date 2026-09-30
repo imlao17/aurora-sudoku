@@ -31,8 +31,17 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
   onClose,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Refs, so the keydown listener is not rebuilt on every parent render (the
+  // parent re-renders each second while the clock runs).
+  const onCloseRef = useRef(onClose);
+  const onPlayAgainRef = useRef(onPlayAgain);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+    onPlayAgainRef.current = onPlayAgain;
+  }, [onClose, onPlayAgain]);
 
   // Keyboard navigation & Focus management
   useEffect(() => {
@@ -48,13 +57,12 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onCloseRef.current();
         return;
       }
-      if (e.key === 'Enter') {
-        onPlayAgain();
-        return;
-      }
+      // Enter is deliberately *not* bound globally: it activated "play again"
+      // even when focus was on Close or Share, and the buttons already handle
+      // Enter natively.
       if (e.key === 'Tab' && modalRef.current) {
         const focusableElements = Array.from(
           modalRef.current.querySelectorAll<HTMLElement>(
@@ -83,7 +91,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         clearTimeout(copyTimerRef.current);
       }
     };
-  }, [isOpen, onClose, onPlayAgain]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -135,19 +143,39 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
       `🔥 快来打破我的纪录！`;
 
     try {
-      if (navigator.clipboard) {
+      if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(text);
-        setCopied(true);
-        if (copyTimerRef.current) {
-          clearTimeout(copyTimerRef.current);
-        }
-        copyTimerRef.current = setTimeout(() => {
-          setCopied(false);
-          copyTimerRef.current = null;
-        }, 2000);
+      } else {
+        // Clipboard API is unavailable over plain http (e.g. LAN testing) and
+        // in some embedded webviews, so fall back to the legacy path.
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        if (!ok) throw new Error('execCommand copy rejected');
       }
+      setCopied(true);
+      if (copyTimerRef.current) {
+        clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = setTimeout(() => {
+        setCopied(false);
+        copyTimerRef.current = null;
+      }, 2000);
     } catch (e) {
       console.warn('Failed to copy share text:', e);
+      setCopyFailed(true);
+      if (copyTimerRef.current) {
+        clearTimeout(copyTimerRef.current);
+      }
+      copyTimerRef.current = setTimeout(() => {
+        setCopyFailed(false);
+        copyTimerRef.current = null;
+      }, 2000);
     }
   };
 
@@ -250,7 +278,9 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             className="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-xs border border-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/80 dark:text-slate-200 dark:border-slate-700 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
             <Share2 className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
-            <span>{copied ? '已复制战报到剪贴板！' : '分享战绩'}</span>
+            <span>
+              {copied ? '已复制战报到剪贴板！' : copyFailed ? '复制失败，请手动截图' : '分享战绩'}
+            </span>
           </button>
         </div>
       </div>

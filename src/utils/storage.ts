@@ -165,6 +165,17 @@ export function toggleMasteredTechnique(techId: string): { isMastered: boolean; 
   return { isMastered: !exists, allMastered: updated };
 }
 
+export function recordGameStarted(difficulty: Difficulty): void {
+  const stats = loadStats();
+  if (!stats[difficulty]) {
+    stats[difficulty] = createInitialDiffStats();
+  }
+  stats[difficulty].gamesPlayed += 1;
+  // A fresh game ends any previous win streak for that difficulty.
+  stats[difficulty].currentStreak = 0;
+  saveStats(stats);
+}
+
 export function recordGameResult(
   difficulty: Difficulty,
   timeTakenSeconds: number,
@@ -179,7 +190,8 @@ export function recordGameResult(
   }
   const diffStats = stats[difficulty];
 
-  diffStats.gamesPlayed += 1;
+  // gamesPlayed is counted when a game starts (see recordGameStarted), so that
+  // the win rate is wins / games actually attempted rather than always 100%.
   diffStats.gamesWon += 1;
   diffStats.totalTime += timeTakenSeconds;
 

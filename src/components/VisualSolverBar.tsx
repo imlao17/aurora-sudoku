@@ -59,8 +59,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
       case 'naked-single':
         return 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-500/10 dark:border-emerald-500/30';
       case 'hidden-single-box':
-      case 'hidden-single-row':
-      case 'hidden-single-col':
+      case 'hidden-single-line':
         return 'text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-400 dark:bg-sky-500/10 dark:border-sky-500/30';
       case 'pointing-pair':
       case 'box-line-reduction':
