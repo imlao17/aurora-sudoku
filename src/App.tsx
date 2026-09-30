@@ -45,7 +45,6 @@ import { TECHNIQUES_DATA } from './constants/techniques';
 import { analyzeNextHint, type SmartHint } from './utils/hint';
 import { generateVisualSolveSteps, type VisualSolveStep } from './utils/visualSolver';
 import { evaluateAchievements, type AchievementDef } from './utils/achievements';
-import { Zap } from 'lucide-react';
 
 export interface AppProps {
   initialScreen?: 'home' | 'game';
@@ -1321,26 +1320,27 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
                   onHint={handleHint}
                 />
 
-                {/* Fast Input Mode Indicator on mobile */}
+                {/* Fast Input Mode Indicator */}
                 {settings.fastInputMode && (
-                  <div className="w-full max-w-xl mx-auto px-3 sm:px-4 pb-1 flex items-center justify-between text-[11px] text-amber-700 dark:text-amber-300 select-none animate-fadeIn">
-                    <span className="flex items-center gap-1 font-medium">
-                      <Zap className="w-3.5 h-3.5 fill-amber-500 text-amber-600" />
+                  <div className="w-full max-w-xl mx-auto px-3 sm:px-4 pb-1.5 flex items-center justify-between text-xs select-none animate-fadeIn">
+                    <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-sky-400 animate-pulse" />
                       <span>
                         数字先行模式：
                         {activePaintDigit ? (
-                          <strong>已选【{activePaintDigit}】，点空格填入</strong>
+                          <span className="font-bold text-slate-900 dark:text-white">已加载数字【{activePaintDigit}】，点击空白格直接填入</span>
                         ) : (
-                          '轻点下方数字激活'
+                          <span className="text-slate-400">轻点下方数字激活画笔</span>
                         )}
                       </span>
                     </span>
                     {activePaintDigit && (
                       <button
+                        type="button"
                         onClick={() => setActivePaintDigit(null)}
-                        className="text-[10px] text-slate-500 hover:text-slate-800 underline dark:text-slate-400 dark:hover:text-slate-200 cursor-pointer"
+                        className="text-[11px] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors cursor-pointer"
                       >
-                        取消选择
+                        退出画笔
                       </button>
                     )}
                   </div>

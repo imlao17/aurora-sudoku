@@ -55,7 +55,7 @@ export const Cell: React.FC<CellProps> = memo(({
   let bgClass = 'bg-transparent hover:bg-slate-100/50 dark:hover:bg-slate-800/30';
 
   if (isHouseCompleted) {
-    bgClass = 'bg-amber-100/90 ring-2 ring-amber-400 animate-house-wave z-20 dark:bg-amber-400/25 dark:ring-amber-400';
+    bgClass = 'bg-blue-100/90 animate-house-wave z-20 dark:bg-blue-900/50';
   } else if (isTarget) {
     bgClass = 'bg-amber-100/90 ring-2 ring-amber-500 animate-pulse z-20 dark:bg-amber-500/25 dark:ring-amber-400';
   } else if (isCause) {

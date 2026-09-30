@@ -76,7 +76,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
 
   return (
     <div className="w-full max-w-xl mx-auto px-2.5 sm:px-4 mt-2 sm:mt-3 select-none animate-fadeIn pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:pb-2">
-      <div className="rounded-2xl bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 shadow-xl p-3 sm:p-4 backdrop-blur-md flex flex-col gap-2.5 sm:gap-3 text-slate-900 dark:text-slate-100">
+      <div className="rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-100 p-3 sm:p-4 flex flex-col gap-2.5 sm:gap-3 text-slate-900 dark:text-slate-100">
         {/* Top Header: Title, Step Counter, Exit Button */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
                 onClick={() => onSpeedChange(s)}
                 className={`px-2 py-0.5 rounded-lg font-semibold transition-all cursor-pointer ${
                   speed === s
-                    ? 'bg-blue-600 text-white shadow-xs font-semibold'
+                    ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950 font-semibold'
                     : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
                 }`}
               >
@@ -179,7 +179,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
             <button
               onClick={() => onStepChange(0)}
               disabled={currentStepIndex === 0}
-              className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-transparent"
+              className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-850 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-transparent"
               title="跳转到起点"
             >
               <ChevronsLeft className="w-4 h-4" />
@@ -187,7 +187,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
             <button
               onClick={() => onStepChange(Math.max(0, currentStepIndex - 1))}
               disabled={currentStepIndex === 0}
-              className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-transparent"
+              className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-850 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-transparent"
               title="上一步"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -196,7 +196,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
             {/* Play/Pause Button */}
             <button
               onClick={onTogglePlay}
-              className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-1.5 rounded-lg bg-slate-950 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-100 text-white dark:text-slate-950 font-bold text-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
             >
               {isPlaying ? (
                 <>
