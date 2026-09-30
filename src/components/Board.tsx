@@ -48,11 +48,11 @@ export const Board: React.FC<BoardProps> = ({
 
   return (
     <div className="w-full max-w-[min(480px,calc(100dvh-290px))] aspect-square mx-auto px-1.5 sm:px-0 select-none touch-manipulation">
-      {/* 9x9 Floating Apple Board Frame */}
+      {/* 9x9 Classic Ink Board Frame */}
       <div
         role="grid"
         aria-label="数独棋盘 9乘9"
-        className="relative w-full aspect-square bg-white dark:bg-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden shadow-card dark:shadow-none ring-1 ring-black/[0.06] dark:ring-white/[0.08] flex flex-col transition-colors duration-200 touch-manipulation"
+        className="relative w-full aspect-square bg-white dark:bg-slate-900 rounded-lg overflow-hidden border-2 sm:border-[2.5px] border-slate-900 dark:border-slate-100 flex flex-col transition-colors duration-200 touch-manipulation"
       >
         {board.map((rowCells, r) => (
           <div key={`row-${r}`} role="row" className="flex-1 grid grid-cols-9 w-full">
