@@ -533,9 +533,10 @@ export interface AutoFillResult {
 }
 
 /**
- * Automatically detects and fills any row, column, or 3x3 box that has
- * exactly one empty cell remaining with a unique valid digit.
- * Cascades iteratively if filling a cell causes another house to have only 1 empty cell left.
+ * Automatically detects and fills:
+ * 1. Any row, column, or 3x3 box that has exactly one empty cell remaining.
+ * 2. Any digit (1..9) that has already been placed 8 times across the board (auto-fills the 9th instance).
+ * Cascades iteratively if filling a cell causes another house or digit to qualify.
  */
 export function autoFillLastRemainingCells(
   board: CellData[][],
@@ -544,6 +545,15 @@ export function autoFillLastRemainingCells(
   let currentBoard = board.map((rList) =>
     rList.map((cData) => ({ ...cData, notes: [...cData.notes] }))
   );
+
+  // If the board already contains conflicts (e.g. duplicate numbers due to player error),
+  // do not perform any auto-filling until the conflict is resolved.
+  const numGrid = currentBoard.map((rList) => rList.map((c) => c.value));
+  const conflicts = findConflicts(numGrid);
+  if (conflicts.some((row) => row.some(Boolean))) {
+    return { updatedBoard: currentBoard, filledCells: [], deltas: [] };
+  }
+
   const filledCells: { row: number; col: number; value: number }[] = [];
   const deltas: CellDelta[] = [];
 
@@ -656,6 +666,52 @@ export function autoFillLastRemainingCells(
             col: pos.col,
             value: missingDigit,
           });
+        }
+      }
+    }
+
+    // 4. Check Digits (1..9): when 8 instances of digit d are already placed across the board
+    for (let d = 1; d <= 9; d++) {
+      let count = 0;
+      const rowsWithD = new Set<number>();
+      const colsWithD = new Set<number>();
+
+      for (let r = 0; r < GRID_SIZE; r++) {
+        for (let c = 0; c < GRID_SIZE; c++) {
+          if (currentBoard[r][c].value === d) {
+            count++;
+            rowsWithD.add(r);
+            colsWithD.add(c);
+          }
+        }
+      }
+
+      // If exactly 8 distinct rows and cols contain digit d (no invalid duplicates of d)
+      if (count === 8 && rowsWithD.size === 8 && colsWithD.size === 8) {
+        let missingRow = -1;
+        let missingCol = -1;
+        for (let r = 0; r < GRID_SIZE; r++) {
+          if (!rowsWithD.has(r)) {
+            missingRow = r;
+            break;
+          }
+        }
+        for (let c = 0; c < GRID_SIZE; c++) {
+          if (!colsWithD.has(c)) {
+            missingCol = c;
+            break;
+          }
+        }
+
+        if (missingRow !== -1 && missingCol !== -1) {
+          const cell = currentBoard[missingRow][missingCol];
+          if (cell.value === 0 && cell.solution === d) {
+            toFill.set(`${missingRow}-${missingCol}`, {
+              row: missingRow,
+              col: missingCol,
+              value: d,
+            });
+          }
         }
       }
     }

@@ -70,7 +70,7 @@ export interface GameSettings {
   highlightConflicts: boolean;
   realtimeErrorCheck: boolean;
   autoClearNotes: boolean;
-  autoFillLastRemaining: boolean; // 自动填入行列九宫格唯一剩余空格
+  autoFillLastRemaining: boolean; // 最后一个数字自动填充（行列宫仅剩1格或某数字已填满8个时自动补全）
   soundEnabled: boolean;
 }
 

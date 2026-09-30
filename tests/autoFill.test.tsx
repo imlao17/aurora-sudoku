@@ -115,6 +115,31 @@ describe('autoFillLastRemainingCells logic', () => {
     expect(result.updatedBoard[0][8].value).toBe(2);
     expect(result.updatedBoard[1][8].notes).toEqual([4]);
   });
+
+  it('auto-fills the 9th instance of a digit when 8 instances are placed even if houses have multiple empties', () => {
+    const board = createMockBoard(VALID_SOLUTION);
+    // In VALID_SOLUTION, digit 5 is at (0,0), (1,5), (2,6), (3,1), (4,4), (5,7), (6,3), (7,8), and (8,2).
+    // Clear (8, 2) [value 5].
+    board[8][2].value = 0;
+    // Clear (8, 0) [value 3] -> Row 8 and Box 6 now have 2 empty cells!
+    board[8][0].value = 0;
+    // Clear (0, 2) [value 4] -> Col 2 now has 2 empty cells!
+    board[0][2].value = 0;
+    // Clear (0, 8) [value 2] -> Row 0 now has 2 empty cells!
+    board[0][8].value = 0;
+
+    // Notice: None of Row 8, Col 2, Box 6, Row 0 have only 1 empty cell.
+    // However, digit 5 has exactly 8 instances on the board!
+    const result = autoFillLastRemainingCells(board, true);
+
+    // Should fill (8, 2) with 5 via digit check, and then cascade to fill the rest!
+    expect(result.filledCells.some((c) => c.row === 8 && c.col === 2 && c.value === 5)).toBe(true);
+    expect(result.updatedBoard[8][2].value).toBe(5);
+    // After (8, 2) is filled, Row 8 has only (8, 0) left (value 3), Col 2 has only (0, 2) left (value 4)
+    expect(result.updatedBoard[8][0].value).toBe(3);
+    expect(result.updatedBoard[0][2].value).toBe(4);
+    expect(result.updatedBoard[0][8].value).toBe(2);
+  });
 });
 
 describe('SettingsModal auto-fill toggle switch', () => {
@@ -129,13 +154,13 @@ describe('SettingsModal auto-fill toggle switch', () => {
       />
     );
 
-    expect(screen.getByText('最后空格自动补全 (唯一余数)')).toBeTruthy();
+    expect(screen.getByText('最后一个数字自动填充')).toBeTruthy();
     expect(
-      screen.getByText('当某一行、某一列或九宫格只剩最后一个空格时，自动计算并填入')
+      screen.getByText('当某行/列/宫仅剩最后一格，或全盘某数字已填满8个时，自动补全最后一个数字')
     ).toBeTruthy();
 
     // Toggle the switch
-    const switchBtn = screen.getByRole('switch', { name: '切换最后空格自动补全 (唯一余数)' });
+    const switchBtn = screen.getByRole('switch', { name: '切换最后一个数字自动填充' });
     fireEvent.click(switchBtn);
     expect(onUpdateSettings).toHaveBeenCalledWith({ autoFillLastRemaining: false });
   });
@@ -153,7 +178,7 @@ describe('App auto-fill integration', () => {
     const settingsBtn = screen.getByLabelText('打开游戏偏好设置');
     fireEvent.click(settingsBtn);
 
-    const toggle = screen.getByRole('switch', { name: '切换最后空格自动补全 (唯一余数)' });
+    const toggle = screen.getByRole('switch', { name: '切换最后一个数字自动填充' });
     expect(toggle).toBeTruthy();
   });
 });

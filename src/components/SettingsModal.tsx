@@ -156,8 +156,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     },
     {
       key: 'autoFillLastRemaining' as const,
-      label: '最后空格自动补全 (唯一余数)',
-      desc: '当某一行、某一列或九宫格只剩最后一个空格时，自动计算并填入',
+      label: '最后一个数字自动填充',
+      desc: '当某行/列/宫仅剩最后一格，或全盘某数字已填满8个时，自动补全最后一个数字',
       icon: <Wand2 className="w-4 h-4 text-amber-500 dark:text-amber-400" />,
       checked: settings.autoFillLastRemaining,
     },
