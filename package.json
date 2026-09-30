@@ -1,7 +1,8 @@
 {
-  "name": "-",
+  "name": "aurora-sudoku",
+  "description": "极光数独 - 纯粹·优雅·极致手感的现代数独 Web 单页应用",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
