@@ -36,7 +36,7 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
                   : isMatched
                   ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950 font-black'
                   : isNoteMode
-                  ? 'border-amber-400 bg-amber-50/60 dark:bg-amber-950/20 text-amber-900 dark:text-amber-200'
+                  ? 'border-slate-400 dark:border-slate-600 bg-slate-100/70 dark:bg-slate-800/60 text-slate-900 dark:text-white'
                   : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-900 dark:text-white'
               }`}
               aria-label={`填入数字 ${num}，剩余 ${remaining} 个`}
@@ -50,7 +50,7 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
               {/* Remaining count badge / Completed badge */}
               <span className="text-[10px] font-semibold leading-none">
                 {isComplete ? (
-                  <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400 stroke-[3]" />
+                  <Check className="w-3 h-3 text-slate-500 dark:text-slate-400 stroke-[2.5]" />
                 ) : (
                   <span className={isMatched ? 'text-white/70 dark:text-black/70' : 'text-slate-400'}>
                     {remaining}
@@ -60,7 +60,7 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
 
               {/* Tiny note indicator dot if in note mode */}
               {isNoteMode && !isComplete && (
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-amber-500" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white" />
               )}
             </button>
           );

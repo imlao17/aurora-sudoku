@@ -75,15 +75,15 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
       aria-live="assertive"
       className="fixed top-6 inset-x-4 z-50 max-w-sm mx-auto animate-pop select-none"
     >
-      <div className="rounded-2xl bg-white dark:bg-slate-900 border-2 border-amber-500/80 shadow-2xl p-4 backdrop-blur-md flex flex-col gap-2.5 text-slate-900 dark:text-slate-100">
+      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 shadow-2xl p-4 backdrop-blur-md flex flex-col gap-2.5 text-slate-900 dark:text-slate-100">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-amber-50 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-500/40 flex items-center justify-center shrink-0 shadow-xs">
-              <IconComponent className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-950 flex items-center justify-center shrink-0 shadow-xs">
+              <IconComponent className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/20 dark:text-amber-300 dark:border-amber-500/40">
+                <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-slate-100 text-slate-900 border border-slate-200 dark:bg-slate-800 dark:text-white dark:border-slate-700">
                   🎉 成就解锁
                 </span>
                 {achievements.length > 1 && (
@@ -92,7 +92,7 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white mt-1 leading-snug">
+              <h3 className="text-sm font-bold text-slate-950 dark:text-white mt-1 leading-snug">
                 {current.name}
               </h3>
             </div>
@@ -114,13 +114,13 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
         <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-200 dark:border-slate-800">
           <button
             onClick={onViewAll}
-            className="px-3 py-1.5 rounded-xl text-xs font-medium text-amber-700 hover:text-amber-800 hover:bg-amber-50 dark:text-amber-300 dark:hover:text-amber-200 dark:hover:bg-amber-500/10 transition-all cursor-pointer"
+            className="px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800 transition-all cursor-pointer"
           >
             查看成就墙
           </button>
           <button
             onClick={onClose}
-            className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs shadow-xs active:scale-95 transition-all cursor-pointer"
+            className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-xs shadow-xs active:scale-95 transition-all cursor-pointer"
           >
             太棒了！
           </button>

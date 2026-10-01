@@ -1380,7 +1380,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
                 {settings.fastInputMode && (
                   <div className="w-full max-w-xl mx-auto px-3 sm:px-4 pb-1.5 flex items-center justify-between text-xs select-none animate-fadeIn">
                     <span className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-sky-400 animate-pulse" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white animate-pulse" />
                       <span>
                         数字先行模式：
                         {activePaintDigit ? (

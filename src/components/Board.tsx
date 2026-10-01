@@ -167,17 +167,17 @@ export const Board: React.FC<BoardProps> = ({
 
         {/* Anti-cheat Pause Overlay */}
         {isPaused && (
-          <div className="absolute inset-0 z-20 backdrop-blur-md bg-white/90 dark:bg-slate-950/85 flex flex-col items-center justify-center p-6 text-center animate-fadeIn">
-            <div className="w-16 h-16 rounded-full bg-blue-50 dark:bg-sky-500/20 border border-blue-200 dark:border-sky-500/40 flex items-center justify-center mb-4 text-blue-600 dark:text-sky-400 shadow-sm">
-              <Play className="w-8 h-8 fill-blue-600 dark:fill-sky-400 ml-1" />
+          <div className="absolute inset-0 z-20 backdrop-blur-md bg-white/95 dark:bg-slate-950/90 flex flex-col items-center justify-center p-6 text-center animate-fadeIn">
+            <div className="w-14 h-14 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center mb-3 text-slate-900 dark:text-white shadow-xs">
+              <Play className="w-6 h-6 fill-current ml-0.5" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">游戏已暂停</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-xs">
+            <h3 className="text-lg font-bold text-slate-950 dark:text-white mb-1.5">游戏已暂停</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5 max-w-xs leading-relaxed">
               计时器已静止，盘面防窥保护中。随时点击下方按钮继续挑战。
             </p>
             <button
               onClick={onResume}
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-sm active:scale-95 transition-all cursor-pointer"
+              className="px-6 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-xs shadow-xs active:scale-95 transition-all cursor-pointer"
             >
               继续游戏
             </button>

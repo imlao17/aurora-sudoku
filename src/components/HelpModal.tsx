@@ -91,14 +91,14 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
         {/* Header */}
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 dark:bg-sky-500/20 dark:border-sky-500/40 flex items-center justify-center text-blue-600 dark:text-sky-400">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center text-slate-800 dark:text-slate-200">
               <Keyboard className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">
+              <h2 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-tight">
                 快捷键操作指南
               </h2>
-              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">全端沉浸式极速解题手册</p>
+              <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">纸墨极速解题交互手册</p>
             </div>
           </div>
           <button
@@ -113,22 +113,23 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
         {/* Content body */}
         <div className="my-3 sm:my-4 space-y-3 overflow-y-auto pr-1">
           {/* Mobile touch guide */}
-          <div className="p-3 rounded-2xl bg-amber-50/70 border border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30 flex flex-col gap-1.5">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-amber-800 dark:text-amber-300">
-              <Smartphone className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-              <span>📱 移动触屏操作秘籍</span>
+          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white">
+              <Smartphone className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+              <span>📱 移动触屏交互手势</span>
             </div>
-            <ul className="text-[11px] text-slate-700 dark:text-slate-300 space-y-1 m-0 pl-4 list-disc leading-relaxed">
+            <ul className="text-[11px] text-slate-600 dark:text-slate-300 space-y-1 m-0 pl-4 list-disc leading-relaxed">
               <li><strong>点选落子</strong>：轻点棋盘空格，再按底部数字填入或标记笔记。</li>
-              <li><strong>数字先行（快速连点）</strong>：在设置中开启「数字先行」后，先轻按底部数字，再连续轻点棋盘空格极速落子。</li>
+              <li><strong>滑动选择</strong>：在棋盘上向上下左右轻扫即可连续平移光标。</li>
+              <li><strong>数字先行（快速连点）</strong>：在设置中开启「数字先行」后，先轻按底部数字，再连续轻点空格极速落子。</li>
               <li><strong>全盘同数点亮</strong>：轻按任意已有数字的格子，全盘相同数字高亮定位。</li>
-              <li><strong>触觉振动反馈</strong>：落子、擦除与通关均配备真实清脆震动反馈。</li>
+              <li><strong>触觉振动反馈</strong>：落子、擦除与通关均配备真实清脆微触震动。</li>
             </ul>
           </div>
 
           {/* Desktop keyboard guide title */}
           <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 pt-1">
-            <Keyboard className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+            <Keyboard className="w-3.5 h-3.5 text-slate-500" />
             <span>⌨️ 桌面端键盘快捷键</span>
           </div>
 
@@ -140,7 +141,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
                 className="flex items-center justify-between p-2 sm:p-2.5 rounded-xl bg-slate-50 border border-slate-200 dark:bg-slate-950/70 dark:border-slate-800/80"
               >
                 <span className="text-[11px] sm:text-xs text-slate-700 dark:text-slate-300 font-medium">{s.label}</span>
-                <kbd className="px-2 py-0.5 sm:py-1 rounded-md bg-white border border-slate-200 dark:bg-slate-800 dark:border-slate-700 font-mono text-[10px] sm:text-[11px] text-blue-600 dark:text-sky-300 font-bold shadow-xs">
+                <kbd className="px-2 py-0.5 sm:py-1 rounded-md bg-white border border-slate-200 dark:bg-slate-800 dark:border-slate-700 font-mono text-[10px] sm:text-[11px] text-slate-900 dark:text-white font-bold shadow-xs">
                   {s.key}
                 </kbd>
               </div>
@@ -148,8 +149,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           </div>
 
           {/* Tip */}
-          <div className="p-2.5 sm:p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 dark:bg-sky-500/10 dark:border-sky-500/20 dark:text-sky-300 text-xs flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-blue-600 dark:text-sky-400 shrink-0" />
+          <div className="p-2.5 sm:p-3 rounded-xl bg-slate-100/80 border border-slate-200 text-slate-700 dark:bg-slate-800/60 dark:border-slate-700 dark:text-slate-300 text-xs flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-slate-500 shrink-0" />
             <span>提示：手机浏览器可选择「添加到主屏幕」即可像原生 App 一样全屏离线玩！</span>
           </div>
         </div>
@@ -157,7 +158,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
         {/* Footer */}
         <button
           onClick={onClose}
-          className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 font-medium text-xs border border-transparent dark:border-slate-700 active:scale-95 transition-all cursor-pointer shadow-xs"
+          className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-xs active:scale-95 transition-all cursor-pointer shadow-xs"
         >
           我已知晓
         </button>

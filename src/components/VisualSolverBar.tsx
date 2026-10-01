@@ -53,39 +53,37 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
     return null;
   }
 
-  // Color mapping based on technique
+  // Color mapping based on technique - restrained paper & ink badges
   const getBadgeStyle = (tech: string) => {
     switch (tech) {
       case 'naked-single':
-        return 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-400 dark:bg-emerald-500/10 dark:border-emerald-500/30';
       case 'hidden-single-box':
       case 'hidden-single-line':
-        return 'text-sky-700 bg-sky-50 border-sky-200 dark:text-sky-400 dark:bg-sky-500/10 dark:border-sky-500/30';
+        return 'text-slate-800 bg-slate-100 border-slate-300 dark:text-slate-200 dark:bg-slate-800 dark:border-slate-700';
       case 'pointing-pair':
       case 'box-line-reduction':
-        return 'text-amber-800 bg-amber-50 border-amber-200 dark:text-amber-400 dark:bg-amber-500/10 dark:border-amber-500/30';
       case 'naked-pair':
       case 'hidden-pair':
-        return 'text-rose-700 bg-rose-50 border-rose-200 dark:text-rose-400 dark:bg-rose-500/10 dark:border-rose-500/30';
+        return 'text-slate-900 bg-slate-100/90 border-slate-300 dark:text-white dark:bg-slate-800 dark:border-slate-600';
       case 'x-wing':
-        return 'text-violet-700 bg-violet-50 border-violet-200 dark:text-violet-400 dark:bg-violet-500/10 dark:border-violet-500/30';
+        return 'text-slate-950 bg-slate-200 border-slate-400 dark:text-white dark:bg-slate-700 dark:border-slate-500';
       default:
-        return 'text-blue-700 bg-blue-50 border-blue-200 dark:text-sky-400 dark:bg-sky-500/10 dark:border-sky-500/30';
+        return 'text-slate-800 bg-slate-100 border-slate-200 dark:text-slate-200 dark:bg-slate-800 dark:border-slate-700';
     }
   };
 
   return (
     <div className="w-full max-w-xl mx-auto px-2.5 sm:px-4 mt-2 sm:mt-3 select-none animate-fadeIn pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:pb-2">
-      <div className="rounded-xl bg-white dark:bg-slate-900 border-2 border-slate-900 dark:border-slate-100 p-3 sm:p-4 flex flex-col gap-2.5 sm:gap-3 text-slate-900 dark:text-slate-100">
+      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-3.5 sm:p-4 flex flex-col gap-2.5 sm:gap-3 text-slate-900 dark:text-slate-100">
         {/* Top Header: Title, Step Counter, Exit Button */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-950 shadow-xs">
               <Compass className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-900 dark:text-white tracking-wide">
+                <span className="text-xs font-bold text-slate-950 dark:text-white tracking-wide">
                   逐步演算教学模式
                 </span>
                 <button
@@ -117,8 +115,8 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
 
         {/* Step Reasoning Card */}
         <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-blue-700 dark:text-sky-300">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-950 dark:text-white">
+            <Sparkles className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
             <span>{currentStep.title}</span>
           </div>
           <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed m-0">
@@ -150,7 +148,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
             max={totalSteps - 1}
             value={currentStepIndex}
             onChange={(e) => onStepChange(Number(e.target.value))}
-            className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-sky-500"
+            className="w-full h-1.5 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-slate-900 dark:accent-white"
             aria-label="演算进度进度条"
           />
         </div>
@@ -200,12 +198,12 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
             >
               {isPlaying ? (
                 <>
-                  <Pause className="w-3.5 h-3.5 fill-white" />
+                  <Pause className="w-3.5 h-3.5 fill-current" />
                   <span>暂停</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-3.5 h-3.5 fill-white" />
+                  <Play className="w-3.5 h-3.5 fill-current" />
                   <span>播放</span>
                 </>
               )}

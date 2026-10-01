@@ -56,7 +56,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           title={`剩余提示: ${hintsRemaining}次`}
           aria-label={`剩余提示 ${hintsRemaining} 次`}
         >
-          <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+          <Lightbulb className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
           <span>提示: {hintsRemaining}</span>
         </div>
 
@@ -67,13 +67,13 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           type="button"
           onClick={onTogglePause}
           aria-label={isPaused ? '游戏已暂停，点击恢复' : `当前用时 ${formatTime(elapsedTime)}，点击暂停`}
-          className="flex items-center gap-1.5 px-2 py-0.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white active:scale-95 transition-all font-mono font-bold cursor-pointer touch-manipulation"
+          className="flex items-center gap-1.5 px-2 py-0.5 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white active:scale-95 transition-all font-mono font-bold cursor-pointer touch-manipulation tabular-nums"
           title={isPaused ? '继续游戏' : '暂停计时'}
         >
           {isPaused ? (
-            <Play className="w-3.5 h-3.5 text-emerald-600 fill-current" />
+            <Play className="w-3.5 h-3.5 text-slate-900 dark:text-white fill-current" />
           ) : (
-            <Pause className="w-3.5 h-3.5 text-slate-500" />
+            <Pause className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
           )}
           <span role="timer" aria-live="off">{formatTime(elapsedTime)}</span>
         </button>

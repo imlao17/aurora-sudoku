@@ -392,15 +392,15 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
         {/* Top Header */}
         <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-slate-200 dark:border-slate-800 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-xs">
+            <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-950 shadow-xs">
               <GraduationCap className="w-4 h-4" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white leading-tight">
+                <h2 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-tight">
                   数独解题方法百科
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30 font-semibold hidden sm:inline">
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-800 border border-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700 font-semibold hidden sm:inline">
                   已掌握 {masteredIds.length}/{TECHNIQUES_DATA.length} (
                   {Math.round((masteredIds.length / TECHNIQUES_DATA.length) * 100)}%)
                 </span>
@@ -428,9 +428,9 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategoryId(cat.id)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                   selectedCategoryId === cat.id
-                    ? 'bg-blue-600 text-white font-semibold shadow-xs'
+                    ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 shadow-xs'
                     : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200 dark:bg-slate-900 dark:text-slate-400 dark:border-slate-800 dark:hover:text-slate-200'
                 }`}
               >
@@ -478,7 +478,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                     }}
                     className={`w-full text-left p-2.5 sm:p-3 rounded-2xl transition-all cursor-pointer flex flex-col gap-1 border ${
                       isActive
-                        ? 'bg-blue-50/70 border-blue-300 dark:bg-sky-500/15 dark:border-sky-500/40 shadow-xs'
+                        ? 'bg-slate-100/90 border-slate-900 dark:bg-slate-800 dark:border-white shadow-xs'
                         : 'bg-white hover:bg-slate-50 border-slate-200/80 dark:bg-slate-900 dark:hover:bg-slate-850 dark:border-slate-800'
                     }`}
                   >
@@ -487,14 +487,14 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                         <span
                           className={`text-xs font-bold truncate ${
                             isActive
-                              ? 'text-blue-700 dark:text-sky-300'
+                              ? 'text-slate-950 dark:text-white'
                               : 'text-slate-900 dark:text-slate-100'
                           }`}
                         >
                           {tech.name}
                         </span>
                         {techMastered ? (
-                          <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 font-bold text-[9px]">
+                          <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-[9px]">
                             <Check className="w-2.5 h-2.5" />
                             <span>已掌握</span>
                           </span>
@@ -511,15 +511,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                       <span className="font-mono text-[9px] opacity-80">
                         {tech.englishName}
                       </span>
-                      <span
-                        className={`px-1.5 py-0.5 rounded-full font-semibold ${
-                          tech.category === 'basic'
-                            ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
-                            : tech.category === 'intermediate'
-                            ? 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400'
-                            : 'bg-purple-50 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400'
-                        }`}
-                      >
+                      <span className="px-1.5 py-0.5 rounded-full font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                         {tech.category === 'basic'
                           ? '基础'
                           : tech.category === 'intermediate'
@@ -575,13 +567,13 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                     onClick={() => handleToggleMastered(activeTechnique.id)}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                       isMastered
-                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs'
+                        ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold shadow-xs'
                         : 'bg-slate-100 hover:bg-slate-200 text-slate-700 dark:bg-slate-800 dark:hover:bg-slate-750 dark:text-slate-200 border border-slate-300 dark:border-slate-700'
                     }`}
                     title={isMastered ? '点击取消掌握标记' : '标记为已掌握该方法'}
                   >
                     <CheckCircle2
-                      className={`w-3.5 h-3.5 ${isMastered ? 'text-white' : 'text-slate-400'}`}
+                      className={`w-3.5 h-3.5 ${isMastered ? 'text-white dark:text-slate-950' : 'text-slate-400'}`}
                     />
                     <span>{isMastered ? '已掌握 · 核对通过' : '标记为已掌握'}</span>
                   </button>
@@ -590,7 +582,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                   {onSelectForPractice && (
                     <button
                       onClick={() => onSelectForPractice(activeTechnique.id)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-xs font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
                       title="开启一局契合此技法难度的实战挑战"
                     >
                       <Gamepad2 className="w-3.5 h-3.5" />
@@ -601,9 +593,9 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
               </div>
 
               {/* Tagline / Catchphrase Banner */}
-              <div className="p-3 rounded-2xl bg-amber-50/80 border border-amber-200 dark:bg-amber-500/10 dark:border-amber-500/30 flex items-center justify-between gap-2 text-amber-900 dark:text-amber-200 text-xs font-bold">
+              <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 text-slate-950 dark:text-white text-xs font-bold">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <Sparkles className="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" />
                   <span>口诀：{activeTechnique.tagline}</span>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
@@ -615,8 +607,8 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
 
             {/* Principle Summary */}
             <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
-              <span className="text-xs font-bold text-blue-700 dark:text-sky-300 flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5" />
+              <span className="text-xs font-bold text-slate-950 dark:text-white flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                 <span>核心原理解析</span>
               </span>
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed m-0">
@@ -626,8 +618,8 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
 
             {/* How to Spot It in Real Puzzles */}
             <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-2">
-              <span className="text-xs font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5" />
+              <span className="text-xs font-bold text-slate-950 dark:text-white flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
                 <span>实战找法秘籍 (How to Spot It)</span>
               </span>
               <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 m-0 pl-4 list-disc leading-relaxed">
