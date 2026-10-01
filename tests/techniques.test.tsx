@@ -15,8 +15,8 @@ import type { VisualSolveStep } from '../src/utils/visualSolver';
 import type { SmartHint } from '../src/utils/hint';
 
 describe('Sudoku Solving Techniques Encyclopedia - Data & Logic', () => {
-  it('contains all 11 classic and advanced human deduction techniques', () => {
-    expect(TECHNIQUES_DATA.length).toBe(11);
+  it('contains all 23 classic and advanced human deduction techniques', () => {
+    expect(TECHNIQUES_DATA.length).toBe(23);
     
     const categories = new Set(TECHNIQUES_DATA.map((t) => t.category));
     expect(categories.has('basic')).toBe(true);
@@ -42,11 +42,11 @@ describe('Sudoku Solving Techniques Encyclopedia - Data & Logic', () => {
     const advanced = TECHNIQUES_DATA.filter((t) => t.category === 'advanced');
 
     expect(basic.length).toBe(3); // 宫摒除, 行列摒除, 唯一余数
-    expect(intermediate.length).toBe(5); // 宫内区块, 行列区块, 显性数对, 隐性数对, 显性三数组
-    expect(advanced.length).toBe(3); // X-Wing, XY-Wing, 剑鱼矩阵
+    expect(intermediate.length).toBe(8); // 宫内区块, 行列区块, 显性数对, 隐性数对, 显性三数, 隐性三数, 显性四数, 隐性四数
+    expect(advanced.length).toBe(12); // X-Wing, 摩天楼, 双飞燕, 唯一矩形, 空矩形, XY-Wing, W-Wing, 鳍鱼, 剑鱼, 水母, XYZ-Wing, XY-Chain
   });
 
-  it('all 11 technique clue boards are mathematically valid with no duplicate numbers in any row, column, or box', () => {
+  it('all 23 technique clue boards are mathematically valid with no duplicate numbers in any row, column, or box', () => {
     TECHNIQUES_DATA.forEach((tech) => {
       const { clues } = tech.example;
       // 1. Check rows
@@ -93,7 +93,7 @@ describe('Sudoku Solving Techniques Encyclopedia - Data & Logic', () => {
     });
   });
 
-  it('all 11 techniques have complete 3-step breakdown and valid coordinates', () => {
+  it('all 23 techniques have complete 3-step breakdown and valid coordinates', () => {
     TECHNIQUES_DATA.forEach((tech) => {
       const { stepBreakdown, targetCells, causeCells, eliminatedCandidates, cellNotes } = tech.example;
       expect(stepBreakdown).toBeTruthy();
@@ -157,7 +157,7 @@ describe('TechniquesModal Component', () => {
     render(<TechniquesModal isOpen={true} onClose={vi.fn()} />);
 
     // Click "大师高阶" category tab
-    const advancedTab = screen.getByText('大师高阶 (3)');
+    const advancedTab = screen.getByText(/大师高阶/);
     fireEvent.click(advancedTab);
 
     expect(screen.getAllByText(/X-Wing 矩阵排除法/).length).toBeGreaterThanOrEqual(1);

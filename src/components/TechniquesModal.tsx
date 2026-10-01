@@ -141,6 +141,120 @@ const KNOWLEDGE_CHECKS: Record<
     ],
     explanation: '三行锁定三列，列上的 3 已被独占，因此对第 2、5、9 列全线排除其他候选数 3！',
   },
+  'hidden-triple': {
+    question: '第 5 宫中候选数 2, 5, 7 仅分布在 (3,4)、(4,4) 和 (5,4)，隐性三数组纯化后应清除哪些候选数？',
+    options: [
+      { text: 'A. 清除 (3,4) 的 6,8，(4,4) 的 9，(5,4) 的 8', isCorrect: true },
+      { text: 'B. 清除整宫所有的 2, 5, 7', isCorrect: false },
+      { text: 'C. 直接在 (3,4) 填入 2', isCorrect: false },
+    ],
+    explanation: '2, 5, 7 独占了这三格，格内混杂的 6, 8, 9 杂质候选必须全部被清除！',
+  },
+  'naked-quad': {
+    question: '第 2 行中四格候选并集为 {1,3,6,8} 形成显性四数组，(1,5) 原候选数为 [3,8,9]，排除后将直出什么？',
+    options: [
+      { text: 'A. 唯余直出数字 9', isCorrect: true },
+      { text: 'B. 唯余直出数字 3', isCorrect: false },
+      { text: 'C. 依然保留 8', isCorrect: false },
+    ],
+    explanation: '四数组锁定了 1, 3, 6, 8，(1,5) 剔除 3 和 8 干扰后露出唯一候选 9！',
+  },
+  'hidden-quad': {
+    question: '第 4 列中数字 1, 4, 7, 9 仅分布在四格中构成隐性四数组，(5,3) 原候选为 [4,8,9]，清洗后保留？',
+    options: [
+      { text: 'A. 保留纯净候选 [4, 9]，清除 8', isCorrect: true },
+      { text: 'B. 保留 8，清除 4 和 9', isCorrect: false },
+      { text: 'C. 直接填入数字 8', isCorrect: false },
+    ],
+    explanation: '1, 4, 7, 9 独占四格，杂质候选 8 必须被清除，仅保留 [4, 9]！',
+  },
+  'skyscraper': {
+    question: '摩天楼地基为 (1,2) 和 (5,2)，楼顶为 (1,7) 和 (5,5)，交汇格 (1,5) 能排除哪个候选数？',
+    options: [
+      { text: 'A. 排除候选数 4', isCorrect: true },
+      { text: 'B. 排除候选数 7', isCorrect: false },
+      { text: 'C. 直接填入 4', isCorrect: false },
+    ],
+    explanation: '两座楼顶必有一真，与两楼顶同时产生视线交汇的 (1,5) 绝不能是 4！',
+  },
+  'two-string-kite': {
+    question: '双飞燕宫内端为 (2,2) 与 (1,2)，外端为 (2,7) 与 (6,2)，十字交汇格 (6,7) 排除什么？',
+    options: [
+      { text: 'A. 排除候选数 6', isCorrect: true },
+      { text: 'B. 排除候选数 2', isCorrect: false },
+      { text: 'C. 锁定填入 6', isCorrect: false },
+    ],
+    explanation: '外端两点必有一真，十字交汇格 (6,7) 绝不可为 6，成功排除！',
+  },
+  'unique-rectangle': {
+    question: '致命矩形四角为 (1,1)=[3,7]、(1,4)=[3,7]、(2,1)=[3,7]，第四角 (2,4)=[3,7,8]，根据唯一解法则：',
+    options: [
+      { text: 'A. (2,4) 排除 3,7，直接定解为 8', isCorrect: true },
+      { text: 'B. (2,4) 只能填 3', isCorrect: false },
+      { text: 'C. 整题无解', isCorrect: false },
+    ],
+    explanation: '为规避致命矩形多解死局，第四角绝不能落入 3 或 7，排除后直出真值 8！',
+  },
+  'empty-rectangle': {
+    question: '第 3 宫内候选数 2 呈空矩形，结合第 9 行 (8,2)-(8,7) 强链，交叉格 (1,2) 消除什么？',
+    options: [
+      { text: 'A. 排除候选数 2', isCorrect: true },
+      { text: 'B. 排除候选数 8', isCorrect: false },
+      { text: 'C. 直接填入 2', isCorrect: false },
+    ],
+    explanation: '通过空矩形分流推理，交点 (1,2) 无论如何都不能为 2，成功剔除！',
+  },
+  'w-wing': {
+    question: '两翼格 (1,1) 与 (6,7) 候选均为 [3,8]，由数字 3 强链连接，共同交点 (1,7) 排除什么？',
+    options: [
+      { text: 'A. 排除候选数 8', isCorrect: true },
+      { text: 'B. 排除候选数 3', isCorrect: false },
+      { text: 'C. 直接填入 8', isCorrect: false },
+    ],
+    explanation: '两翼必有一格填 8，共同视野下的 (1,7) 绝不可为 8！',
+  },
+  'finned-x-wing': {
+    question: '鳍状 X-Wing 的鱼鳍位于 (7,7)，鱼身在第 9 列，(6,8) 同时在第 9 列且与鱼鳍同宫，消除？',
+    options: [
+      { text: 'A. 排除候选数 7', isCorrect: true },
+      { text: 'B. 排除所有已知数', isCorrect: false },
+      { text: 'C. 判定整盘题目出错', isCorrect: false },
+    ],
+    explanation: '无论鱼鳍是否生效，(6,8) 均被严格封锁，候选数 7 必定排除！',
+  },
+  'jellyfish': {
+    question: '数字 1 在四行中仅出现在第 2、4、7、9 列形成水母阵，其他行的这四列中应执行什么？',
+    options: [
+      { text: 'A. 纵向排除所有其他格子中的候选数 1', isCorrect: true },
+      { text: 'B. 填入所有空格', isCorrect: false },
+      { text: 'C. 排除整行的数字', isCorrect: false },
+    ],
+    explanation: '四行四列天罗地网，这四列的其他所有候选数 1 全部被全线封杀！',
+  },
+  'xyz-wing': {
+    question: 'XYZ-Wing 枢纽为 (1,1)=[1,4,5]，翼格为 (2,2)=[1,5] 与 (1,7)=[4,5]，交汇格 (1,2) 排除？',
+    options: [
+      { text: 'A. 排除候选数 5', isCorrect: true },
+      { text: 'B. 排除候选数 1', isCorrect: false },
+      { text: 'C. 直接填入 4', isCorrect: false },
+    ],
+    explanation: '无论枢纽取 1, 4 还是 5，交点 (1,2) 均不可为 5，成功剔除！',
+  },
+  'xy-chain': {
+    question: 'XY-Chain 链首为 (1,1)[2,6]，链尾为 (7,3)[9,2]，交点 (1,3) 同时看到首尾两端，应排除？',
+    options: [
+      { text: 'A. 排除候选数 2', isCorrect: true },
+      { text: 'B. 排除候选数 6', isCorrect: false },
+      { text: 'C. 判定此链无效', isCorrect: false },
+    ],
+    explanation: '首尾两端必有一端为 2，共同视野下的 (1,3) 绝不可为 2！',
+  },
+};
+
+const CATEGORY_COUNTS = {
+  basic: TECHNIQUES_DATA.filter((t) => t.category === 'basic').length,
+  intermediate: TECHNIQUES_DATA.filter((t) => t.category === 'intermediate').length,
+  advanced: TECHNIQUES_DATA.filter((t) => t.category === 'advanced').length,
 };
 
 export const TechniquesModal: React.FC<TechniquesModalProps> = ({
@@ -372,9 +486,9 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
     { id: 'all', label: '全部技巧' },
     { id: 'mastered', label: `已掌握 (${masteredIds.length})` },
     { id: 'unmastered', label: `待学习 (${TECHNIQUES_DATA.length - masteredIds.length})` },
-    { id: 'basic', label: '入门基础 (3)' },
-    { id: 'intermediate', label: '进阶战术 (5)' },
-    { id: 'advanced', label: '大师高阶 (3)' },
+    { id: 'basic', label: `入门基础 (${CATEGORY_COUNTS.basic})` },
+    { id: 'intermediate', label: `进阶战术 (${CATEGORY_COUNTS.intermediate})` },
+    { id: 'advanced', label: `大师高阶 (${CATEGORY_COUNTS.advanced})` },
   ];
 
   return (
