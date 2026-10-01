@@ -138,6 +138,14 @@ export function saveGameRecord(record: GameRecord): void {
   }
 }
 
+export function saveAllGameRecords(records: GameRecord[]): void {
+  try {
+    localStorage.setItem(GAME_HISTORY_KEY, JSON.stringify(records.slice(0, 50)));
+  } catch (e) {
+    console.warn('Failed to save game records:', e);
+  }
+}
+
 export function loadMasteredTechniques(): string[] {
   try {
     const data = localStorage.getItem(MASTERED_TECHS_KEY);
@@ -299,6 +307,21 @@ export function clearActiveGame(): void {
   } catch (e) {
     console.warn('Failed to clear active game:', e);
   }
+}
+
+export function clearGameRecords(): void {
+  try {
+    localStorage.removeItem(GAME_HISTORY_KEY);
+  } catch (e) {
+    console.warn('Failed to clear game records:', e);
+  }
+}
+
+export function resetLiveStorageToDefault(): void {
+  saveStats(getDefaultStats());
+  clearGameRecords();
+  saveMasteredTechniques([]);
+  clearActiveGame();
 }
 
 export function formatTime(seconds: number): string {

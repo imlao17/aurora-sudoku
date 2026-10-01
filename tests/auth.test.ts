@@ -71,13 +71,75 @@ describe('User Authentication & Account Management', () => {
     expect(getCurrentUser().username).toBe('高手玩家');
   });
 
-  it('logs out to guest mode safely', () => {
+  it('logs out to guest mode safely and resets live storage for privacy', () => {
     registerAccount('旅人', undefined, 'wind');
     expect(getCurrentUser().isGuest).toBe(false);
+
+    // Save active game and some stats for this logged in user
+    localStorage.setItem('aurora_sudoku_active_game_v1', JSON.stringify({ difficulty: 'easy', timer: 120 }));
 
     const guest = logoutToGuest();
     expect(guest.isGuest).toBe(true);
     expect(getCurrentUser().isGuest).toBe(true);
+
+    // Verify live storage was cleared to protect privacy
+    expect(localStorage.getItem('aurora_sudoku_active_game_v1')).toBeNull();
+
+    // Verify stats in guest mode are reset to defaults
+    const guestStats = JSON.parse(localStorage.getItem('aurora_sudoku_stats_v1') || '{}');
+    expect(guestStats.easy?.gamesPlayed || 0).toBe(0);
+  });
+
+  it('merges guest progress when logging into an existing account', () => {
+    // 1. Create registered user with 2 wins on easy
+    registerAccount('老将', 'pass123');
+    const userStats = {
+      easy: { gamesPlayed: 2, gamesWon: 2, totalTime: 200, bestTime: 90, currentStreak: 2, maxStreak: 2 },
+      medium: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      hard: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      expert: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      master: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      dailyStreak: 0,
+      maxDailyStreak: 0,
+      completedDailies: [],
+      dailyWinCounts: {},
+      achievements: {
+        first_win: { id: 'first_win', unlockedAt: '2026-09-28T10:00:00Z', progress: 1, maxProgress: 1 },
+      },
+    };
+    localStorage.setItem('aurora_sudoku_stats_v1', JSON.stringify(userStats));
+    logoutToGuest();
+
+    // 2. In guest session, play 3 games on easy with better bestTime, and unlock another achievement
+    const guestStats = {
+      easy: { gamesPlayed: 3, gamesWon: 3, totalTime: 180, bestTime: 50, currentStreak: 3, maxStreak: 3 },
+      medium: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      hard: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      expert: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      master: { gamesPlayed: 0, gamesWon: 0, totalTime: 0, bestTime: null, currentStreak: 0, maxStreak: 0 },
+      dailyStreak: 1,
+      maxDailyStreak: 1,
+      completedDailies: ['2026-10-01'],
+      dailyWinCounts: { '2026-10-01': 1 },
+      achievements: {
+        streak_3: { id: 'streak_3', unlockedAt: '2026-10-01T10:00:00Z', progress: 3, maxProgress: 3 },
+      },
+    };
+    localStorage.setItem('aurora_sudoku_stats_v1', JSON.stringify(guestStats));
+
+    // 3. Log in with mergeGuestData = true
+    const loginRes = loginAccount('老将', 'pass123', true);
+    expect(loginRes.success).toBe(true);
+    expect(loginRes.merged).toBe(true);
+
+    // 4. Verify live stats are merged
+    const mergedLiveStats = JSON.parse(localStorage.getItem('aurora_sudoku_stats_v1') || '{}');
+    expect(mergedLiveStats.easy.gamesPlayed).toBe(5);
+    expect(mergedLiveStats.easy.gamesWon).toBe(5);
+    expect(mergedLiveStats.easy.bestTime).toBe(50); // better time preserved
+    expect(mergedLiveStats.achievements.first_win.unlockedAt).toBe('2026-09-28T10:00:00Z');
+    expect(mergedLiveStats.achievements.streak_3.unlockedAt).toBe('2026-10-01T10:00:00Z');
+    expect(mergedLiveStats.completedDailies).toContain('2026-10-01');
   });
 
   it('exports user data backup and imports it back accurately', () => {

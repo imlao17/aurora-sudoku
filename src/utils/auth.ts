@@ -14,11 +14,18 @@ import {
   saveSettings,
   loadActiveGame,
   saveActiveGame,
+  clearActiveGame,
   loadGameRecords,
-  saveGameRecord,
+  saveAllGameRecords,
+  resetLiveStorageToDefault,
   loadMasteredTechniques,
   saveMasteredTechniques,
 } from './storage';
+import {
+  summarizeGuestData,
+  mergeAccountPackageWithGuest,
+  type GuestDataSummary,
+} from './accountMerge';
 
 export const AVATAR_PRESETS: AvatarInfo[] = [
   { id: 'ink', name: '墨客', icon: '🖋️', color: 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' },
@@ -245,12 +252,25 @@ export function registerAccount(
 }
 
 /**
- * Logs in with an existing username and optional password
+ * Helper to inspect if the current local guest has unmigrated progress
+ */
+export function getLocalGuestSummary(): GuestDataSummary {
+  return summarizeGuestData(
+    loadStats(),
+    loadGameRecords(),
+    loadMasteredTechniques()
+  );
+}
+
+/**
+ * Logs in with an existing username and optional password.
+ * When mergeGuestData is true, current local guest progress is seamlessly merged into the account!
  */
 export function loginAccount(
   username: string,
-  password?: string
-): { success: boolean; user?: UserProfile; error?: string } {
+  password?: string,
+  mergeGuestData: boolean = true
+): { success: boolean; user?: UserProfile; error?: string; merged?: boolean } {
   const cleanUsername = username.trim();
   if (!cleanUsername) {
     return { success: false, error: '请输入用户名' };
@@ -272,29 +292,43 @@ export function loginAccount(
     }
   }
 
-  // Restore user state into active storage
-  saveStats(pkg.stats);
-  saveSettings(pkg.settings);
-  if (pkg.activeGame) {
-    saveActiveGame(pkg.activeGame);
+  const currentUser = getCurrentUser();
+  const guestSummary = getLocalGuestSummary();
+  let finalPkg = pkg;
+  let didMerge = false;
+
+  // Perform data merge if requested and there is guest data to merge
+  if (mergeGuestData && (currentUser.isGuest || guestSummary.hasData)) {
+    finalPkg = mergeAccountPackageWithGuest(pkg, {
+      stats: loadStats(),
+      history: loadGameRecords(),
+      masteredTechs: loadMasteredTechniques(),
+      settings: loadSettings(),
+      activeGame: loadActiveGame(),
+    });
+    saveAccountPackage(target.id, finalPkg);
+    didMerge = true;
   }
-  if (pkg.history && pkg.history.length > 0) {
-    for (const rec of pkg.history) {
-      saveGameRecord(rec);
-    }
+
+  // Restore final state into active live storage
+  saveStats(finalPkg.stats);
+  saveSettings(finalPkg.settings);
+  if (finalPkg.activeGame) {
+    saveActiveGame(finalPkg.activeGame);
+  } else {
+    clearActiveGame();
   }
-  if (pkg.masteredTechs && pkg.masteredTechs.length > 0) {
-    saveMasteredTechniques(pkg.masteredTechs);
-  }
+  saveAllGameRecords(finalPkg.history || []);
+  saveMasteredTechniques(finalPkg.masteredTechs || []);
 
   target.lastLoginAt = Date.now();
   setCurrentUser(target);
 
-  return { success: true, user: target };
+  return { success: true, user: target, merged: didMerge };
 }
 
 /**
- * Logs out current account and returns to guest mode
+ * Logs out current account and returns to guest mode with clean, private state
  */
 export function logoutToGuest(): UserProfile {
   // Sync current active data into user account package before leaving
@@ -308,6 +342,9 @@ export function logoutToGuest(): UserProfile {
       masteredTechs: loadMasteredTechniques(),
     });
   }
+
+  // Reset live storage to ensure privacy & cleanliness for guest session
+  resetLiveStorageToDefault();
 
   const guest = createGuestProfile();
   localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(guest));

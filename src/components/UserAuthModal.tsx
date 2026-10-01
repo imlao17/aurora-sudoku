@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, User, Lock, ArrowRight, UserPlus, LogIn, Users } from 'lucide-react';
+import { X, User, Lock, ArrowRight, UserPlus, LogIn, Users, Sparkles } from 'lucide-react';
 import type { UserProfile, AvatarId } from '../types/user';
-import { AVATAR_PRESETS, registerAccount, loginAccount, listAccounts } from '../utils/auth';
+import { AVATAR_PRESETS, registerAccount, loginAccount, listAccounts, getLocalGuestSummary } from '../utils/auth';
 import { FlatAvatar } from './FlatAvatar';
 
 interface UserAuthModalProps {
@@ -22,6 +22,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
   const [password, setPassword] = useState('');
   const [avatar, setAvatar] = useState<AvatarId>('ink');
   const [mergeData, setMergeData] = useState(true);
+  const [guestSummary, setGuestSummary] = useState(() => getLocalGuestSummary());
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [accounts, setAccounts] = useState<UserProfile[]>([]);
@@ -35,6 +36,8 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
       setUsername('');
       setPassword('');
       setAccounts(listAccounts());
+      setGuestSummary(getLocalGuestSummary());
+      setMergeData(true);
     }
   }
 
@@ -61,7 +64,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
     setErrorMsg(null);
     setLoading(true);
 
-    const res = loginAccount(username, password);
+    const res = loginAccount(username, password, mergeData);
     setLoading(false);
 
     if (res.success && res.user) {
@@ -74,7 +77,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
 
   const handleSwitchAccount = (targetUser: UserProfile) => {
     setErrorMsg(null);
-    const res = loginAccount(targetUser.username);
+    const res = loginAccount(targetUser.username, undefined, mergeData);
     if (res.success && res.user) {
       onSuccess(res.user);
       onClose();
@@ -232,18 +235,31 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
               </div>
             </div>
 
-            {/* Merge Guest Data Checkbox */}
-            <label className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={mergeData}
-                onChange={(e) => setMergeData(e.target.checked)}
-                className="w-4 h-4 text-slate-900 dark:text-white rounded border-slate-300 focus:ring-slate-500"
-              />
-              <span className="text-xs text-slate-600 dark:text-slate-300">
-                将当前的游客战绩、连胜和成就合并迁移至新账号
-              </span>
-            </label>
+            {/* Merge Guest Data if exists */}
+            {guestSummary.hasData && (
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    发现本地游客游玩进度
+                  </span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    已玩 {guestSummary.totalGames} 局 · 胜 {guestSummary.totalWins} 局
+                  </span>
+                </div>
+                <label className="flex items-center gap-2 pt-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={mergeData}
+                    onChange={(e) => setMergeData(e.target.checked)}
+                    className="w-4 h-4 text-slate-900 dark:text-white rounded border-slate-300 focus:ring-slate-500"
+                  />
+                  <span className="text-xs text-slate-600 dark:text-slate-300">
+                    合并当前游客战绩、连胜和成就至新账号
+                  </span>
+                </label>
+              </div>
+            )}
 
             <button
               type="submit"
@@ -292,6 +308,35 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
               </div>
             </div>
 
+            {/* Merge Guest Data if exists */}
+            {guestSummary.hasData && (
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                    合并当前游客游玩记录
+                  </span>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                    已玩 {guestSummary.totalGames} 局 · 胜 {guestSummary.totalWins} 局
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  包含 {guestSummary.totalAchievements} 项已解锁成就，登录时将智能合并最高分与成就。
+                </p>
+                <label className="flex items-center gap-2 pt-1 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={mergeData}
+                    onChange={(e) => setMergeData(e.target.checked)}
+                    className="w-4 h-4 text-slate-900 dark:text-white rounded border-slate-300 focus:ring-slate-500"
+                  />
+                  <span className="text-xs text-slate-600 dark:text-slate-300">
+                    登录时自动合并游客数据至该账号
+                  </span>
+                </label>
+              </div>
+            )}
+
             <button
               type="submit"
               disabled={loading}
@@ -306,6 +351,22 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
         {/* 3. Switch Account Mode */}
         {mode === 'switch' && (
           <div className="flex flex-col gap-2">
+            {guestSummary.hasData && (
+              <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between">
+                <span className="text-slate-600 dark:text-slate-400">
+                  当前游客进度 ({guestSummary.totalGames} 局)
+                </span>
+                <label className="flex items-center gap-1.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={mergeData}
+                    onChange={(e) => setMergeData(e.target.checked)}
+                    className="w-3.5 h-3.5 text-slate-900 dark:text-white rounded border-slate-300 focus:ring-slate-500"
+                  />
+                  <span className="font-medium text-slate-700 dark:text-slate-200">切换时合并</span>
+                </label>
+              </div>
+            )}
             {accounts.length === 0 ? (
               <div className="py-8 text-center text-slate-400 text-xs">
                 本设备尚未保存已注册账号，可先点击上方「注册」创建一个专属账号。
