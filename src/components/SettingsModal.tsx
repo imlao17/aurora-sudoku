@@ -114,56 +114,56 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       key: 'fastInputMode' as const,
       label: '数字先行模式 (快速填数)',
       desc: '先点选数字激活画笔，再轻点空格快速连续落子',
-      icon: <Zap className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <Zap className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.fastInputMode,
     },
     {
       key: 'realtimeErrorCheck' as const,
       label: '错误实时标红',
       desc: '填入错误数字时即时以墨色浅红警示',
-      icon: <ShieldAlert className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <ShieldAlert className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.realtimeErrorCheck,
     },
     {
       key: 'highlightConflicts' as const,
       label: '冲突格高亮警示',
       desc: '同行、同列或同九宫格存在重复数字时高亮提示',
-      icon: <Eye className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <Eye className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.highlightConflicts,
     },
     {
       key: 'highlightCross' as const,
       label: '同行同列同宫十字高亮',
       desc: '点选格子时光标十字交叉加亮相应行、列、宫',
-      icon: <Crosshair className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <Crosshair className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.highlightCross,
     },
     {
       key: 'highlightSameNumbers' as const,
       label: '高亮相同数字',
       desc: '点选带数字的格子时，全盘相同数字均加亮提示',
-      icon: <Sparkles className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <Sparkles className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.highlightSameNumbers,
     },
     {
       key: 'autoClearNotes' as const,
       label: '自动擦除笔记候选数',
       desc: '填入正确数字后，自动移除相连关联格的同名笔记',
-      icon: <CheckSquare className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <CheckSquare className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.autoClearNotes,
     },
     {
       key: 'autoFillLastRemaining' as const,
       label: '最后一个数字自动填充',
       desc: '当某行/列/宫仅剩最后一格，或全盘某数字已填满8个时，自动补全最后一个数字',
-      icon: <Wand2 className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <Wand2 className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.autoFillLastRemaining,
     },
     {
       key: 'soundEnabled' as const,
       label: '音效与震动反馈',
       desc: '落子、笔记、撤销与通关时的拟真微触震动与纸墨落子音效',
-      icon: <Volume2 className="w-4 h-4 text-slate-700 dark:text-slate-300" />,
+      icon: <Volume2 className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
       checked: settings.soundEnabled,
     },
   ];
@@ -184,7 +184,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-300">
-              <SlidersHorizontal className="w-4 h-4" />
+              <SlidersHorizontal className="w-4 h-4 stroke-[1.5]" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-tight">
@@ -198,7 +198,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="关闭偏好设置"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 stroke-[1.5]" />
           </button>
         </div>
 
@@ -208,7 +208,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <div className="pb-3.5">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-1.5">
-                <Palette className="w-3.5 h-3.5 text-slate-500" />
+                <Palette className="w-3.5 h-3.5 text-slate-500 stroke-[1.5]" />
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300">纸墨护眼主题</span>
               </div>
               <span className="text-[10px] text-slate-400">现代极简</span>

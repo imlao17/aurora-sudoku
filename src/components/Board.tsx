@@ -169,7 +169,7 @@ export const Board: React.FC<BoardProps> = ({
         {isPaused && (
           <div className="absolute inset-0 z-20 backdrop-blur-md bg-white/95 dark:bg-slate-950/90 flex flex-col items-center justify-center p-6 text-center animate-fadeIn">
             <div className="w-14 h-14 rounded-full bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center mb-3 text-slate-900 dark:text-white shadow-xs">
-              <Play className="w-6 h-6 fill-current ml-0.5" />
+              <Play className="w-6 h-6 stroke-[1.5] ml-0.5" />
             </div>
             <h3 className="text-lg font-bold text-slate-950 dark:text-white mb-1.5">游戏已暂停</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-5 max-w-xs leading-relaxed">

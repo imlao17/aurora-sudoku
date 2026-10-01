@@ -40,7 +40,7 @@ export const Controls: React.FC<ControlsProps> = memo(({
         }`}
         title="撤销上一步 (快捷键: Z / Ctrl+Z)"
       >
-        <Undo2 className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5" />
+        <Undo2 className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5 stroke-[1.5]" />
         <span className="text-[10px] sm:text-[11px] font-semibold">撤销</span>
       </button>
 
@@ -58,7 +58,7 @@ export const Controls: React.FC<ControlsProps> = memo(({
         }`}
         title="重做下一步 (快捷键: Y / Ctrl+Y)"
       >
-        <Redo2 className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5" />
+        <Redo2 className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5 stroke-[1.5]" />
         <span className="text-[10px] sm:text-[11px] font-semibold">重做</span>
       </button>
 
@@ -71,7 +71,7 @@ export const Controls: React.FC<ControlsProps> = memo(({
         className="flex-1 flex flex-col items-center justify-center py-2 sm:py-2.5 min-h-[46px] rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-800 dark:text-slate-200 active:scale-95 transition-all touch-manipulation cursor-pointer"
         title="擦除选中格 (快捷键: Backspace / Delete)"
       >
-        <Eraser className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5 text-slate-600 dark:text-slate-400" />
+        <Eraser className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5 text-slate-600 dark:text-slate-400 stroke-[1.5]" />
         <span className="text-[10px] sm:text-[11px] font-semibold">擦除</span>
       </button>
 
@@ -91,7 +91,7 @@ export const Controls: React.FC<ControlsProps> = memo(({
         title="切换候选数笔记模式 (快捷键: N 或 空格键)"
       >
         <div className="relative">
-          <Edit3 className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5" />
+          <Edit3 className="w-4 h-4 sm:w-5 sm:h-5 mb-0.5 stroke-[1.5]" />
           <span
             className={`absolute -top-1 -right-3.5 px-1 py-0.2 rounded text-[8px] font-bold ${
               isNoteMode
@@ -120,9 +120,9 @@ export const Controls: React.FC<ControlsProps> = memo(({
         title={`提示功能 (剩余${hintsRemaining}次，快捷键: H)`}
       >
         <div className="relative">
-          <Lightbulb className={`w-4 h-4 sm:w-5 sm:h-5 mb-0.5 ${hintsRemaining > 0 ? 'text-amber-500' : 'text-slate-300 dark:text-slate-600'}`} />
+          <Lightbulb className={`w-4 h-4 sm:w-5 sm:h-5 mb-0.5 stroke-[1.5] ${hintsRemaining > 0 ? 'text-slate-900 dark:text-white' : 'text-slate-300 dark:text-slate-600'}`} />
           {hintsRemaining > 0 && (
-            <span className="absolute -top-1 -right-2.5 w-3.5 h-3.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-[8px] flex items-center justify-center">
+            <span className="absolute -top-1 -right-2.5 w-3.5 h-3.5 rounded bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-[8px] flex items-center justify-center">
               {hintsRemaining}
             </span>
           )}

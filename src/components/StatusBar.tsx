@@ -43,7 +43,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           title="失误次数"
           aria-label={`当前失误 ${mistakesCount} 次`}
         >
-          <AlertCircle className="w-3.5 h-3.5" />
+          <AlertCircle className="w-3.5 h-3.5 stroke-[1.5]" />
           <span>失误: <strong>{mistakesCount}</strong></span>
         </div>
       </div>
@@ -56,7 +56,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           title={`剩余提示: ${hintsRemaining}次`}
           aria-label={`剩余提示 ${hintsRemaining} 次`}
         >
-          <Lightbulb className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+          <Lightbulb className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 stroke-[1.5]" />
           <span>提示: {hintsRemaining}</span>
         </div>
 
@@ -71,9 +71,9 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           title={isPaused ? '继续游戏' : '暂停计时'}
         >
           {isPaused ? (
-            <Play className="w-3.5 h-3.5 text-slate-900 dark:text-white fill-current" />
+            <Play className="w-3.5 h-3.5 text-slate-900 dark:text-white stroke-[1.5]" />
           ) : (
-            <Pause className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
+            <Pause className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400 stroke-[1.5]" />
           )}
           <span role="timer" aria-live="off">{formatTime(elapsedTime)}</span>
         </button>

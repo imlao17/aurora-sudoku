@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Difficulty, GameMode } from '../types/sudoku';
 import type { UserProfile } from '../types/user';
-import { AVATAR_PRESETS } from '../utils/auth';
+import { FlatAvatar } from './FlatAvatar';
 import {
   Play,
   RotateCcw,
@@ -78,9 +78,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   };
 
   const isDark = ['aurora', 'cyberpunk', 'twilight'].includes(theme);
-  const avatarIcon = user
-    ? AVATAR_PRESETS.find((p) => p.id === user.avatar)?.icon || '👤'
-    : '👤';
 
   return (
     <div className="w-full max-w-sm mx-auto px-4 py-4 sm:py-12 flex flex-col justify-between min-h-[90dvh] select-none text-slate-900 dark:text-slate-100 animate-fadeIn">
@@ -93,16 +90,16 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           title="个人中心与账号"
           aria-label="打开个人中心"
         >
-          <span className="text-sm">{avatarIcon}</span>
+          <FlatAvatar id={user?.avatar} size="sm" className="text-slate-800 dark:text-slate-200" />
           <span className="text-xs font-bold text-slate-800 dark:text-slate-200 max-w-[100px] truncate">
             {user ? user.username : '我的账号'}
           </span>
           {user?.isGuest ? (
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-medium">
+            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 font-medium">
               游客
             </span>
           ) : (
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white animate-pulse" />
           )}
         </button>
 
@@ -113,7 +110,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
             title="切换视觉主题"
           >
-            {isDark ? <Moon className="w-4 h-4 text-purple-400" /> : <Sun className="w-4 h-4 text-amber-500" />}
+            {isDark ? <Moon className="w-4 h-4 text-slate-700 dark:text-slate-300" strokeWidth={1.5} /> : <Sun className="w-4 h-4 text-slate-700 dark:text-slate-300" strokeWidth={1.5} />}
           </button>
           <button
             type="button"
@@ -121,7 +118,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
             title={soundEnabled ? '音效开启' : '音效静音'}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-blue-600 dark:text-sky-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 text-slate-800 dark:text-slate-200" strokeWidth={1.5} /> : <VolumeX className="w-4 h-4 text-slate-400" strokeWidth={1.5} />}
           </button>
         </div>
       </div>
@@ -171,7 +168,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 onClick={onResumeGame}
                 className="flex-1 py-2.5 px-3 rounded-xl bg-white text-slate-950 dark:bg-slate-900 dark:text-white font-bold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer"
               >
-                <Play className="w-4 h-4 fill-current" />
+                <Play className="w-4 h-4 fill-current stroke-[1.5]" />
                 <span>继续对局</span>
               </button>
 
@@ -181,7 +178,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 className="py-2.5 px-3 rounded-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 text-xs font-medium transition-all cursor-pointer flex items-center gap-1 shrink-0"
                 title="重开此局"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3.5 h-3.5 stroke-[1.5]" />
                 <span>重开</span>
               </button>
             </div>
@@ -221,12 +218,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="w-full py-3 px-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-400 dark:hover:border-slate-600 flex items-center justify-between font-bold text-xs sm:text-sm text-slate-900 dark:text-slate-100 transition-all cursor-pointer active:scale-[0.99]"
         >
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+            <Calendar className="w-4 h-4 text-slate-600 dark:text-slate-400 stroke-[1.5]" />
             <span>每日一题挑战</span>
           </div>
           <div className="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400 font-normal">
             <span>{isDailyCompletedToday ? '已通关' : dailyStreak > 0 ? `连胜 ${dailyStreak} 天` : '今日挑战'}</span>
-            <ChevronRight className="w-3.5 h-3.5" />
+            <ChevronRight className="w-3.5 h-3.5 stroke-[1.5]" />
           </div>
         </button>
       </div>
@@ -239,7 +236,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer flex items-center gap-1"
           title="查阅解题技巧百科"
         >
-          <BookOpen className="w-3.5 h-3.5" />
+          <BookOpen className="w-3.5 h-3.5 stroke-[1.5]" />
           <span>解题技巧百科</span>
         </button>
 
@@ -252,7 +249,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer flex items-center gap-1"
           title="战绩与荣誉"
         >
-          <Trophy className="w-3.5 h-3.5" />
+          <Trophy className="w-3.5 h-3.5 stroke-[1.5]" />
           <span>战绩</span>
         </button>
 
@@ -265,7 +262,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer p-1"
           title="设置"
         >
-          <Settings className="w-3.5 h-3.5" />
+          <Settings className="w-3.5 h-3.5 stroke-[1.5]" />
         </button>
 
         <button
@@ -275,7 +272,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer p-1"
           title="帮助"
         >
-          <HelpCircle className="w-3.5 h-3.5" />
+          <HelpCircle className="w-3.5 h-3.5 stroke-[1.5]" />
         </button>
 
         <button
@@ -285,7 +282,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer p-1"
           title={soundEnabled ? '音效开启' : '音效静音'}
         >
-          {soundEnabled ? <Volume2 className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" /> : <VolumeX className="w-3.5 h-3.5 text-slate-400" />}
+          {soundEnabled ? <Volume2 className="w-3.5 h-3.5 stroke-[1.5] text-slate-800 dark:text-slate-200" /> : <VolumeX className="w-3.5 h-3.5 stroke-[1.5] text-slate-400" />}
         </button>
 
         <button
@@ -295,7 +292,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer p-1"
           title="快速切换浅色/深色主题"
         >
-          {isDark ? <Sun className="w-3.5 h-3.5 text-amber-500" /> : <Moon className="w-3.5 h-3.5 text-slate-700" />}
+          {isDark ? <Sun className="w-3.5 h-3.5 stroke-[1.5] text-slate-300" /> : <Moon className="w-3.5 h-3.5 stroke-[1.5] text-slate-700" />}
         </button>
       </div>
     </div>

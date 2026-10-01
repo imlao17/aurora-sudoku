@@ -29,7 +29,7 @@ export const HintDialog: React.FC<HintDialogProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-950 shadow-xs">
-              <Lightbulb className="w-4 h-4" />
+              <Lightbulb className="w-4 h-4 stroke-[1.5]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -44,7 +44,7 @@ export const HintDialog: React.FC<HintDialogProps> = ({
                     title="点击查看该技法百科与图解"
                   >
                     <span>{hint.techniqueName}</span>
-                    <BookOpen className="w-2.5 h-2.5" />
+                    <BookOpen className="w-2.5 h-2.5 stroke-[1.5]" />
                   </button>
                 )}
               </div>
@@ -58,7 +58,7 @@ export const HintDialog: React.FC<HintDialogProps> = ({
             className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="关闭提示"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 stroke-[1.5]" />
           </button>
         </div>
 
@@ -69,7 +69,7 @@ export const HintDialog: React.FC<HintDialogProps> = ({
           </p>
 
           <div className="flex items-center gap-1.5 text-[10px] text-slate-600 dark:text-slate-400 pt-1 border-t border-slate-200 dark:border-slate-800">
-            <Info className="w-3.5 h-3.5 shrink-0" />
+            <Info className="w-3.5 h-3.5 shrink-0 stroke-[1.5]" />
             <span>棋盘已同步高亮：目标候选格与关联线索格</span>
           </div>
         </div>
@@ -86,7 +86,7 @@ export const HintDialog: React.FC<HintDialogProps> = ({
             onClick={onApply}
             className="px-4 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-xs shadow-xs active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 fill-current" />
+            <Sparkles className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>直接填入数字 【{hint.suggestedValue}】</span>
           </button>
         </div>

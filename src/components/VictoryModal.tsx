@@ -197,13 +197,13 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
           className="absolute top-4 right-4 p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
           aria-label="关闭结算弹窗"
         >
-          <X className="w-5 h-5" />
+          <X className="w-5 h-5 stroke-[1.5]" />
         </button>
 
         {/* Seal Stamp Insignia */}
         <div className="relative my-2.5">
           <div className="w-14 h-14 rounded-2xl bg-slate-900 text-white dark:bg-white dark:text-slate-950 flex items-center justify-center shadow-sm">
-            <Trophy className="w-7 h-7" />
+            <Trophy className="w-7 h-7 stroke-[1.5]" />
           </div>
         </div>
 
@@ -218,8 +218,8 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         {/* New Best Record Banner */}
         {isNewBest && (
           <div className="w-full mb-3.5 py-1.5 px-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs font-bold flex items-center justify-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
-            <span>刷新历史最快通关纪录！🎉</span>
+            <Sparkles className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 stroke-[1.5]" />
+            <span>刷新历史最快通关纪录！</span>
           </div>
         )}
 
@@ -227,7 +227,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
         <div className="w-full grid grid-cols-2 gap-2 mb-5">
           <div className="bg-slate-50/70 dark:bg-slate-950/40 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center">
             <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-xs mb-1">
-              <Clock className="w-3.5 h-3.5" />
+              <Clock className="w-3.5 h-3.5 stroke-[1.5]" />
               <span>通关耗时</span>
             </div>
             <span className="font-mono text-xl font-bold text-slate-950 dark:text-white tabular-nums tracking-wide">
@@ -237,7 +237,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
 
           <div className="bg-slate-50/70 dark:bg-slate-950/40 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center">
             <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-xs mb-1">
-              <AlertCircle className="w-3.5 h-3.5" />
+              <AlertCircle className="w-3.5 h-3.5 stroke-[1.5]" />
               <span>失误次数</span>
             </div>
             <span className="font-mono text-xl font-bold text-slate-950 dark:text-white tabular-nums">
@@ -247,7 +247,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
 
           <div className="bg-slate-50/70 dark:bg-slate-950/40 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center">
             <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-xs mb-1">
-              <Lightbulb className="w-3.5 h-3.5" />
+              <Lightbulb className="w-3.5 h-3.5 stroke-[1.5]" />
               <span>提示使用</span>
             </div>
             <span className="font-mono text-xl font-bold text-slate-950 dark:text-white tabular-nums">
@@ -257,7 +257,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
 
           <div className="bg-slate-50/70 dark:bg-slate-950/40 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center">
             <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400 text-xs mb-1">
-              <Trophy className="w-3.5 h-3.5" />
+              <Trophy className="w-3.5 h-3.5 stroke-[1.5]" />
               <span>挑战难度</span>
             </div>
             <span className="text-base font-bold text-slate-950 dark:text-white">
@@ -272,7 +272,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             onClick={onPlayAgain}
             className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-xs shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>再来一局</span>
           </button>
 
@@ -280,7 +280,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({
             onClick={handleShare}
             className="w-full py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-medium text-xs border border-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-slate-800 active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
           >
-            <Share2 className="w-3.5 h-3.5 text-slate-500" />
+            <Share2 className="w-3.5 h-3.5 text-slate-500 stroke-[1.5]" />
             <span>
               {copied ? '已复制战报到剪贴板！' : copyFailed ? '复制失败，请手动截图' : '分享战绩'}
             </span>

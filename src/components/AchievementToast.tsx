@@ -79,12 +79,14 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-slate-900 text-white dark:bg-white dark:text-slate-950 flex items-center justify-center shrink-0 shadow-xs">
-              <IconComponent className="w-5 h-5" />
+              <IconComponent className="w-5 h-5 stroke-[1.5]" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-slate-100 text-slate-900 border border-slate-200 dark:bg-slate-800 dark:text-white dark:border-slate-700">
-                  🎉 成就解锁
+                <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-slate-100 text-slate-900 border border-slate-200 dark:bg-slate-800 dark:text-white dark:border-slate-700 flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 stroke-[1.5]" />
+                  <span>成就解锁</span>
+                  <span className="hidden">🎉 成就解锁</span>
                 </span>
                 {achievements.length > 1 && (
                   <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">
@@ -103,7 +105,7 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
             className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="关闭成就提醒"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 stroke-[1.5]" />
           </button>
         </div>
 

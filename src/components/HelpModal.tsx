@@ -92,7 +92,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center text-slate-800 dark:text-slate-200">
-              <Keyboard className="w-4 h-4" />
+              <Keyboard className="w-4 h-4 stroke-[1.5]" />
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-tight">
@@ -106,7 +106,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
             className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="关闭快捷键指南"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 stroke-[1.5]" />
           </button>
         </div>
 
@@ -115,8 +115,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
           {/* Mobile touch guide */}
           <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
             <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white">
-              <Smartphone className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
-              <span>📱 移动触屏交互手势</span>
+              <Smartphone className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400 stroke-[1.5]" />
+              <span>移动触屏交互手势</span>
             </div>
             <ul className="text-[11px] text-slate-600 dark:text-slate-300 space-y-1 m-0 pl-4 list-disc leading-relaxed">
               <li><strong>点选落子</strong>：轻点棋盘空格，再按底部数字填入或标记笔记。</li>
@@ -129,8 +129,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
           {/* Desktop keyboard guide title */}
           <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 pt-1">
-            <Keyboard className="w-3.5 h-3.5 text-slate-500" />
-            <span>⌨️ 桌面端键盘快捷键</span>
+            <Keyboard className="w-3.5 h-3.5 text-slate-500 stroke-[1.5]" />
+            <span>桌面端键盘快捷键</span>
           </div>
 
           {/* Shortcuts list */}
@@ -150,7 +150,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
 
           {/* Tip */}
           <div className="p-2.5 sm:p-3 rounded-xl bg-slate-100/80 border border-slate-200 text-slate-700 dark:bg-slate-800/60 dark:border-slate-700 dark:text-slate-300 text-xs flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-slate-500 shrink-0" />
+            <Sparkles className="w-4 h-4 text-slate-500 shrink-0 stroke-[1.5]" />
             <span>提示：手机浏览器可选择「添加到主屏幕」即可像原生 App 一样全屏离线玩！</span>
           </div>
         </div>

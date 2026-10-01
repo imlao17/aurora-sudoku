@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, User, Lock, ArrowRight, UserPlus, LogIn, Users } from 'lucide-react';
 import type { UserProfile, AvatarId } from '../types/user';
 import { AVATAR_PRESETS, registerAccount, loginAccount, listAccounts } from '../utils/auth';
+import { FlatAvatar } from './FlatAvatar';
 
 interface UserAuthModalProps {
   isOpen: boolean;
@@ -98,7 +99,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
         <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-slate-100 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 flex items-center justify-center text-slate-800 dark:text-slate-200">
-              {mode === 'register' ? <UserPlus className="w-4 h-4" /> : mode === 'switch' ? <Users className="w-4 h-4" /> : <LogIn className="w-4 h-4" />}
+              {mode === 'register' ? <UserPlus className="w-4 h-4 stroke-[1.5]" /> : mode === 'switch' ? <Users className="w-4 h-4 stroke-[1.5]" /> : <LogIn className="w-4 h-4 stroke-[1.5]" />}
             </div>
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-tight">
@@ -114,7 +115,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
             className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="关闭账号弹窗"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 stroke-[1.5]" />
           </button>
         </div>
 
@@ -180,12 +181,12 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                       onClick={() => setAvatar(p.id)}
                       className={`flex flex-col items-center justify-center p-2 rounded-xl border text-center transition-all cursor-pointer ${
                         isSelected
-                          ? 'border-blue-600 bg-blue-50/50 dark:border-sky-400 dark:bg-sky-950/30 scale-105 shadow-sm'
+                          ? 'border-slate-900 bg-slate-100 dark:border-white dark:bg-white/10 shadow-xs'
                           : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60'
                       }`}
                       title={p.name}
                     >
-                      <span className="text-xl mb-0.5">{p.icon}</span>
+                      <FlatAvatar id={p.id} size="sm" className="mb-1" />
                       <span className="text-[10px] text-slate-600 dark:text-slate-400 font-medium">
                         {p.name}
                       </span>
@@ -201,7 +202,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                 用户昵称
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                <User className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 stroke-[1.5]" />
                 <input
                   type="text"
                   required
@@ -209,7 +210,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   maxLength={16}
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/40"
                 />
               </div>
             </div>
@@ -220,13 +221,13 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                 设置登录密码 (可选)
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                <Lock className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 stroke-[1.5]" />
                 <input
                   type="password"
                   placeholder="为空时支持免密快速登录"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/40"
                 />
               </div>
             </div>
@@ -237,7 +238,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                 type="checkbox"
                 checked={mergeData}
                 onChange={(e) => setMergeData(e.target.checked)}
-                className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                className="w-4 h-4 text-slate-900 dark:text-white rounded border-slate-300 focus:ring-slate-500"
               />
               <span className="text-xs text-slate-600 dark:text-slate-300">
                 将当前的游客战绩、连胜和成就合并迁移至新账号
@@ -247,10 +248,10 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="mt-1 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-sm shadow-xs active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>{loading ? '正在创建账号...' : '立即注册并登录'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 stroke-[1.5]" />
             </button>
           </form>
         )}
@@ -263,14 +264,14 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                 账号昵称 / 账号 ID
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                <User className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 stroke-[1.5]" />
                 <input
                   type="text"
                   required
                   placeholder="输入已注册的用户名"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/40"
                 />
               </div>
             </div>
@@ -280,13 +281,13 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                 登录密码
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-2.5 w-4 h-4 text-slate-400" />
+                <Lock className="absolute left-3 top-2.5 w-4 h-4 text-slate-400 stroke-[1.5]" />
                 <input
                   type="password"
                   placeholder="若未设密码可留空"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                  className="w-full pl-9 pr-3 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500/40"
                 />
               </div>
             </div>
@@ -294,10 +295,10 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 font-bold text-sm shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="mt-1 w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-900 font-bold text-sm shadow-xs active:scale-98 transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <span>{loading ? '正在验证登录...' : '确认登录'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 stroke-[1.5]" />
             </button>
           </form>
         )}
@@ -312,16 +313,15 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
             ) : (
               <div className="flex flex-col gap-2 max-h-56 overflow-y-auto pr-1">
                 {accounts.map((acc) => {
-                  const avatarPreset = AVATAR_PRESETS.find((p) => p.id === acc.avatar) || AVATAR_PRESETS[0];
                   return (
                     <button
                       key={acc.id}
                       type="button"
                       onClick={() => handleSwitchAccount(acc)}
-                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-sky-400 hover:bg-blue-50/30 dark:hover:bg-sky-950/20 flex items-center justify-between text-left transition-all cursor-pointer"
+                      className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between text-left transition-all cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">{avatarPreset.icon}</span>
+                        <FlatAvatar id={acc.avatar} size="md" />
                         <div>
                           <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
                             {acc.username}
@@ -331,8 +331,8 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({
                           </p>
                         </div>
                       </div>
-                      <span className="text-xs text-blue-600 dark:text-sky-400 font-semibold flex items-center gap-1">
-                        切换 <ArrowRight className="w-3.5 h-3.5" />
+                      <span className="text-xs text-slate-900 dark:text-white font-semibold flex items-center gap-1">
+                        切换 <ArrowRight className="w-3.5 h-3.5 stroke-[1.5]" />
                       </span>
                     </button>
                   );

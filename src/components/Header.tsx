@@ -14,7 +14,7 @@ import {
   Home,
 } from 'lucide-react';
 import type { UserProfile } from '../types/user';
-import { AVATAR_PRESETS } from '../utils/auth';
+import { FlatAvatar } from './FlatAvatar';
 
 interface HeaderProps {
   difficulty: Difficulty;
@@ -68,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="返回首页大厅"
               className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-850 text-slate-700 dark:text-slate-300 font-medium text-xs flex items-center gap-1 active:scale-95 transition-all cursor-pointer shrink-0"
             >
-              <Home className="w-3.5 h-3.5" />
+              <Home className="w-3.5 h-3.5 stroke-[1.5]" />
               <span className="hidden sm:inline">首页</span>
             </button>
           )}
@@ -93,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-1 px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-semibold active:scale-95 transition-all cursor-pointer"
               title="逐步演示推理教学过程"
             >
-              <Compass className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
+              <Compass className="w-3.5 h-3.5 stroke-[1.5] text-slate-700 dark:text-slate-300" />
               <span className="hidden sm:inline">逐步演示</span>
             </button>
           )}
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
             title={soundEnabled ? '音效开启' : '音效静音'}
           >
-            {soundEnabled ? <Volume2 className="w-4 h-4 text-slate-800 dark:text-slate-200" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4 stroke-[1.5] text-slate-800 dark:text-slate-200" /> : <VolumeX className="w-4 h-4 stroke-[1.5] text-slate-400" />}
           </button>
 
           <button
@@ -115,7 +115,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
             title="查看排行榜与统计"
           >
-            <Trophy className="w-4 h-4" />
+            <Trophy className="w-4 h-4 stroke-[1.5]" />
           </button>
 
           <button
@@ -125,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
             title="游戏设置"
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-4 h-4 stroke-[1.5]" />
           </button>
 
           {onOpenProfile && (
@@ -133,12 +133,10 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={onOpenProfile}
               aria-label="打开个人中心与账号数据"
-              className="px-1.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer flex items-center gap-1"
+              className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer flex items-center gap-1.5"
               title={user ? `账号: ${user.username} (${user.isGuest ? '游客' : '已登录'})` : '个人账号'}
             >
-              <span className="text-xs">
-                {user ? (AVATAR_PRESETS.find((p) => p.id === user.avatar)?.icon || '👤') : '👤'}
-              </span>
+              <FlatAvatar id={user?.avatar} size="sm" className="text-slate-700 dark:text-slate-300" />
               <span className="text-[11px] font-semibold hidden md:inline max-w-[56px] truncate">
                 {user ? user.username : '账号'}
               </span>
@@ -152,7 +150,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
             title="快捷键指南"
           >
-            <HelpCircle className="w-4 h-4" />
+            <HelpCircle className="w-4 h-4 stroke-[1.5]" />
           </button>
 
           {onOpenTechniques && (
@@ -163,7 +161,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
               title="解题技巧百科"
             >
-              <GraduationCap className="w-4 h-4" />
+              <GraduationCap className="w-4 h-4 stroke-[1.5]" />
             </button>
           )}
 
@@ -173,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="新开一局"
             className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-xs active:scale-95 transition-all cursor-pointer ml-1"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>新对局</span>
           </button>
         </div>
@@ -203,10 +201,10 @@ export const Header: React.FC<HeaderProps> = ({
                 : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            <Calendar className="w-3.5 h-3.5" />
+            <Calendar className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>每日一题</span>
             {isDailyCompleted && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ml-0.5" />
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-900 dark:bg-white ml-0.5" />
             )}
           </button>
         </div>

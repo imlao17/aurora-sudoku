@@ -13,12 +13,12 @@ import {
 import type { UserProfile } from '../types/user';
 import type { GameStats } from '../types/sudoku';
 import {
-  AVATAR_PRESETS,
   exportUserBackup,
   importUserBackup,
   syncCloudData,
   getMasteryTitle,
 } from '../utils/auth';
+import { FlatAvatar } from './FlatAvatar';
 
 interface UserProfileModalProps {
   isOpen: boolean;
@@ -53,7 +53,6 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
 
   const totalWins = stats.easy.gamesWon + stats.medium.gamesWon + stats.hard.gamesWon;
   const mastery = getMasteryTitle(totalWins);
-  const avatarInfo = AVATAR_PRESETS.find((p) => p.id === user.avatar) || AVATAR_PRESETS[0];
 
   const handleSync = async () => {
     setSyncing(true);
@@ -123,7 +122,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-blue-600 dark:text-sky-400" />
+            <ShieldCheck className="w-5 h-5 text-slate-800 dark:text-slate-200 stroke-[1.5]" />
             <h2 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white leading-tight">
               个人账号与数据中心
             </h2>
@@ -133,27 +132,25 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="关闭个人中心"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 stroke-[1.5]" />
           </button>
         </div>
 
         {/* User Profile Card */}
-        <div className="mt-4 p-4 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-800/60 dark:to-slate-800/30 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between">
+        <div className="mt-4 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60 flex items-center justify-between">
           <div className="flex items-center gap-3.5">
-            <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-3xl shadow-sm shrink-0">
-              {avatarInfo.icon}
-            </div>
+            <FlatAvatar id={user.avatar} size="lg" />
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">
                   {user.username}
                 </h3>
                 {user.isGuest ? (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 font-semibold">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300 font-semibold">
                     游客
                   </span>
                 ) : (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-sky-950/60 dark:text-sky-300 font-semibold">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-900 font-semibold">
                     正式账号
                   </span>
                 )}
@@ -168,7 +165,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 className="text-[10px] text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 mt-0.5 flex items-center gap-1 font-mono transition-colors cursor-pointer"
               >
                 <span>ID: {user.id.slice(0, 14)}...</span>
-                {copiedId ? <Check className="w-2.5 h-2.5 text-emerald-500" /> : <Copy className="w-2.5 h-2.5" />}
+                {copiedId ? <Check className="w-2.5 h-2.5 text-emerald-500 stroke-[2]" /> : <Copy className="w-2.5 h-2.5 stroke-[1.5]" />}
               </button>
             </div>
           </div>
@@ -180,7 +177,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 onClose();
                 onOpenAuth('register');
               }}
-              className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold active:scale-95 transition-all shadow-sm shrink-0 cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-xs font-bold active:scale-95 transition-all shadow-xs shrink-0 cursor-pointer"
             >
               升级账号
             </button>
@@ -208,8 +205,8 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </div>
           <div className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
             <span className="text-slate-400 text-[10px] block font-medium">每日连胜</span>
-            <span className="text-base font-bold tabular-nums text-amber-500 flex items-center justify-center gap-0.5">
-              <Flame className="w-3.5 h-3.5 fill-amber-500" />
+            <span className="text-base font-bold tabular-nums text-slate-900 dark:text-white flex items-center justify-center gap-0.5">
+              <Flame className="w-3.5 h-3.5 stroke-[1.5]" />
               {stats.dailyStreak}
             </span>
           </div>
@@ -221,7 +218,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </div>
           <div className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
             <span className="text-slate-400 text-[10px] block font-medium">已学技巧</span>
-            <span className="text-base font-bold tabular-nums text-blue-600 dark:text-sky-400">
+            <span className="text-base font-bold tabular-nums text-slate-900 dark:text-white">
               {masteredTechsCount}
             </span>
           </div>
@@ -234,15 +231,15 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
           </h4>
 
           {syncStatus && (
-            <div className="px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs flex items-center gap-2 animate-fadeIn">
-              <Check className="w-4 h-4" />
+            <div className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs flex items-center gap-2 animate-fadeIn">
+              <Check className="w-4 h-4 stroke-[2]" />
               <span>{syncStatus}</span>
             </div>
           )}
 
           {importSuccess && (
-            <div className="px-3 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs flex items-center gap-2 animate-fadeIn">
-              <Check className="w-4 h-4" />
+            <div className="px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs flex items-center gap-2 animate-fadeIn">
+              <Check className="w-4 h-4 stroke-[2]" />
               <span>数据恢复成功！正在重新载入...</span>
             </div>
           )}
@@ -252,9 +249,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
               type="button"
               onClick={handleSync}
               disabled={syncing}
-              className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-sky-400 hover:bg-slate-50 dark:hover:bg-slate-850 flex flex-col items-center justify-center text-center transition-all cursor-pointer"
+              className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-850 flex flex-col items-center justify-center text-center transition-all cursor-pointer"
             >
-              <RefreshCw className={`w-5 h-5 text-blue-600 dark:text-sky-400 mb-1.5 ${syncing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-5 h-5 text-slate-800 dark:text-slate-200 stroke-[1.5] mb-1.5 ${syncing ? 'animate-spin' : ''}`} />
               <span className="text-xs font-bold text-slate-900 dark:text-white">
                 {syncing ? '正在同步...' : '立即云端同步'}
               </span>
@@ -264,9 +261,9 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             <button
               type="button"
               onClick={handleExport}
-              className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-sky-400 hover:bg-slate-50 dark:hover:bg-slate-850 flex flex-col items-center justify-center text-center transition-all cursor-pointer"
+              className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-850 flex flex-col items-center justify-center text-center transition-all cursor-pointer"
             >
-              <Download className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mb-1.5" />
+              <Download className="w-5 h-5 text-slate-800 dark:text-slate-200 stroke-[1.5] mb-1.5" />
               <span className="text-xs font-bold text-slate-900 dark:text-white">
                 导出数据备份
               </span>
@@ -281,7 +278,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 onClick={() => setShowImportArea(true)}
                 className="w-full py-2 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-850 text-xs text-slate-600 dark:text-slate-400 flex items-center justify-center gap-1.5 transition-all cursor-pointer"
               >
-                <Upload className="w-3.5 h-3.5" />
+                <Upload className="w-3.5 h-3.5 stroke-[1.5]" />
                 <span>从备份文件或文本还原数据</span>
               </button>
             ) : (
@@ -301,7 +298,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   onChange={(e) => setImportText(e.target.value)}
                   placeholder="在此粘贴导出的备份数据 JSON..."
                   rows={3}
-                  className="w-full p-2 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full p-2 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-500"
                 />
                 {importError && (
                   <p className="text-xs text-rose-600 dark:text-rose-400">{importError}</p>
@@ -309,7 +306,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 <button
                   type="button"
                   onClick={handleImportSubmit}
-                  className="py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-sm active:scale-98 transition-all cursor-pointer"
+                  className="py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-xs shadow-xs active:scale-98 transition-all cursor-pointer"
                 >
                   确认还原
                 </button>
@@ -329,7 +326,7 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
             onClick={onLogout}
             className="flex items-center gap-1.5 text-xs text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
           >
-            <LogOut className="w-3.5 h-3.5" />
+            <LogOut className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>{user.isGuest ? '重置游客进度' : '退出登录'}</span>
           </button>
         </div>

@@ -357,7 +357,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
         {[1, 2, 3, 4, 5].map((star) => (
           <Star
             key={star}
-            className={`w-3 h-3 ${
+            className={`w-3 h-3 stroke-[1.5] ${
               star <= count
                 ? 'text-amber-500 fill-amber-500'
                 : 'text-slate-300 dark:text-slate-700'
@@ -393,7 +393,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
         <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-slate-200 dark:border-slate-800 shrink-0">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-950 shadow-xs">
-              <GraduationCap className="w-4 h-4" />
+              <GraduationCap className="w-4 h-4 stroke-[1.5]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -416,7 +416,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
             className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 dark:hover:text-white dark:hover:bg-slate-800 transition-colors cursor-pointer"
             aria-label="关闭技巧宝典"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 stroke-[1.5]" />
           </button>
         </div>
 
@@ -441,7 +441,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
 
           {/* Search Bar */}
           <div className="relative w-full sm:w-44">
-            <Search className="w-3.5 h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 stroke-[1.5] absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
             <input
               type="text"
               placeholder="搜索方法口诀..."
@@ -495,7 +495,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                         </span>
                         {techMastered ? (
                           <span className="shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-slate-900 text-white dark:bg-white dark:text-slate-950 font-bold text-[9px]">
-                            <Check className="w-2.5 h-2.5" />
+                            <Check className="w-2.5 h-2.5 stroke-[2]" />
                             <span>已掌握</span>
                           </span>
                         ) : (
@@ -541,7 +541,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                 onClick={() => setMobileDetailView(false)}
                 className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold dark:bg-slate-800 dark:text-slate-300 transition-colors cursor-pointer"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
+                <ArrowLeft className="w-3.5 h-3.5 stroke-[1.5]" />
                 <span>返回技巧列表</span>
               </button>
               <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -573,7 +573,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                     title={isMastered ? '点击取消掌握标记' : '标记为已掌握该方法'}
                   >
                     <CheckCircle2
-                      className={`w-3.5 h-3.5 ${isMastered ? 'text-white dark:text-slate-950' : 'text-slate-400'}`}
+                      className={`w-3.5 h-3.5 stroke-[1.5] ${isMastered ? 'text-white dark:text-slate-950' : 'text-slate-400'}`}
                     />
                     <span>{isMastered ? '已掌握 · 核对通过' : '标记为已掌握'}</span>
                   </button>
@@ -585,7 +585,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 text-xs font-bold shadow-xs active:scale-95 transition-all cursor-pointer"
                       title="开启一局契合此技法难度的实战挑战"
                     >
-                      <Gamepad2 className="w-3.5 h-3.5" />
+                      <Gamepad2 className="w-3.5 h-3.5 stroke-[1.5]" />
                       <span>实战演练</span>
                     </button>
                   )}
@@ -595,7 +595,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
               {/* Tagline / Catchphrase Banner */}
               <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2 text-slate-950 dark:text-white text-xs font-bold">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-slate-700 dark:text-slate-300 shrink-0" />
+                  <Sparkles className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5] shrink-0" />
                   <span>口诀：{activeTechnique.tagline}</span>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
@@ -608,7 +608,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
             {/* Principle Summary */}
             <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
               <span className="text-xs font-bold text-slate-950 dark:text-white flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+                <BookOpen className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400 stroke-[1.5]" />
                 <span>核心原理解析</span>
               </span>
               <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed m-0">
@@ -619,7 +619,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
             {/* How to Spot It in Real Puzzles */}
             <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-2">
               <span className="text-xs font-bold text-slate-950 dark:text-white flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-slate-600 dark:text-slate-400 stroke-[1.5]" />
                 <span>实战找法秘籍 (How to Spot It)</span>
               </span>
               <ul className="text-xs text-slate-700 dark:text-slate-300 space-y-1.5 m-0 pl-4 list-disc leading-relaxed">
@@ -633,7 +633,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
             <div className="p-4 rounded-3xl bg-slate-100/70 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 flex flex-col gap-3.5">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white">
-                  <Compass className="w-4 h-4 text-blue-600 dark:text-sky-400" />
+                  <Compass className="w-4 h-4 text-slate-800 dark:text-slate-200 stroke-[1.5]" />
                   <span>经典实战图解演示 (可点击格子查看细节)</span>
                 </div>
                 {/* Visual Legend */}
@@ -799,13 +799,13 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                         const val = example.clues[r][c];
 
                         if (targetObj) {
-                          return `🟡 目标格 [${targetObj.label || (targetObj.value ? `填入 ${targetObj.value}` : `锁定候选 [${targetObj.notes?.join(',')}]`)}]`;
+                          return `目标格 [${targetObj.label || (targetObj.value ? `填入 ${targetObj.value}` : `锁定候选 [${targetObj.notes?.join(',')}]`)}]`;
                         }
                         if (causeObj) {
-                          return `🔵 条件格 [${causeObj.label || (causeObj.value ? `已知 ${causeObj.value}` : `条件 [${causeObj.notes?.join(',')}]`)}]`;
+                          return `条件格 [${causeObj.label || (causeObj.value ? `已知 ${causeObj.value}` : `条件 [${causeObj.notes?.join(',')}]`)}]`;
                         }
                         if (elimList && elimList.length > 0) {
-                          return `🔴 排除候选格 [已排除 ${elimList.map((e) => e.candidate).join(',')}]${elimList[0]?.remainingNotes ? ` → 露出唯一数 [${elimList[0].remainingNotes.join(',')}]` : ''}`;
+                          return `排除候选格 [已排除 ${elimList.map((e) => e.candidate).join(',')}]${elimList[0]?.remainingNotes ? ` → 露出唯一数 [${elimList[0].remainingNotes.join(',')}]` : ''}`;
                         }
                         if (cellNotes && cellNotes.length > 0) {
                           return `候选笔记 [${cellNotes.join(', ')}]`;
@@ -878,13 +878,13 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
               {example.stepBreakdown && (
                 <div className="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col gap-2.5">
                   <div className="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    <Brain className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+                    <Brain className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 stroke-[1.5]" />
                     <span>三步推导解析 (Step-by-Step Logic)</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <div className="p-2.5 rounded-xl bg-blue-50/60 dark:bg-slate-850/80 border border-blue-100 dark:border-slate-800 flex flex-col gap-1">
                       <span className="text-[11px] font-bold text-blue-700 dark:text-sky-400 flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
+                        <Eye className="w-3 h-3 stroke-[1.5]" />
                         <span>1. 观察线索</span>
                       </span>
                       <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed m-0">
@@ -894,7 +894,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
 
                     <div className="p-2.5 rounded-xl bg-amber-50/60 dark:bg-slate-850/80 border border-amber-100 dark:border-slate-800 flex flex-col gap-1">
                       <span className="text-[11px] font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1">
-                        <Crosshair className="w-3 h-3" />
+                        <Crosshair className="w-3 h-3 stroke-[1.5]" />
                         <span>2. 逻辑推演</span>
                       </span>
                       <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed m-0">
@@ -904,7 +904,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
 
                     <div className="p-2.5 rounded-xl bg-emerald-50/60 dark:bg-slate-850/80 border border-emerald-100 dark:border-slate-800 flex flex-col gap-1">
                       <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
-                        <Target className="w-3 h-3" />
+                        <Target className="w-3 h-3 stroke-[1.5]" />
                         <span>3. 最终判定</span>
                       </span>
                       <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed m-0">
@@ -929,12 +929,12 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
               <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900 dark:text-white">
-                    <HelpCircle className="w-4 h-4 text-amber-500" />
+                    <HelpCircle className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />
                     <span>随堂核对检验 (Quick Check)</span>
                   </div>
                   {isMastered && (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300 font-bold text-[10px]">
-                      <CheckCircle2 className="w-3 h-3" />
+                      <CheckCircle2 className="w-3 h-3 stroke-[1.5]" />
                       <span>已核对通过</span>
                     </span>
                   )}
@@ -973,7 +973,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                 {quizFeedback === 'correct' && (
                   <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/30 text-emerald-800 dark:text-emerald-300 text-xs flex items-center justify-between animate-fadeIn">
                     <div className="flex items-center gap-1.5 font-bold">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0 stroke-[1.5]" />
                       <span>核对成功！您已透彻理解「{activeTechnique.name}」</span>
                     </div>
                     <span className="text-[10px] text-emerald-600 dark:text-emerald-400">
@@ -984,7 +984,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
 
                 {quizFeedback === 'incorrect' && (
                   <div className="p-2.5 rounded-xl bg-rose-50 border border-rose-200 dark:bg-rose-500/10 dark:border-rose-500/30 text-rose-800 dark:text-rose-300 text-xs flex items-center gap-1.5 animate-fadeIn">
-                    <X className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
+                    <X className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0 stroke-[1.5]" />
                     <span>核对未通过，再仔细观察一下图解推导哦！{currentQuiz.explanation}</span>
                   </div>
                 )}
@@ -994,7 +994,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
             {/* Deep dive expansion */}
             <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
               <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+                <Layers className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 stroke-[1.5]" />
                 <span>数学与逻辑延伸</span>
               </span>
               <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed m-0">
@@ -1011,7 +1011,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
           </span>
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-xs active:scale-95 transition-all cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-slate-100 dark:text-slate-950 font-bold text-xs shadow-xs active:scale-95 transition-all cursor-pointer"
           >
             我已知晓，开始挑战
           </button>

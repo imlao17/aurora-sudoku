@@ -79,7 +79,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-white flex items-center justify-center text-white dark:text-slate-950 shadow-xs">
-              <Compass className="w-4 h-4" />
+              <Compass className="w-4 h-4 stroke-[1.5]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
                   title="点击查看该解题技巧的图解教学"
                 >
                   <span>{currentStep.techniqueName}</span>
-                  <BookOpen className="w-2.5 h-2.5 opacity-70" />
+                  <BookOpen className="w-2.5 h-2.5 opacity-70 stroke-[1.5]" />
                 </button>
               </div>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 m-0">
@@ -108,7 +108,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
             onClick={onExit}
             className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium border border-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 dark:text-slate-300 dark:border-slate-700/80 transition-all cursor-pointer"
           >
-            <X className="w-3.5 h-3.5" />
+            <X className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>退出演示</span>
           </button>
         </div>
@@ -116,7 +116,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
         {/* Step Reasoning Card */}
         <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/60 border border-slate-200 dark:border-slate-800 flex flex-col gap-1.5">
           <div className="flex items-center gap-1.5 text-xs font-bold text-slate-950 dark:text-white">
-            <Sparkles className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300" />
+            <Sparkles className="w-3.5 h-3.5 text-slate-700 dark:text-slate-300 stroke-[1.5]" />
             <span>{currentStep.title}</span>
           </div>
           <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed m-0">
@@ -180,7 +180,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
               className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-850 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-transparent"
               title="跳转到起点"
             >
-              <ChevronsLeft className="w-4 h-4" />
+              <ChevronsLeft className="w-4 h-4 stroke-[1.5]" />
             </button>
             <button
               onClick={() => onStepChange(Math.max(0, currentStepIndex - 1))}
@@ -188,7 +188,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
               className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-850 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-transparent"
               title="上一步"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4 stroke-[1.5]" />
             </button>
 
             {/* Play/Pause Button */}
@@ -198,12 +198,12 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
             >
               {isPlaying ? (
                 <>
-                  <Pause className="w-3.5 h-3.5 fill-current" />
+                  <Pause className="w-3.5 h-3.5 stroke-[1.5]" />
                   <span>暂停</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <Play className="w-3.5 h-3.5 stroke-[1.5]" />
                   <span>播放</span>
                 </>
               )}
@@ -215,7 +215,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
               className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-transparent"
               title="下一步"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-4 h-4 stroke-[1.5]" />
             </button>
             <button
               onClick={() => onStepChange(totalSteps - 1)}
@@ -223,7 +223,7 @@ export const VisualSolverBar: React.FC<VisualSolverBarProps> = ({
               className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 disabled:opacity-40 transition-all cursor-pointer disabled:cursor-not-allowed dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-transparent"
               title="跳转到终点"
             >
-              <ChevronsRight className="w-4 h-4" />
+              <ChevronsRight className="w-4 h-4 stroke-[1.5]" />
             </button>
           </div>
         </div>
