@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import type { CellData, CellPosition, GameSettings } from '../types/sudoku';
+import type { CellData, CellPosition, GameSettings, BoardSize, SymbolTheme } from '../types/sudoku';
+import { getMultiSizeBoxIndex } from '../utils/multiSizeSudoku';
 import { Cell } from './Cell';
 import { Play } from 'lucide-react';
 
@@ -9,6 +10,8 @@ interface BoardProps {
   conflicts: boolean[][];
   settings: GameSettings;
   isPaused: boolean;
+  boardSize?: BoardSize;
+  symbolTheme?: SymbolTheme;
   targetHighlightCells?: { row: number; col: number }[];
   causeHighlightCells?: { row: number; col: number }[];
   scopeHighlight?: { type: 'row' | 'col' | 'box'; index: number };
@@ -25,6 +28,8 @@ export const Board: React.FC<BoardProps> = ({
   conflicts,
   settings,
   isPaused,
+  boardSize,
+  symbolTheme,
   targetHighlightCells,
   causeHighlightCells,
   scopeHighlight,
@@ -34,6 +39,9 @@ export const Board: React.FC<BoardProps> = ({
   onSelectCell,
   onResume,
 }) => {
+  const size: BoardSize = boardSize || ((board.length === 4 || board.length === 6) ? (board.length as BoardSize) : 9);
+  const currentSymbolTheme = symbolTheme || settings.symbolTheme || 'numbers';
+  const gridColsClass = size === 4 ? 'grid-cols-4' : size === 6 ? 'grid-cols-6' : 'grid-cols-9';
   const selectedValue = selectedCell && board[selectedCell.row] ? board[selectedCell.row][selectedCell.col]?.value : 0;
 
   const targetHighlightSet = useMemo(() => {
@@ -72,13 +80,13 @@ export const Board: React.FC<BoardProps> = ({
     if (Math.hypot(dx, dy) < threshold) return;
 
     if (Math.abs(dx) > Math.abs(dy)) {
-      if (dx > 0 && selectedCell.col < 8) {
+      if (dx > 0 && selectedCell.col < size - 1) {
         onSelectCell(selectedCell.row, selectedCell.col + 1);
       } else if (dx < 0 && selectedCell.col > 0) {
         onSelectCell(selectedCell.row, selectedCell.col - 1);
       }
     } else {
-      if (dy > 0 && selectedCell.row < 8) {
+      if (dy > 0 && selectedCell.row < size - 1) {
         onSelectCell(selectedCell.row + 1, selectedCell.col);
       } else if (dy < 0 && selectedCell.row > 0) {
         onSelectCell(selectedCell.row - 1, selectedCell.col);
@@ -88,27 +96,27 @@ export const Board: React.FC<BoardProps> = ({
 
   return (
     <div className="w-full max-w-[min(480px,calc(100dvh-290px))] aspect-square mx-auto px-1.5 sm:px-0 select-none touch-manipulation">
-      {/* 9x9 Classic Ink Board Frame */}
+      {/* Dynamic Multi-Size Board Frame */}
       <div
         role="grid"
-        aria-label="数独棋盘 9乘9"
+        aria-label={`数独棋盘 ${size}乘${size}`}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         className="relative w-full aspect-square bg-white dark:bg-slate-900 rounded-lg overflow-hidden border-2 sm:border-[2.5px] border-slate-900 dark:border-slate-100 flex flex-col transition-colors duration-200 touch-manipulation"
       >
         {board.map((rowCells, r) => (
-          <div key={`row-${r}`} role="row" className="flex-1 grid grid-cols-9 w-full">
+          <div key={`row-${r}`} role="row" className={`flex-1 grid ${gridColsClass} w-full`}>
             {rowCells.map((cell, c) => {
               const isSelected = selectedCell?.row === r && selectedCell?.col === c;
 
-              // Related crosshair (same row, col, or 3x3 box)
+              // Related crosshair (same row, col, or box)
               let isRelated = false;
               if (settings.highlightCross && selectedCell) {
                 const sameRow = selectedCell.row === r;
                 const sameCol = selectedCell.col === c;
                 const sameBox =
-                  Math.floor(selectedCell.row / 3) === Math.floor(r / 3) &&
-                  Math.floor(selectedCell.col / 3) === Math.floor(c / 3);
+                  getMultiSizeBoxIndex(selectedCell.row, selectedCell.col, size) ===
+                  getMultiSizeBoxIndex(r, c, size);
                 isRelated = (sameRow || sameCol || sameBox) && !isSelected;
               }
 
@@ -133,7 +141,7 @@ export const Board: React.FC<BoardProps> = ({
                 if (scopeHighlight.type === 'col' && scopeHighlight.index === c) isScope = true;
                 if (
                   scopeHighlight.type === 'box' &&
-                  Math.floor(r / 3) * 3 + Math.floor(c / 3) === scopeHighlight.index
+                  getMultiSizeBoxIndex(r, c, size) === scopeHighlight.index
                 ) {
                   isScope = true;
                 }
@@ -158,6 +166,8 @@ export const Board: React.FC<BoardProps> = ({
                   isHouseCompleted={!!completedHouseCells?.[`${r}-${c}`]}
                   customCandidates={customCandidates}
                   customDisplayValue={customDisplayValue}
+                  boardSize={size}
+                  symbolTheme={currentSymbolTheme}
                   onClick={onSelectCell}
                 />
               );

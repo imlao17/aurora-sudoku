@@ -1,5 +1,6 @@
 import React, { memo } from 'react';
-import type { CellData } from '../types/sudoku';
+import type { CellData, BoardSize, SymbolTheme } from '../types/sudoku';
+import { getSymbolDisplay } from '../utils/multiSizeSudoku';
 
 interface CellProps {
   cell: CellData;
@@ -16,6 +17,8 @@ interface CellProps {
   isHouseCompleted?: boolean;
   customCandidates?: number[];
   customDisplayValue?: number;
+  boardSize?: BoardSize;
+  symbolTheme?: SymbolTheme;
   onClick: (row: number, col: number) => void;
 }
 
@@ -33,21 +36,40 @@ export const Cell: React.FC<CellProps> = memo(({
   isHouseCompleted = false,
   customCandidates,
   customDisplayValue,
+  boardSize = 9,
+  symbolTheme = 'numbers',
   onClick,
 }) => {
   const { row, col, isInitial, notes } = cell;
   const value = customDisplayValue !== undefined ? customDisplayValue : cell.value;
   const displayNotes = customCandidates !== undefined ? customCandidates : notes;
 
-  // 3x3 box boundary styling: Crisp solid ink 3x3 dividers with clean hairline cells
-  const borderRight = (col === 2 || col === 5)
+  // Dynamic box boundary styling depending on boardSize
+  let isBoxRight = false;
+  let isBoxBottom = false;
+  const isLastCol = col === boardSize - 1;
+  const isLastRow = row === boardSize - 1;
+
+  if (boardSize === 4) {
+    isBoxRight = col === 1;
+    isBoxBottom = row === 1;
+  } else if (boardSize === 6) {
+    isBoxRight = col === 2;
+    isBoxBottom = row === 1 || row === 3;
+  } else {
+    isBoxRight = col === 2 || col === 5;
+    isBoxBottom = row === 2 || row === 5;
+  }
+
+  const borderRight = isBoxRight
     ? 'border-r-2 sm:border-r-[2.5px] border-r-slate-900 dark:border-r-slate-100'
-    : col === 8
+    : isLastCol
     ? ''
     : 'border-r border-r-slate-200 dark:border-r-slate-800';
-  const borderBottom = (row === 2 || row === 5)
+
+  const borderBottom = isBoxBottom
     ? 'border-b-2 sm:border-b-[2.5px] border-b-slate-900 dark:border-b-slate-100'
-    : row === 8
+    : isLastRow
     ? ''
     : 'border-b border-b-slate-200 dark:border-b-slate-800';
 
@@ -90,11 +112,21 @@ export const Cell: React.FC<CellProps> = memo(({
     }
   }
 
+  const displaySymbol = getSymbolDisplay(value, symbolTheme, boardSize);
+
+  // Dynamic font sizing based on boardSize
+  let fontSizeClass = 'text-xl sm:text-2xl md:text-3xl';
+  if (boardSize === 4) {
+    fontSizeClass = 'text-3xl sm:text-4xl md:text-5xl';
+  } else if (boardSize === 6) {
+    fontSizeClass = 'text-2xl sm:text-3xl md:text-4xl';
+  }
+
   // Accessible descriptive label
   const accessibleLabel = value !== 0
-    ? `第${row + 1}行第${col + 1}列，${isInitial ? '题目已知数' : '已填数'} ${value}`
+    ? `第${row + 1}行第${col + 1}列，${isInitial ? '题目已知数' : '已填数'} ${displaySymbol || value}`
     : displayNotes.length > 0
-    ? `第${row + 1}行第${col + 1}列，空格，候选笔记 ${displayNotes.join('、')}`
+    ? `第${row + 1}行第${col + 1}列，空格，候选笔记 ${displayNotes.map((n) => getSymbolDisplay(n, symbolTheme, boardSize)).join('、')}`
     : `第${row + 1}行第${col + 1}列，空格`;
 
   return (
@@ -110,11 +142,11 @@ export const Cell: React.FC<CellProps> = memo(({
     >
       {value !== 0 ? (
         <span
-          className={`text-xl sm:text-2xl md:text-3xl font-sans font-bold tabular-nums tracking-tight leading-none transition-transform select-none ${textColorClass} ${
+          className={`${fontSizeClass} font-sans font-bold tabular-nums tracking-tight leading-none transition-transform select-none ${textColorClass} ${
             !isInitial ? 'animate-pop' : ''
           }`}
         >
-          {value}
+          {displaySymbol || value}
         </span>
       ) : displayNotes.length > 0 ? (
         // 3x3 pencil marks (candidate numbers) grid

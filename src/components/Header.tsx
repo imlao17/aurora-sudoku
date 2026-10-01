@@ -1,5 +1,4 @@
-import React from 'react';
-import type { Difficulty, GameMode } from '../types/sudoku';
+import type { Difficulty, GameMode, BoardSize, SymbolTheme } from '../types/sudoku';
 import { DIFFICULTY_PRESETS } from '../constants/sudoku';
 import {
   Trophy,
@@ -22,6 +21,8 @@ interface HeaderProps {
   dateStr: string;
   isDailyCompleted: boolean;
   soundEnabled: boolean;
+  boardSize?: BoardSize;
+  symbolTheme?: SymbolTheme;
   user?: UserProfile;
   onSelectDifficulty: (diff: Difficulty) => void;
   onSelectMode: (mode: GameMode) => void;
@@ -42,6 +43,8 @@ export const Header: React.FC<HeaderProps> = ({
   dateStr,
   isDailyCompleted,
   soundEnabled,
+  boardSize = 9,
+  symbolTheme = 'numbers',
   user,
   onSelectDifficulty,
   onSelectMode,
@@ -75,17 +78,21 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="flex items-baseline gap-2 min-w-0">
             <h1 className="text-base sm:text-lg font-black tracking-tight text-slate-950 dark:text-white m-0 truncate">
-              知数
+              {boardSize !== 9 ? `小知数 ${boardSize}×${boardSize}` : '知数'}
             </h1>
             <span className="text-[11px] text-slate-400 dark:text-slate-400 font-mono hidden sm:inline">
-              {gameMode === 'daily' ? `· 每日 ${dateStr}` : ''}
+              {boardSize !== 9
+                ? `· 启蒙 (${symbolTheme === 'animals' ? '萌宠' : symbolTheme === 'fruit' ? '蔬果' : symbolTheme === 'hanzi' ? '汉字' : '数字'})`
+                : gameMode === 'daily'
+                ? `· 每日 ${dateStr}`
+                : ''}
             </span>
           </div>
         </div>
 
         {/* 辅助工具图标 */}
         <div className="flex items-center gap-1 shrink-0 text-slate-600 dark:text-slate-400">
-          {onStartVisualSolver && (
+          {onStartVisualSolver && boardSize === 9 && (
             <button
               type="button"
               onClick={onStartVisualSolver}

@@ -8,8 +8,18 @@ import type {
   MoveHistory,
   GameStats,
   GameSettings,
+  BoardSize,
+  SymbolTheme,
 } from './types/sudoku';
 import { generatePuzzle, findConflicts, isBoardCompleted, findNewlyCompletedCells, autoFillLastRemainingCells } from './utils/sudoku';
+import {
+  generateMultiSizePuzzle,
+  checkMultiSizeConflicts,
+  autoFillMultiSizeLastRemainingCells,
+  generateJuniorHint,
+  isMultiSizeBoardCompleted,
+  findNewlyCompletedMultiSizeCells,
+} from './utils/multiSizeSudoku';
 import { createPRNG, hashStringToSeed } from './utils/prng';
 import { soundManager } from './utils/sound';
 import { MAX_HINTS } from './constants/sudoku';
@@ -76,6 +86,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   // Game configuration
   const [difficulty, setDifficulty] = useState<Difficulty>('medium');
   const [gameMode, setGameMode] = useState<GameMode>('random');
+  const [boardSize, setBoardSize] = useState<BoardSize>(9);
+  const [symbolTheme, setSymbolTheme] = useState<SymbolTheme>(() => loadSettings().symbolTheme || 'numbers');
 
   // Game State
   const [board, setBoard] = useState<CellData[][]>([]);
@@ -146,6 +158,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   const stateRef = useRef({
     currentScreen,
     board,
+    boardSize,
+    symbolTheme,
     selectedCell,
     isNoteMode,
     isPaused,
@@ -177,6 +191,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
     stateRef.current = {
       currentScreen,
       board,
+      boardSize,
+      symbolTheme,
       selectedCell,
       isNoteMode,
       isPaused,
@@ -207,47 +223,71 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
 
 
   // Initialize a new game
-  const initGame = useCallback((diff: Difficulty, mode: GameMode, forceReset: boolean = false) => {
+  const initGame = useCallback((
+    diff: Difficulty,
+    mode: GameMode,
+    forceReset: boolean = false,
+    targetSize: BoardSize = 9,
+    targetTheme?: SymbolTheme
+  ) => {
     const today = getTodayDateStr();
     setActiveDateStr(today);
+
+    const appliedTheme = targetTheme || settings.symbolTheme || 'numbers';
+    setBoardSize(targetSize);
+    setSymbolTheme(appliedTheme);
 
     // Check if there is an in-progress game in localStorage
     if (!forceReset) {
       const saved = loadActiveGame();
       if (saved && !saved.isCompleted && saved.difficulty === diff && saved.gameMode === mode) {
-        if (mode === 'daily' && saved.dateStr !== today) {
-          // Stale daily game from yesterday, generate new
-        } else {
-          setBoard(saved.board);
-          setElapsedTime(saved.elapsedTime);
-          setMistakesCount(saved.mistakesCount);
-          setHintsRemaining(saved.hintsRemaining);
-          setHintsUsed(saved.hintsUsed ?? (MAX_HINTS - saved.hintsRemaining));
-          setIsPaused(saved.isPaused);
-          setIsCompleted(false);
-          setHistory([]);
-          setHistoryIndex(-1);
-          setSelectedCell({ row: 0, col: 0 });
-          setActivePaintDigit(null);
-          return;
+        const savedSize = (saved.boardSize ?? (saved.board.length as BoardSize)) || 9;
+        if (savedSize === targetSize) {
+          if (mode === 'daily' && saved.dateStr !== today) {
+            // Stale daily game from yesterday, generate new
+          } else {
+            setBoard(saved.board);
+            setBoardSize(savedSize);
+            if (saved.symbolTheme) {
+              setSymbolTheme(saved.symbolTheme);
+            }
+            setElapsedTime(saved.elapsedTime);
+            setMistakesCount(saved.mistakesCount);
+            setHintsRemaining(saved.hintsRemaining);
+            setHintsUsed(saved.hintsUsed ?? (MAX_HINTS - saved.hintsRemaining));
+            setIsPaused(saved.isPaused);
+            setIsCompleted(false);
+            setHistory([]);
+            setHistoryIndex(-1);
+            setSelectedCell({ row: 0, col: 0 });
+            setActivePaintDigit(null);
+            return;
+          }
         }
       }
     }
 
     // Generate puzzle
-    let rng = Math.random;
-    if (mode === 'daily') {
-      // Seed must include the difficulty: with a date-only seed all three
-      // difficulties produce the same solution grid, so a player who did the
-      // easy daily already knows the answer to the medium and hard ones.
-      const seed = hashStringToSeed(`${today}:${diff}`);
-      rng = createPRNG(seed);
+    let initialBoard: number[][];
+    let solution: number[][];
+
+    if (targetSize === 4 || targetSize === 6) {
+      const res = generateMultiSizePuzzle(targetSize, diff);
+      initialBoard = res.puzzle;
+      solution = res.solution;
+    } else {
+      let rng = Math.random;
+      if (mode === 'daily') {
+        const seed = hashStringToSeed(`${today}:${diff}`);
+        rng = createPRNG(seed);
+      }
+      const res = generatePuzzle(diff, rng);
+      initialBoard = res.initialBoard;
+      solution = res.solution;
     }
 
-    const { initialBoard, solution } = generatePuzzle(diff, rng);
-
-    const newBoard: CellData[][] = Array.from({ length: 9 }, (_, r) =>
-      Array.from({ length: 9 }, (_, c) => {
+    const newBoard: CellData[][] = Array.from({ length: targetSize }, (_, r) =>
+      Array.from({ length: targetSize }, (_, c) => {
         const val = initialBoard[r][c];
         return {
           row: r,
@@ -284,7 +324,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
     // Count the attempt here (on a genuinely new puzzle) rather than on
     // victory, so the win rate reflects games started, not only games won.
     recordGameStarted(diff);
-  }, []);
+  }, [settings.symbolTheme]);
 
   // Mount initialization
   // Restore the in-progress game if present.
@@ -296,10 +336,13 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
     if (saved && !saved.isCompleted) {
       const isStaleDaily = saved.gameMode === 'daily' && saved.dateStr !== getTodayDateStr();
       if (!isStaleDaily) {
+        const size = (saved.boardSize ?? (saved.board.length as BoardSize)) || 9;
         setDifficulty(saved.difficulty);
         setGameMode(saved.gameMode);
+        setBoardSize(size);
+        if (saved.symbolTheme) setSymbolTheme(saved.symbolTheme);
         setActiveDateStr(saved.dateStr ?? getTodayDateStr());
-        initGame(saved.difficulty, saved.gameMode);
+        initGame(saved.difficulty, saved.gameMode, false, size, saved.symbolTheme);
         return () => {
           if (houseWaveTimerRef.current) {
             clearTimeout(houseWaveTimerRef.current);
@@ -308,7 +351,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
       }
     }
     if (initialScreen === 'game') {
-      initGame(difficulty, gameMode);
+      initGame(difficulty, gameMode, true, boardSize, symbolTheme);
     }
     return () => {
       if (houseWaveTimerRef.current) {
@@ -333,6 +376,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
             gameMode: s.gameMode,
             dateStr: s.activeDateStr,
             board: s.board,
+            boardSize: s.boardSize,
+            symbolTheme: s.symbolTheme,
             elapsedTime: nextTime,
             mistakesCount: s.mistakesCount,
             hintsRemaining: s.hintsRemaining,
@@ -363,6 +408,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
           gameMode: s.gameMode,
           dateStr: s.activeDateStr,
           board: s.board,
+          boardSize: s.boardSize,
+          symbolTheme: s.symbolTheme,
           elapsedTime: s.elapsedTime,
           mistakesCount: s.mistakesCount,
           hintsRemaining: s.hintsRemaining,
@@ -383,25 +430,32 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
 
   // Conflicts calculation
   const conflicts = useMemo(() => {
-    if (board.length < 9) return Array.from({ length: 9 }, () => Array(9).fill(false));
+    const size = board.length;
+    if (size === 0) return [];
+    if (size === 4 || size === 6) {
+      return checkMultiSizeConflicts(board, size as BoardSize);
+    }
+    if (size < 9) return Array.from({ length: 9 }, () => Array(9).fill(false));
     const numGrid = board.map((row) => row.map((c) => c.value));
     return findConflicts(numGrid);
   }, [board]);
 
   // Accurate number counts: excludes erroneous cells so completion isn't spoofed
   const numberCounts = useMemo(() => {
-    const counts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 };
-    if (board.length < 9) return counts;
-    for (let r = 0; r < 9; r++) {
-      for (let c = 0; c < 9; c++) {
-        const cell = board[r][c];
-        if (cell.value >= 1 && cell.value <= 9 && !cell.isError) {
+    const size = board.length || boardSize;
+    const counts: Record<number, number> = {};
+    for (let i = 1; i <= size; i++) counts[i] = 0;
+    if (board.length === 0) return counts;
+    for (let r = 0; r < board.length; r++) {
+      for (let c = 0; c < board.length; c++) {
+        const cell = board[r]?.[c];
+        if (cell && cell.value >= 1 && cell.value <= size && !cell.isError) {
           counts[cell.value] = (counts[cell.value] || 0) + 1;
         }
       }
     }
     return counts;
-  }, [board]);
+  }, [board, boardSize]);
 
   // Check victory condition.
   // `pendingHintsUsed` lets a caller that is *simultaneously* incrementing
@@ -409,8 +463,15 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   // state update has not been committed yet at this point.
   const checkVictory = useCallback(
     (currentBoard: CellData[][], pendingHintsUsed?: number, pendingMistakes?: number) => {
-    const numGrid = currentBoard.map((row) => row.map((c) => c.value));
-    if (isBoardCompleted(numGrid)) {
+    const size = currentBoard.length as BoardSize;
+    let completed = false;
+    if (size === 4 || size === 6) {
+      completed = isMultiSizeBoardCompleted(currentBoard, size);
+    } else {
+      const numGrid = currentBoard.map((row) => row.map((c) => c.value));
+      completed = isBoardCompleted(numGrid);
+    }
+    if (completed) {
       setIsCompleted(true);
       clearActiveGame();
       soundManager.playVictory();
@@ -472,10 +533,17 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
       return updated;
     });
 
+    if (newSettings.symbolTheme) {
+      setSymbolTheme(newSettings.symbolTheme);
+    }
+
     if (newSettings.autoFillLastRemaining) {
       const s = stateRef.current;
       if (s.board.length > 0 && !s.isCompleted && !s.isPaused && !s.isVisualSolverActive) {
-        const autoFillRes = autoFillLastRemainingCells(s.board, s.settings.autoClearNotes);
+        const autoFillRes =
+          s.boardSize === 4 || s.boardSize === 6
+            ? autoFillMultiSizeLastRemainingCells(s.board, s.boardSize)
+            : autoFillLastRemainingCells(s.board, s.settings.autoClearNotes);
         if (autoFillRes.filledCells.length > 0) {
           const move: MoveHistory = {
             selectedBefore: s.selectedCell,
@@ -613,7 +681,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
         setMistakesCount((m) => m + 1);
         soundManager.playError();
       } else if (nextValue !== 0) {
-        const willBeFull = (numberCounts[nextValue] || 0) + 1 >= 9;
+        const willBeFull = (numberCounts[nextValue] || 0) + 1 >= (s.boardSize || 9);
         soundManager.playPlaceNumber(nextValue, willBeFull);
       } else {
         soundManager.playErase();
@@ -631,6 +699,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
         newNotes: [],
       });
 
+      const geo = s.boardSize === 4 ? { boxRows: 2, boxCols: 2 } : s.boardSize === 6 ? { boxRows: 2, boxCols: 3 } : { boxRows: 3, boxCols: 3 };
+
       // Update board and track peer note eliminations in changes array
       const newBoard = s.board.map((rList, r) =>
         rList.map((cData, c) => {
@@ -646,8 +716,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
             const sameRow = r === row;
             const sameCol = c === col;
             const sameBox =
-              Math.floor(r / 3) === Math.floor(row / 3) &&
-              Math.floor(c / 3) === Math.floor(col / 3);
+              Math.floor(r / geo.boxRows) === Math.floor(row / geo.boxRows) &&
+              Math.floor(c / geo.boxCols) === Math.floor(col / geo.boxCols);
             if ((sameRow || sameCol || sameBox) && cData.notes.includes(nextValue)) {
               const updatedNotes = cData.notes.filter((n) => n !== nextValue);
               changes.push({
@@ -673,7 +743,10 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
       const allChangedPositions: { row: number; col: number }[] = [{ row, col }];
 
       if (!isError && nextValue !== 0 && s.settings.autoFillLastRemaining) {
-        const autoFillRes = autoFillLastRemainingCells(newBoard, s.settings.autoClearNotes);
+        const autoFillRes =
+          s.boardSize === 4 || s.boardSize === 6
+            ? autoFillMultiSizeLastRemainingCells(newBoard, s.boardSize)
+            : autoFillLastRemainingCells(newBoard, s.settings.autoClearNotes);
         if (autoFillRes.filledCells.length > 0) {
           finalBoard = autoFillRes.updatedBoard;
           allChanges.push(...autoFillRes.deltas);
@@ -698,7 +771,10 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
       if (!isError && nextValue !== 0) {
         const newlyCompletedMap = new Map<string, { row: number; col: number }>();
         for (const pos of allChangedPositions) {
-          const completedInPos = findNewlyCompletedCells(s.board, finalBoard, pos.row, pos.col);
+          const completedInPos =
+            s.boardSize === 4 || s.boardSize === 6
+              ? findNewlyCompletedMultiSizeCells(s.board, finalBoard, pos.row, pos.col, s.boardSize)
+              : findNewlyCompletedCells(s.board, finalBoard, pos.row, pos.col);
           for (const c of completedInPos) {
             newlyCompletedMap.set(`${c.row}-${c.col}`, c);
           }
@@ -869,6 +945,28 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
     const s = stateRef.current;
     if (s.hintsRemaining <= 0 || s.isPaused || s.isCompleted) return;
 
+    if (s.boardSize === 4 || s.boardSize === 6 || s.settings.juniorMode) {
+      const juniorHint = generateJuniorHint(s.board, s.boardSize, s.symbolTheme);
+      if (juniorHint) {
+        const smartHint: SmartHint = {
+          type: 'naked-single',
+          row: juniorHint.row,
+          col: juniorHint.col,
+          suggestedValue: juniorHint.value,
+          title: '启发点拨 (小知数)',
+          techniqueName: '启发点拨 (小知数)',
+          explanation: juniorHint.message,
+          relatedCells: [{ row: juniorHint.row, col: juniorHint.col }],
+          causeCells: [],
+          scope: { type: 'row', index: juniorHint.row },
+        };
+        setSelectedCell({ row: juniorHint.row, col: juniorHint.col });
+        setCurrentHint(smartHint);
+        soundManager.playHint();
+        return;
+      }
+    }
+
     const hint = analyzeNextHint(s.board, s.selectedCell);
     if (!hint) return;
 
@@ -954,10 +1052,18 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   }, []);
 
   const handleStartGameFromHome = useCallback(
-    (diff: Difficulty, mode: GameMode, forceReset: boolean = true) => {
+    (
+      diff: Difficulty,
+      mode: GameMode,
+      forceReset: boolean = true,
+      targetSize: BoardSize = 9,
+      targetTheme?: SymbolTheme
+    ) => {
       setDifficulty(diff);
       setGameMode(mode);
-      initGame(diff, mode, forceReset);
+      setBoardSize(targetSize);
+      if (targetTheme) setSymbolTheme(targetTheme);
+      initGame(diff, mode, forceReset, targetSize, targetTheme);
       setIsPaused(false);
       setCurrentScreen('game');
     },
@@ -968,14 +1074,17 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
     if (board.length === 0) {
       const saved = loadActiveGame();
       if (saved && !saved.isCompleted) {
-        initGame(saved.difficulty, saved.gameMode, false);
+        const size = (saved.boardSize ?? (saved.board.length as BoardSize)) || 9;
+        setBoardSize(size);
+        if (saved.symbolTheme) setSymbolTheme(saved.symbolTheme);
+        initGame(saved.difficulty, saved.gameMode, false, size, saved.symbolTheme);
       } else {
-        initGame(difficulty, gameMode, true);
+        initGame(difficulty, gameMode, true, boardSize, symbolTheme);
       }
     }
     setIsPaused(false);
     setCurrentScreen('game');
-  }, [board.length, difficulty, gameMode, initGame]);
+  }, [board.length, difficulty, gameMode, boardSize, symbolTheme, initGame]);
 
   const handleBackHome = useCallback(() => {
     setIsPaused(true);
@@ -985,6 +1094,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
         gameMode,
         dateStr: activeDateStr,
         board,
+        boardSize,
+        symbolTheme,
         elapsedTime,
         mistakesCount,
         hintsRemaining,
@@ -994,7 +1105,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
       });
     }
     setCurrentScreen('home');
-  }, [board, isCompleted, difficulty, gameMode, activeDateStr, elapsedTime, mistakesCount, hintsRemaining, hintsUsed]);
+  }, [board, isCompleted, difficulty, gameMode, activeDateStr, boardSize, symbolTheme, elapsedTime, mistakesCount, hintsRemaining, hintsUsed]);
 
   const handleCycleTheme = useCallback(() => {
     const THEME_CYCLE: ThemeType[] = ['nordic', 'zen', 'matcha', 'aurora', 'cyberpunk', 'twilight'];
@@ -1020,7 +1131,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
   const activeGameSummary = useMemo(() => {
     if (board.length === 0 || isCompleted) {
       const saved = loadActiveGame();
-      if (saved && !saved.isCompleted && Array.isArray(saved.board) && saved.board.length === 9) {
+      if (saved && !saved.isCompleted && Array.isArray(saved.board) && saved.board.length > 0) {
         let filled = 0;
         for (const row of saved.board) {
           for (const cell of row) {
@@ -1030,6 +1141,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
         return {
           difficulty: saved.difficulty,
           gameMode: saved.gameMode,
+          boardSize: saved.boardSize ?? (saved.board.length as BoardSize),
+          symbolTheme: saved.symbolTheme,
           elapsedTime: saved.elapsedTime,
           filledCount: filled,
         };
@@ -1045,10 +1158,12 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
     return {
       difficulty,
       gameMode,
+      boardSize,
+      symbolTheme,
       elapsedTime,
       filledCount: filled,
     };
-  }, [board, isCompleted, difficulty, gameMode, elapsedTime]);
+  }, [board, isCompleted, difficulty, gameMode, boardSize, symbolTheme, elapsedTime]);
 
   // Keyboard navigation & inputs
   useEffect(() => {
@@ -1258,6 +1373,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
           soundEnabled={settings.soundEnabled}
           theme={settings.theme}
           user={currentUser}
+          defaultSymbolTheme={settings.symbolTheme || 'numbers'}
           onOpenProfile={() => setShowProfileModal(true)}
           onToggleSound={() => updateSettings({ soundEnabled: !settings.soundEnabled })}
           onCycleTheme={handleCycleTheme}
@@ -1279,19 +1395,21 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
               dateStr={activeDateStr}
               isDailyCompleted={isDailyCompletedToday}
               soundEnabled={settings.soundEnabled}
+              boardSize={boardSize}
+              symbolTheme={symbolTheme}
               user={currentUser}
               onOpenProfile={() => setShowProfileModal(true)}
               onBackHome={handleBackHome}
               onSelectDifficulty={(diff) => {
                 setDifficulty(diff);
                 setGameMode('random');
-                initGame(diff, 'random', true);
+                initGame(diff, 'random', true, boardSize, symbolTheme);
               }}
               onSelectMode={(mode) => {
                 setGameMode(mode);
-                initGame(difficulty, mode, false);
+                initGame(difficulty, mode, false, boardSize, symbolTheme);
               }}
-              onNewGame={() => initGame(difficulty, gameMode, true)}
+              onNewGame={() => initGame(difficulty, gameMode, true, boardSize, symbolTheme)}
               onStartVisualSolver={handleStartVisualSolver}
               onOpenStats={() => {
                 setStatsModalTab('stats');
@@ -1314,10 +1432,12 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
               onTogglePause={() => setIsPaused((p) => !p)}
             />
 
-            {/* 9x9 Board */}
+            {/* Adaptive Board Grid */}
             <main className="mt-0.5 sm:mt-1 mb-1 sm:mb-2 flex items-center justify-center">
               <Board
                 board={board}
+                boardSize={boardSize}
+                symbolTheme={symbolTheme}
                 selectedCell={selectedCell}
                 conflicts={conflicts}
                 settings={settings}
@@ -1403,6 +1523,8 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
                 )}
 
                 <NumberPad
+                  boardSize={boardSize}
+                  symbolTheme={symbolTheme}
                   numberCounts={numberCounts}
                   selectedNumber={
                     settings.fastInputMode && activePaintDigit !== null
@@ -1430,7 +1552,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
         isNewBest={isNewBestRecord}
         onPlayAgain={() => {
           setShowVictoryModal(false);
-          initGame(difficulty, gameMode, true);
+          initGame(difficulty, gameMode, true, boardSize, symbolTheme);
         }}
         onClose={() => setShowVictoryModal(false)}
       />

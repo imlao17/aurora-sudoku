@@ -1,11 +1,14 @@
 import React, { memo } from 'react';
 import { Check } from 'lucide-react';
-import { DIGITS } from '../constants/sudoku';
+import type { BoardSize, SymbolTheme } from '../types/sudoku';
+import { getSymbolDisplay } from '../utils/multiSizeSudoku';
 
 interface NumberPadProps {
-  numberCounts: Record<number, number>; // How many of each valid number (1-9) is on the board
+  numberCounts: Record<number, number>; // How many of each valid number (1-N) is on the board
   selectedNumber: number; // The number in current selected cell (for highlighting pad)
   isNoteMode: boolean;
+  boardSize?: BoardSize;
+  symbolTheme?: SymbolTheme;
   onNumberClick: (num: number) => void;
 }
 
@@ -13,16 +16,50 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
   numberCounts,
   selectedNumber,
   isNoteMode,
+  boardSize = 9,
+  symbolTheme = 'numbers',
   onNumberClick,
 }) => {
+  const size = boardSize;
+  const digits = Array.from({ length: size }, (_, i) => i + 1);
+
+  const gridColsClass =
+    size === 4
+      ? 'grid-cols-4 max-w-sm'
+      : size === 6
+      ? 'grid-cols-6 max-w-md'
+      : 'grid-cols-9 max-w-xl';
+
+  const btnHeightClass =
+    size === 4
+      ? 'py-3 sm:py-4 min-h-[58px] sm:min-h-[68px]'
+      : size === 6
+      ? 'py-2.5 sm:py-3.5 min-h-[52px] sm:min-h-[60px]'
+      : 'py-2 sm:py-3 min-h-[48px] sm:min-h-[56px]';
+
+  const fontClass =
+    size === 4
+      ? 'text-2xl sm:text-3xl'
+      : size === 6
+      ? 'text-xl sm:text-2xl'
+      : 'text-xl sm:text-2xl';
+
+  const gridColsInner =
+    size === 4
+      ? 'grid-cols-4'
+      : size === 6
+      ? 'grid-cols-6'
+      : 'grid-cols-9';
+
   return (
-    <div className="w-full max-w-xl mx-auto px-1.5 sm:px-4 pb-[max(0.6rem,env(safe-area-inset-bottom))] sm:pb-4 select-none">
-      <div className="grid grid-cols-9 gap-1 sm:gap-1.5">
-        {DIGITS.map((num) => {
+    <div className={`w-full ${gridColsClass} mx-auto px-1.5 sm:px-4 pb-[max(0.6rem,env(safe-area-inset-bottom))] sm:pb-4 select-none`}>
+      <div className={`grid ${gridColsInner} gap-1.5 sm:gap-2`}>
+        {digits.map((num) => {
           const count = numberCounts[num] || 0;
-          const isComplete = count >= 9;
-          const remaining = Math.max(0, 9 - count);
+          const isComplete = count >= size;
+          const remaining = Math.max(0, size - count);
           const isMatched = selectedNumber === num;
+          const symbol = getSymbolDisplay(num, symbolTheme, size);
 
           return (
             <button
@@ -30,21 +67,21 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
               type="button"
               onClick={() => onNumberClick(num)}
               aria-disabled={isComplete}
-              className={`relative flex flex-col items-center justify-center py-2 sm:py-3 min-h-[48px] sm:min-h-[56px] rounded-xl border transition-all active:scale-95 touch-manipulation cursor-pointer ${
+              className={`relative flex flex-col items-center justify-center ${btnHeightClass} rounded-2xl border transition-all active:scale-95 touch-manipulation cursor-pointer ${
                 isComplete
                   ? 'border-slate-100 dark:border-slate-900 bg-slate-50/40 text-slate-300 dark:bg-slate-900/20 dark:text-slate-700 opacity-25 cursor-default'
                   : isMatched
-                  ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950 font-black'
+                  ? 'border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950 font-black shadow-xs'
                   : isNoteMode
                   ? 'border-slate-400 dark:border-slate-600 bg-slate-100/70 dark:bg-slate-800/60 text-slate-900 dark:text-white'
-                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-900 dark:text-white'
+                  : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-900 dark:text-white shadow-2xs'
               }`}
-              aria-label={`填入数字 ${num}，剩余 ${remaining} 个`}
-              title={`填入数字 ${num} (剩余 ${remaining} 个)`}
+              aria-label={symbolTheme === 'numbers' ? `填入数字 ${symbol}，剩余 ${remaining} 个` : `填入 ${symbol}，剩余 ${remaining} 个`}
+              title={symbolTheme === 'numbers' ? `填入数字 ${symbol} (剩余 ${remaining} 个)` : `填入 ${symbol} (剩余 ${remaining} 个)`}
             >
-              {/* Digit */}
-              <span className="text-xl sm:text-2xl font-bold tabular-nums tracking-tight leading-none mb-0.5">
-                {num}
+              {/* Symbol / Digit */}
+              <span className={`${fontClass} font-bold tabular-nums tracking-tight leading-none mb-0.5`}>
+                {symbol}
               </span>
 
               {/* Remaining count badge / Completed badge */}

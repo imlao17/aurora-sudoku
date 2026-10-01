@@ -16,6 +16,8 @@ export const DEFAULT_SETTINGS: GameSettings = {
   autoClearNotes: true,
   autoFillLastRemaining: true,
   soundEnabled: true,
+  symbolTheme: 'numbers',
+  juniorMode: false,
 };
 
 const createInitialDiffStats = (): DifficultyStats => ({

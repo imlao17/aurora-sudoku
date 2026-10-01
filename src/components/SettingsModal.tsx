@@ -12,7 +12,7 @@ import {
   Palette,
   SlidersHorizontal,
 } from 'lucide-react';
-import type { GameSettings, ThemeType } from '../types/sudoku';
+import type { GameSettings, ThemeType, SymbolTheme } from '../types/sudoku';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -160,6 +160,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       checked: settings.autoFillLastRemaining,
     },
     {
+      key: 'juniorMode' as const,
+      label: '少儿启蒙引导模式',
+      desc: '在卡点时提供温和启发点拨，弱化失误惩罚，适合儿童与亲子共学',
+      icon: <Sparkles className="w-4 h-4 text-amber-500 stroke-[1.5]" />,
+      checked: !!settings.juniorMode,
+    },
+    {
       key: 'soundEnabled' as const,
       label: '音效与震动反馈',
       desc: '落子、笔记、撤销与通关时的拟真微触震动与纸墨落子音效',
@@ -231,6 +238,45 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight">{t.name}</span>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Symbol Theme Section */}
+          <div className="py-3.5 border-t border-slate-100 dark:divide-slate-800/80">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-500 stroke-[1.5]" />
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">棋盘符号与皮肤</span>
+              </div>
+              <span className="text-[10px] text-slate-400">支持 4×4 / 6×6 / 9×9</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {[
+                { id: 'numbers' as SymbolTheme, name: '经典数字', preview: '1 2 3', desc: '标准数字' },
+                { id: 'animals' as SymbolTheme, name: '可爱萌宠', preview: '🐱🐶🐰', desc: '动物认知' },
+                { id: 'fruit' as SymbolTheme, name: '清爽蔬果', preview: '🍎🍌🍇', desc: '蔬果启蒙' },
+                { id: 'hanzi' as SymbolTheme, name: '东方汉字', preview: '春 夏 秋', desc: '国学汉字' },
+              ].map((st) => {
+                const isSelected = (settings.symbolTheme || 'numbers') === st.id;
+                return (
+                  <button
+                    key={st.id}
+                    type="button"
+                    onClick={() => onUpdateSettings({ symbolTheme: st.id })}
+                    className={`flex flex-col items-center p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-2 border-amber-500 bg-amber-50/60 dark:border-amber-400 dark:bg-amber-950/20 shadow-xs'
+                        : 'border-slate-200 bg-white hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-700'
+                    }`}
+                  >
+                    <div className="w-full h-7 rounded-lg bg-slate-100 dark:bg-slate-800 mb-1.5 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-xs tracking-wider">
+                      <span>{st.preview}</span>
+                    </div>
+                    <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight">{st.name}</span>
+                    <span className="text-[10px] text-slate-400 mt-0.5">{st.desc}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

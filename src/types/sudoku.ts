@@ -62,6 +62,10 @@ export interface GameStats {
 
 export type ThemeType = 'nordic' | 'zen' | 'matcha' | 'aurora' | 'cyberpunk' | 'twilight';
 
+export type BoardSize = 4 | 6 | 9;
+
+export type SymbolTheme = 'numbers' | 'hanzi' | 'animals' | 'fruit';
+
 export interface GameSettings {
   theme: ThemeType;
   fastInputMode: boolean; // Number-first input mode
@@ -72,6 +76,8 @@ export interface GameSettings {
   autoClearNotes: boolean;
   autoFillLastRemaining: boolean; // 最后一个数字自动填充（行列宫仅剩1格或某数字已填满8个时自动补全）
   soundEnabled: boolean;
+  symbolTheme?: SymbolTheme;
+  juniorMode?: boolean;
 }
 
 export interface ActiveGameState {
@@ -85,6 +91,8 @@ export interface ActiveGameState {
   hintsUsed: number;
   isPaused: boolean;
   isCompleted: boolean;
+  boardSize?: BoardSize;
+  symbolTheme?: SymbolTheme;
 }
 
 export interface GameRecord {
