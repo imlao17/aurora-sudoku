@@ -1489,6 +1489,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
                   canUndo={historyIndex >= 0}
                   canRedo={historyIndex < history.length - 1}
                   hintsRemaining={hintsRemaining}
+                  boardSize={boardSize}
                   onToggleNoteMode={() => setIsNoteMode((p) => !p)}
                   onUndo={handleUndo}
                   onRedo={handleRedo}
