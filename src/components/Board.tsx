@@ -94,8 +94,15 @@ export const Board: React.FC<BoardProps> = ({
     }
   };
 
+  const maxBoardWidthClass =
+    size === 4
+      ? 'max-w-[min(520px,calc(100dvh-230px))]'
+      : size === 6
+      ? 'max-w-[min(500px,calc(100dvh-260px))]'
+      : 'max-w-[min(480px,calc(100dvh-290px))]';
+
   return (
-    <div className="w-full max-w-[min(480px,calc(100dvh-290px))] aspect-square mx-auto px-1.5 sm:px-0 select-none touch-manipulation">
+    <div className={`w-full ${maxBoardWidthClass} aspect-square mx-auto px-1.5 sm:px-0 select-none touch-manipulation`}>
       {/* Dynamic Multi-Size Board Frame */}
       <div
         role="grid"

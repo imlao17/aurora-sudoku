@@ -120,13 +120,29 @@ export const Cell: React.FC<CellProps> = memo(({
       ? getRubyPinyin(value, 'hanzi', boardSize)
       : null;
 
-  // Dynamic font sizing based on boardSize
+  // Dynamic font sizing based on boardSize and symbolTheme
   let fontSizeClass = 'text-xl sm:text-2xl md:text-3xl';
-  if (boardSize === 4) {
-    fontSizeClass = rubyPinyin ? 'text-2xl sm:text-3xl md:text-4xl' : 'text-3xl sm:text-4xl md:text-5xl';
+  if (symbolTheme === 'pinyin') {
+    if (boardSize === 4) {
+      fontSizeClass = 'text-4xl sm:text-5xl md:text-6xl font-black';
+    } else if (boardSize === 6) {
+      fontSizeClass = 'text-3xl sm:text-4xl md:text-5xl font-black';
+    } else {
+      fontSizeClass = 'text-2xl sm:text-3xl md:text-4xl font-bold';
+    }
+  } else if (boardSize === 4) {
+    fontSizeClass = rubyPinyin ? 'text-3xl sm:text-4xl md:text-5xl' : 'text-4xl sm:text-5xl md:text-6xl';
   } else if (boardSize === 6) {
-    fontSizeClass = rubyPinyin ? 'text-xl sm:text-2xl md:text-3xl' : 'text-2xl sm:text-3xl md:text-4xl';
+    fontSizeClass = rubyPinyin ? 'text-2xl sm:text-3xl md:text-4xl' : 'text-3xl sm:text-4xl md:text-5xl';
   }
+
+  // Dynamic ruby pinyin sizing based on boardSize
+  const rubySizeClass =
+    boardSize === 4
+      ? 'text-xs sm:text-sm md:text-base font-extrabold text-slate-700 dark:text-slate-200 tracking-wider mb-1'
+      : boardSize === 6
+      ? 'text-[11px] sm:text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300 tracking-wider mb-0.5'
+      : 'text-[9px] sm:text-[10px] md:text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider mb-0.5';
 
   // Accessible descriptive label
   const accessibleLabel = value !== 0
@@ -149,7 +165,7 @@ export const Cell: React.FC<CellProps> = memo(({
       {value !== 0 ? (
         rubyPinyin ? (
           <div className="flex flex-col items-center justify-center select-none leading-none -my-0.5 sm:-my-1">
-            <span className="text-[9px] sm:text-[10px] md:text-xs font-sans font-medium text-slate-500 dark:text-slate-400 tracking-wider leading-none mb-0.5 select-none">
+            <span className={`${rubySizeClass} font-sans leading-none select-none`}>
               {rubyPinyin}
             </span>
             <span

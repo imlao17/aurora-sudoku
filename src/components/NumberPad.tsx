@@ -34,17 +34,31 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
 
   const btnHeightClass =
     size === 4
-      ? 'py-3 sm:py-4 min-h-[58px] sm:min-h-[68px]'
+      ? 'py-3.5 sm:py-5 min-h-[72px] sm:min-h-[86px]'
       : size === 6
-      ? 'py-2.5 sm:py-3.5 min-h-[52px] sm:min-h-[60px]'
+      ? 'py-3 sm:py-4 min-h-[60px] sm:min-h-[72px]'
       : 'py-2 sm:py-3 min-h-[48px] sm:min-h-[56px]';
 
   const fontClass =
     size === 4
-      ? 'text-2xl sm:text-3xl'
+      ? 'text-3xl sm:text-4xl'
       : size === 6
-      ? 'text-xl sm:text-2xl'
+      ? 'text-2xl sm:text-3xl'
       : 'text-xl sm:text-2xl';
+
+  const padRubySizeClass =
+    size === 4
+      ? 'text-xs sm:text-sm font-extrabold text-slate-600 dark:text-slate-300 leading-none mb-1'
+      : size === 6
+      ? 'text-[10px] sm:text-xs font-bold text-slate-500 dark:text-slate-400 leading-none mb-0.5'
+      : 'text-[8px] sm:text-[9px] font-medium text-slate-400 dark:text-slate-500 leading-none mb-0.5';
+
+  const countBadgeSize =
+    size === 4
+      ? 'text-xs font-bold'
+      : size === 6
+      ? 'text-[11px] font-semibold'
+      : 'text-[10px] font-semibold';
 
   const gridColsInner =
     size === 4
@@ -100,7 +114,7 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
               {/* Symbol / Digit */}
               {rubyPinyin ? (
                 <div className="flex flex-col items-center justify-center leading-none mb-0.5">
-                  <span className="text-[8px] sm:text-[9px] font-sans font-medium text-slate-400 dark:text-slate-500 leading-none mb-0.5">
+                  <span className={`${padRubySizeClass} font-sans select-none`}>
                     {rubyPinyin}
                   </span>
                   <span className={`${fontClass} font-bold tracking-tight leading-none`}>
@@ -114,7 +128,7 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
               )}
 
               {/* Remaining count badge / Completed badge */}
-              <span className="text-[10px] font-semibold leading-none">
+              <span className={`${countBadgeSize} leading-none`}>
                 {isComplete ? (
                   <Check className="w-3 h-3 text-slate-500 dark:text-slate-400 stroke-[2.5]" />
                 ) : (
