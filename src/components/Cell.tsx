@@ -85,7 +85,7 @@ export const Cell: React.FC<CellProps> = memo(({
   } else if (isCause) {
     bgClass = 'bg-sky-100/80 ring-1 ring-sky-400 z-10 dark:bg-sky-500/20 dark:ring-sky-400';
   } else if (isSelected) {
-    bgClass = 'bg-blue-100/90 dark:bg-blue-950/70 z-10';
+    bgClass = 'bg-blue-100/90 ring-2 ring-inset ring-slate-900/80 dark:bg-blue-950/70 dark:ring-white/80 z-20';
   } else if (isConflict) {
     bgClass = 'bg-rose-100/90 text-rose-700 animate-shake z-10 dark:bg-rose-950/70 dark:text-rose-300';
   } else if (isSameNumber && value !== 0) {

@@ -466,7 +466,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer p-1"
           title="快速切换浅色/深色主题"
         >
-          {isDark ? <Sun className="w-3.5 h-3.5 stroke-[1.5] text-slate-300" /> : <Moon className="w-3.5 h-3.5 stroke-[1.5] text-slate-700" />}
+          {isDark ? <Moon className="w-3.5 h-3.5 stroke-[1.5] text-slate-300" /> : <Sun className="w-3.5 h-3.5 stroke-[1.5] text-slate-700" />}
         </button>
       </div>
     </div>
