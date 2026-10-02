@@ -18,6 +18,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   soundEnabled: true,
   symbolTheme: 'numbers',
   juniorMode: false,
+  showPinyinRuby: true,
 };
 
 const createInitialDiffStats = (): DifficultyStats => ({

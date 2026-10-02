@@ -11,6 +11,7 @@ import {
   Volume2,
   Palette,
   SlidersHorizontal,
+  BookOpen,
 } from 'lucide-react';
 import type { GameSettings, ThemeType, SymbolTheme } from '../types/sudoku';
 
@@ -167,6 +168,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       checked: !!settings.juniorMode,
     },
     {
+      key: 'showPinyinRuby' as const,
+      label: '汉字显示拼音注音',
+      desc: '在汉字模式下于字形上方标注声调拼音，辅助认字与拼读',
+      icon: <BookOpen className="w-4 h-4 text-slate-700 dark:text-slate-300 stroke-[1.5]" />,
+      checked: settings.showPinyinRuby !== false,
+    },
+    {
       key: 'soundEnabled' as const,
       label: '音效与震动反馈',
       desc: '落子、笔记、撤销与通关时的拟真微触震动与纸墨落子音效',
@@ -250,11 +258,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <span className="text-[10px] text-slate-400">支持 4×4 / 6×6 / 9×9</span>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
               {[
                 { id: 'numbers' as SymbolTheme, name: '经典数字', preview: '1 2 3', desc: '标准数字' },
                 { id: 'animals' as SymbolTheme, name: '可爱萌宠', preview: '🐱🐶🐰', desc: '动物认知' },
                 { id: 'fruit' as SymbolTheme, name: '清爽蔬果', preview: '🍎🍌🍇', desc: '蔬果启蒙' },
+                { id: 'pinyin' as SymbolTheme, name: '拼音启蒙', preview: 'a o e', desc: '声韵母认知' },
                 { id: 'hanzi' as SymbolTheme, name: '东方汉字', preview: '春 夏 秋', desc: '国学汉字' },
               ].map((st) => {
                 const isSelected = (settings.symbolTheme || 'numbers') === st.id;

@@ -64,7 +64,7 @@ export type ThemeType = 'nordic' | 'zen' | 'matcha' | 'aurora' | 'cyberpunk' | '
 
 export type BoardSize = 4 | 6 | 9;
 
-export type SymbolTheme = 'numbers' | 'hanzi' | 'animals' | 'fruit';
+export type SymbolTheme = 'numbers' | 'hanzi' | 'animals' | 'fruit' | 'pinyin';
 
 export interface GameSettings {
   theme: ThemeType;
@@ -78,6 +78,7 @@ export interface GameSettings {
   soundEnabled: boolean;
   symbolTheme?: SymbolTheme;
   juniorMode?: boolean;
+  showPinyinRuby?: boolean; // 汉字皮肤是否在上方显示拼音注音
 }
 
 export interface ActiveGameState {

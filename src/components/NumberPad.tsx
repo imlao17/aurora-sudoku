@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { Check } from 'lucide-react';
 import type { BoardSize, SymbolTheme } from '../types/sudoku';
-import { getSymbolDisplay } from '../utils/multiSizeSudoku';
+import { getSymbolDisplay, getRubyPinyin } from '../utils/multiSizeSudoku';
 
 interface NumberPadProps {
   numberCounts: Record<number, number>; // How many of each valid number (1-N) is on the board
@@ -9,6 +9,7 @@ interface NumberPadProps {
   isNoteMode: boolean;
   boardSize?: BoardSize;
   symbolTheme?: SymbolTheme;
+  showPinyinRuby?: boolean;
   onNumberClick: (num: number) => void;
 }
 
@@ -18,6 +19,7 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
   isNoteMode,
   boardSize = 9,
   symbolTheme = 'numbers',
+  showPinyinRuby = true,
   onNumberClick,
 }) => {
   const size = boardSize;
@@ -60,6 +62,10 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
           const remaining = Math.max(0, size - count);
           const isMatched = selectedNumber === num;
           const symbol = getSymbolDisplay(num, symbolTheme, size);
+          const rubyPinyin =
+            symbolTheme === 'hanzi' && showPinyinRuby !== false
+              ? getRubyPinyin(num, 'hanzi', size)
+              : null;
 
           return (
             <button
@@ -76,13 +82,36 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
                   ? 'border-slate-400 dark:border-slate-600 bg-slate-100/70 dark:bg-slate-800/60 text-slate-900 dark:text-white'
                   : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-850 text-slate-900 dark:text-white shadow-2xs'
               }`}
-              aria-label={symbolTheme === 'numbers' ? `填入数字 ${symbol}，剩余 ${remaining} 个` : `填入 ${symbol}，剩余 ${remaining} 个`}
-              title={symbolTheme === 'numbers' ? `填入数字 ${symbol} (剩余 ${remaining} 个)` : `填入 ${symbol} (剩余 ${remaining} 个)`}
+              aria-label={
+                symbolTheme === 'numbers'
+                  ? `填入数字 ${symbol}，剩余 ${remaining} 个`
+                  : symbolTheme === 'pinyin'
+                  ? `填入拼音 ${symbol}，剩余 ${remaining} 个`
+                  : `填入 ${symbol}${rubyPinyin ? ` (${rubyPinyin})` : ''}，剩余 ${remaining} 个`
+              }
+              title={
+                symbolTheme === 'numbers'
+                  ? `填入数字 ${symbol} (剩余 ${remaining} 个)`
+                  : symbolTheme === 'pinyin'
+                  ? `填入拼音 ${symbol} (剩余 ${remaining} 个)`
+                  : `填入 ${symbol}${rubyPinyin ? ` (${rubyPinyin})` : ''} (剩余 ${remaining} 个)`
+              }
             >
               {/* Symbol / Digit */}
-              <span className={`${fontClass} font-bold tabular-nums tracking-tight leading-none mb-0.5`}>
-                {symbol}
-              </span>
+              {rubyPinyin ? (
+                <div className="flex flex-col items-center justify-center leading-none mb-0.5">
+                  <span className="text-[8px] sm:text-[9px] font-sans font-medium text-slate-400 dark:text-slate-500 leading-none mb-0.5">
+                    {rubyPinyin}
+                  </span>
+                  <span className={`${fontClass} font-bold tracking-tight leading-none`}>
+                    {symbol}
+                  </span>
+                </div>
+              ) : (
+                <span className={`${fontClass} font-bold tabular-nums tracking-tight leading-none mb-0.5`}>
+                  {symbol}
+                </span>
+              )}
 
               {/* Remaining count badge / Completed badge */}
               <span className="text-[10px] font-semibold leading-none">

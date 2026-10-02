@@ -168,6 +168,7 @@ export const Board: React.FC<BoardProps> = ({
                   customDisplayValue={customDisplayValue}
                   boardSize={size}
                   symbolTheme={currentSymbolTheme}
+                  showPinyinRuby={settings.showPinyinRuby}
                   onClick={onSelectCell}
                 />
               );

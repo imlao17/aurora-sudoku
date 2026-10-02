@@ -8,6 +8,8 @@ import {
   generateJuniorHint,
   isMultiSizeBoardCompleted,
   SYMBOL_PRESETS,
+  getRubyPinyin,
+  speakChineseText,
 } from '../src/utils/multiSizeSudoku';
 import type { CellData } from '../src/types/sudoku';
 
@@ -82,6 +84,35 @@ describe('MultiSize Sudoku Engine (4x4, 6x6, 9x9)', () => {
 
     expect(getSymbolDisplay(1, 'numbers', 4)).toBe('1');
     expect(getSymbolDisplay(0, 'numbers', 4)).toBe('');
+
+    // pinyin
+    expect(getSymbolDisplay(1, 'pinyin', 4)).toBe('b');
+    expect(getSymbolDisplay(2, 'pinyin', 4)).toBe('p');
+    expect(getSymbolDisplay(3, 'pinyin', 4)).toBe('m');
+    expect(getSymbolDisplay(4, 'pinyin', 4)).toBe('f');
+    expect(getSymbolDisplay(1, 'pinyin', 6)).toBe('a');
+    expect(getSymbolDisplay(6, 'pinyin', 6)).toBe('ü');
+  });
+
+  it('provides ruby pinyin tonal annotations for Hanzi and speech pronunciation', () => {
+    // 4x4 characters
+    expect(getRubyPinyin('春')).toBe('chūn');
+    expect(getRubyPinyin('夏')).toBe('xià');
+    expect(getRubyPinyin('秋')).toBe('qiū');
+    expect(getRubyPinyin('冬')).toBe('dōng');
+
+    // Values mapped to characters
+    expect(getRubyPinyin(1, 'hanzi', 4)).toBe('chūn');
+    expect(getRubyPinyin(2, 'hanzi', 6)).toBe('yuè');
+    expect(getRubyPinyin(9, 'hanzi', 9)).toBe('jiǔ');
+
+    // Non-hanzi returns null
+    expect(getRubyPinyin(1, 'numbers', 4)).toBeNull();
+    expect(getRubyPinyin(1, 'pinyin', 4)).toBeNull();
+    expect(getRubyPinyin('未知汉字')).toBeNull();
+
+    // Speech helper doesn't crash in environments without window.speechSynthesis
+    expect(() => speakChineseText('春')).not.toThrow();
   });
 
   it('computes box indexes accurately for 4x4, 6x6, and 9x9', () => {

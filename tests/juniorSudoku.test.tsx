@@ -167,4 +167,139 @@ describe('Junior Sudoku & Multi-Size Integration Tests', () => {
     // Dialog closes
     expect(screen.queryByText('启发点拨 (小知数)')).toBeNull();
   });
+
+  it('renders 6x6 board with Pinyin symbols and Pinyin numberpad', () => {
+    const createCell = (r: number, c: number, val: number, sol: number): CellData => ({
+      row: r,
+      col: c,
+      value: val,
+      solution: sol,
+      isInitial: val !== 0,
+      notes: [],
+    });
+
+    const board6: CellData[][] = Array.from({ length: 6 }, (_, r) =>
+      Array.from({ length: 6 }, (_, c) => createCell(r, c, (r + c) % 6 + 1, (r + c) % 6 + 1))
+    );
+
+    const settings: GameSettings = { ...DEFAULT_SETTINGS, symbolTheme: 'pinyin' };
+
+    render(
+      <div>
+        <Board
+          board={board6}
+          boardSize={6}
+          symbolTheme="pinyin"
+          selectedCell={{ row: 0, col: 0 }}
+          conflicts={Array.from({ length: 6 }, () => Array(6).fill(false))}
+          settings={settings}
+          isPaused={false}
+          onSelectCell={() => {}}
+        />
+        <NumberPad
+          boardSize={6}
+          symbolTheme="pinyin"
+          numberCounts={{ 1: 6, 2: 6, 3: 6, 4: 6, 5: 6, 6: 6 }}
+          selectedNumber={1}
+          isNoteMode={false}
+          onNumberClick={() => {}}
+        />
+      </div>
+    );
+
+    // Verify 36 cells (6x6)
+    const gridcells = screen.getAllByRole('gridcell');
+    expect(gridcells.length).toBe(36);
+
+    // Verify single finals (a, o, e, i, u, ü) are present on the board
+    expect(screen.getAllByText('a').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('o').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('e').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('i').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('u').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('ü').length).toBeGreaterThan(0);
+
+    // Verify NumberPad has buttons with pinyin aria-labels
+    expect(screen.getByRole('button', { name: /填入拼音 a/ })).toBeDefined();
+    expect(screen.getByRole('button', { name: /填入拼音 ü/ })).toBeDefined();
+  });
+
+  it('renders ruby pinyin above Hanzi and respects showPinyinRuby toggle', () => {
+    const createCell = (r: number, c: number, val: number, sol: number): CellData => ({
+      row: r,
+      col: c,
+      value: val,
+      solution: sol,
+      isInitial: val !== 0,
+      notes: [],
+    });
+
+    const board4: CellData[][] = [
+      [createCell(0, 0, 1, 1), createCell(0, 1, 2, 2), createCell(0, 2, 3, 3), createCell(0, 3, 4, 4)],
+      [createCell(1, 0, 3, 3), createCell(1, 1, 4, 4), createCell(1, 2, 1, 1), createCell(1, 3, 2, 2)],
+      [createCell(2, 0, 2, 2), createCell(2, 1, 1, 1), createCell(2, 2, 4, 4), createCell(2, 3, 3, 3)],
+      [createCell(3, 0, 4, 4), createCell(3, 1, 3, 3), createCell(3, 2, 2, 2), createCell(3, 3, 1, 1)],
+    ];
+
+    // 1. With showPinyinRuby: true
+    const { unmount } = render(
+      <div>
+        <Board
+          board={board4}
+          boardSize={4}
+          symbolTheme="hanzi"
+          selectedCell={{ row: 0, col: 0 }}
+          conflicts={Array.from({ length: 4 }, () => Array(4).fill(false))}
+          settings={{ ...DEFAULT_SETTINGS, symbolTheme: 'hanzi', showPinyinRuby: true }}
+          isPaused={false}
+          onSelectCell={() => {}}
+        />
+        <NumberPad
+          boardSize={4}
+          symbolTheme="hanzi"
+          showPinyinRuby={true}
+          numberCounts={{ 1: 4, 2: 4, 3: 4, 4: 4 }}
+          selectedNumber={1}
+          isNoteMode={false}
+          onNumberClick={() => {}}
+        />
+      </div>
+    );
+
+    // Verify ruby annotations (chūn for 春, xià for 夏, qiū for 秋, dōng for 冬)
+    expect(screen.getAllByText('chūn').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('xià').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('qiū').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('dōng').length).toBeGreaterThan(0);
+    unmount();
+
+    // 2. With showPinyinRuby: false
+    render(
+      <div>
+        <Board
+          board={board4}
+          boardSize={4}
+          symbolTheme="hanzi"
+          selectedCell={{ row: 0, col: 0 }}
+          conflicts={Array.from({ length: 4 }, () => Array(4).fill(false))}
+          settings={{ ...DEFAULT_SETTINGS, symbolTheme: 'hanzi', showPinyinRuby: false }}
+          isPaused={false}
+          onSelectCell={() => {}}
+        />
+        <NumberPad
+          boardSize={4}
+          symbolTheme="hanzi"
+          showPinyinRuby={false}
+          numberCounts={{ 1: 4, 2: 4, 3: 4, 4: 4 }}
+          selectedNumber={1}
+          isNoteMode={false}
+          onNumberClick={() => {}}
+        />
+      </div>
+    );
+
+    // Ruby annotations should not exist
+    expect(screen.queryByText('chūn')).toBeNull();
+    expect(screen.queryByText('xià')).toBeNull();
+  });
 });

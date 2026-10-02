@@ -284,10 +284,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 <span>启蒙符号皮肤</span>
                 <span className="text-amber-600 dark:text-amber-400 font-normal">图形化空间排他</span>
               </div>
-              <div className="grid grid-cols-4 gap-1.5">
+              <div className="grid grid-cols-5 gap-1">
                 {[
                   { id: 'animals', label: '🐱 萌宠', ariaLabel: '可爱萌宠' },
                   { id: 'fruit', label: '🍎 蔬果', ariaLabel: '清爽蔬果' },
+                  { id: 'pinyin', label: '🔤 拼音', ariaLabel: '拼音启蒙' },
                   { id: 'hanzi', label: '🈴 汉字', ariaLabel: '东方汉字' },
                   { id: 'numbers', label: '🔢 数字', ariaLabel: '经典数字' },
                 ].map((item) => (
@@ -296,7 +297,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                     type="button"
                     aria-label={item.ariaLabel}
                     onClick={() => setJuniorTheme(item.id as SymbolTheme)}
-                    className={`py-1.5 px-1 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                    className={`py-1.5 px-0.5 sm:px-1 rounded-xl border text-[11px] sm:text-xs font-bold transition-all cursor-pointer text-center ${
                       juniorTheme === item.id
                         ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-950 shadow-xs'
                         : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-50'

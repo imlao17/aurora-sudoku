@@ -1525,6 +1525,7 @@ export function App({ initialScreen = 'home' }: AppProps = {}) {
                 <NumberPad
                   boardSize={boardSize}
                   symbolTheme={symbolTheme}
+                  showPinyinRuby={settings.showPinyinRuby}
                   numberCounts={numberCounts}
                   selectedNumber={
                     settings.fastInputMode && activePaintDigit !== null

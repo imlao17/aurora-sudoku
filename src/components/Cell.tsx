@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import type { CellData, BoardSize, SymbolTheme } from '../types/sudoku';
-import { getSymbolDisplay } from '../utils/multiSizeSudoku';
+import { getSymbolDisplay, getRubyPinyin } from '../utils/multiSizeSudoku';
 
 interface CellProps {
   cell: CellData;
@@ -19,6 +19,7 @@ interface CellProps {
   customDisplayValue?: number;
   boardSize?: BoardSize;
   symbolTheme?: SymbolTheme;
+  showPinyinRuby?: boolean;
   onClick: (row: number, col: number) => void;
 }
 
@@ -38,6 +39,7 @@ export const Cell: React.FC<CellProps> = memo(({
   customDisplayValue,
   boardSize = 9,
   symbolTheme = 'numbers',
+  showPinyinRuby = true,
   onClick,
 }) => {
   const { row, col, isInitial, notes } = cell;
@@ -113,18 +115,22 @@ export const Cell: React.FC<CellProps> = memo(({
   }
 
   const displaySymbol = getSymbolDisplay(value, symbolTheme, boardSize);
+  const rubyPinyin =
+    symbolTheme === 'hanzi' && showPinyinRuby !== false
+      ? getRubyPinyin(value, 'hanzi', boardSize)
+      : null;
 
   // Dynamic font sizing based on boardSize
   let fontSizeClass = 'text-xl sm:text-2xl md:text-3xl';
   if (boardSize === 4) {
-    fontSizeClass = 'text-3xl sm:text-4xl md:text-5xl';
+    fontSizeClass = rubyPinyin ? 'text-2xl sm:text-3xl md:text-4xl' : 'text-3xl sm:text-4xl md:text-5xl';
   } else if (boardSize === 6) {
-    fontSizeClass = 'text-2xl sm:text-3xl md:text-4xl';
+    fontSizeClass = rubyPinyin ? 'text-xl sm:text-2xl md:text-3xl' : 'text-2xl sm:text-3xl md:text-4xl';
   }
 
   // Accessible descriptive label
   const accessibleLabel = value !== 0
-    ? `第${row + 1}行第${col + 1}列，${isInitial ? '题目已知数' : '已填数'} ${displaySymbol || value}`
+    ? `第${row + 1}行第${col + 1}列，${isInitial ? '题目已知数' : '已填数'} ${displaySymbol || value}${rubyPinyin ? ` (${rubyPinyin})` : ''}`
     : displayNotes.length > 0
     ? `第${row + 1}行第${col + 1}列，空格，候选笔记 ${displayNotes.map((n) => getSymbolDisplay(n, symbolTheme, boardSize)).join('、')}`
     : `第${row + 1}行第${col + 1}列，空格`;
@@ -141,13 +147,28 @@ export const Cell: React.FC<CellProps> = memo(({
       className={`relative w-full aspect-square flex items-center justify-center transition-colors duration-100 text-center select-none cursor-pointer focus:outline-none touch-manipulation ${borderRight} ${borderBottom} ${bgClass}`}
     >
       {value !== 0 ? (
-        <span
-          className={`${fontSizeClass} font-sans font-bold tabular-nums tracking-tight leading-none transition-transform select-none ${textColorClass} ${
-            !isInitial ? 'animate-pop' : ''
-          }`}
-        >
-          {displaySymbol || value}
-        </span>
+        rubyPinyin ? (
+          <div className="flex flex-col items-center justify-center select-none leading-none -my-0.5 sm:-my-1">
+            <span className="text-[9px] sm:text-[10px] md:text-xs font-sans font-medium text-slate-500 dark:text-slate-400 tracking-wider leading-none mb-0.5 select-none">
+              {rubyPinyin}
+            </span>
+            <span
+              className={`${fontSizeClass} font-sans font-bold tracking-tight leading-none transition-transform select-none ${textColorClass} ${
+                !isInitial ? 'animate-pop' : ''
+              }`}
+            >
+              {displaySymbol}
+            </span>
+          </div>
+        ) : (
+          <span
+            className={`${fontSizeClass} font-sans font-bold tabular-nums tracking-tight leading-none transition-transform select-none ${textColorClass} ${
+              !isInitial ? 'animate-pop' : ''
+            }`}
+          >
+            {displaySymbol || value}
+          </span>
+        )
       ) : displayNotes.length > 0 ? (
         // 3x3 pencil marks (candidate numbers) grid
         <div className="w-full h-full p-0.5 grid grid-cols-3 grid-rows-3 pointer-events-none select-none">

@@ -61,6 +61,40 @@ export const SYMBOL_PRESETS: Record<
       9: ['壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'],
     },
   },
+  pinyin: {
+    name: '拼音启蒙',
+    description: '单韵母与声母启蒙，拼读辨识',
+    symbols: {
+      4: ['b', 'p', 'm', 'f'],
+      6: ['a', 'o', 'e', 'i', 'u', 'ü'],
+      9: ['a', 'o', 'e', 'i', 'u', 'ü', 'b', 'p', 'm'],
+    },
+  },
+};
+
+export const HANZI_RUBY_PINYIN_MAP: Record<string, string> = {
+  // 4x4 (春 夏 秋 冬)
+  春: 'chūn',
+  夏: 'xià',
+  秋: 'qiū',
+  冬: 'dōng',
+  // 6x6 (日 月 水 火 木 金)
+  日: 'rì',
+  月: 'yuè',
+  水: 'shuǐ',
+  火: 'huǒ',
+  木: 'mù',
+  金: 'jīn',
+  // 9x9 (壹 贰 叁 肆 伍 陆 柒 捌 玖)
+  壹: 'yī',
+  贰: 'èr',
+  叁: 'sān',
+  肆: 'sì',
+  伍: 'wǔ',
+  陆: 'liù',
+  柒: 'qī',
+  捌: 'bā',
+  玖: 'jiǔ',
 };
 
 /**
@@ -75,6 +109,41 @@ export function getSymbolDisplay(
   const preset = SYMBOL_PRESETS[theme] || SYMBOL_PRESETS.numbers;
   const list = preset.symbols[size] || preset.symbols[9];
   return list[value - 1] ?? String(value);
+}
+
+/**
+ * Returns the ruby pinyin annotation for a character or value
+ */
+export function getRubyPinyin(
+  characterOrValue: string | number,
+  theme: SymbolTheme = 'hanzi',
+  size: BoardSize = 9
+): string | null {
+  if (theme === 'hanzi') {
+    let char = typeof characterOrValue === 'string' ? characterOrValue : '';
+    if (typeof characterOrValue === 'number' && characterOrValue > 0) {
+      char = getSymbolDisplay(characterOrValue, 'hanzi', size);
+    }
+    return HANZI_RUBY_PINYIN_MAP[char] || null;
+  }
+  return null;
+}
+
+/**
+ * Speech pronunciation for Chinese characters and Pinyin
+ */
+export function speakChineseText(text: string): void {
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'zh-CN';
+      utterance.rate = 0.9;
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      // Ignore audio synthesis errors
+    }
+  }
 }
 
 /**
