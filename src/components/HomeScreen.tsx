@@ -220,7 +220,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white'
             }`}
           >
-            <span>🌱 小知数·启蒙</span>
+            <span>小知数·启蒙</span>
             <span className="text-[10px] px-1 py-0.2 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 font-semibold">
               4×4 / 6×6
             </span>
@@ -286,11 +286,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </div>
               <div className="grid grid-cols-5 gap-1">
                 {[
-                  { id: 'animals', label: '🐱 萌宠', ariaLabel: '可爱萌宠' },
-                  { id: 'fruit', label: '🍎 蔬果', ariaLabel: '清爽蔬果' },
-                  { id: 'pinyin', label: '🔤 拼音', ariaLabel: '拼音启蒙' },
-                  { id: 'hanzi', label: '🈴 汉字', ariaLabel: '东方汉字' },
-                  { id: 'numbers', label: '🔢 数字', ariaLabel: '经典数字' },
+                  { id: 'numbers', label: '数字', ariaLabel: '经典数字' },
+                  { id: 'pinyin', label: '拼音', ariaLabel: '拼音启蒙' },
+                  { id: 'hanzi', label: '汉字', ariaLabel: '东方汉字' },
+                  { id: 'animals', label: '萌宠', ariaLabel: '生肖萌宠' },
+                  { id: 'fruit', label: '几何', ariaLabel: '极简几何' },
                 ].map((item) => (
                   <button
                     key={item.id}

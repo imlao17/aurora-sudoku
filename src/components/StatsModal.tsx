@@ -195,7 +195,6 @@ export const StatsModal: React.FC<StatsModalProps> = ({
           >
             <BarChart3 className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>数据看板</span>
-            <span className="hidden">📊 战绩数据看板</span>
           </button>
 
           <button
@@ -220,7 +219,6 @@ export const StatsModal: React.FC<StatsModalProps> = ({
             <Award className="w-3.5 h-3.5 stroke-[1.5]" />
             <span>勋章荣誉</span>
             <span className="ml-0.5 text-[10px] opacity-75">({unlockedCount}/{ACHIEVEMENTS_LIST.length})</span>
-            <span className="hidden">🏆 成就徽章</span>
           </button>
         </div>
 

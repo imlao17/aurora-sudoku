@@ -86,7 +86,6 @@ export const AchievementToast: React.FC<AchievementToastProps> = ({
                 <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-slate-100 text-slate-900 border border-slate-200 dark:bg-slate-800 dark:text-white dark:border-slate-700 flex items-center gap-1">
                   <Sparkles className="w-3 h-3 stroke-[1.5]" />
                   <span>成就解锁</span>
-                  <span className="hidden">🎉 成就解锁</span>
                 </span>
                 {achievements.length > 1 && (
                   <span className="text-[10px] text-slate-500 dark:text-slate-400 font-semibold">

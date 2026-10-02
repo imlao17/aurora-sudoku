@@ -230,9 +230,11 @@ describe('TechniquesModal Component', () => {
     expect(screen.getByText(/R3C4: 排除候选 \[3, 8\]/)).toBeTruthy();
     expect(screen.getByText(/R3C8: 排除候选 \[3, 8\]/)).toBeTruthy();
 
-    // Check eliminated candidate numbers in 3x3 slots
-    expect(screen.getAllByText('3✕').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('8✕').length).toBeGreaterThanOrEqual(1);
+    // Check eliminated candidate numbers in 3x3 slots (rendered with line-through)
+    const lineThroughThrees = screen.getAllByText('3').filter((el) => el.className.includes('line-through'));
+    const lineThroughEights = screen.getAllByText('8').filter((el) => el.className.includes('line-through'));
+    expect(lineThroughThrees.length).toBeGreaterThanOrEqual(1);
+    expect(lineThroughEights.length).toBeGreaterThanOrEqual(1);
   });
 
   it('supports toggle mastery, knowledge quiz check, and practice button', () => {

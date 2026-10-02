@@ -116,8 +116,8 @@ export const Cell: React.FC<CellProps> = memo(({
 
   const displaySymbol = getSymbolDisplay(value, symbolTheme, boardSize);
   const rubyPinyin =
-    symbolTheme === 'hanzi' && showPinyinRuby !== false
-      ? getRubyPinyin(value, 'hanzi', boardSize)
+    (symbolTheme === 'hanzi' || symbolTheme === 'animals') && showPinyinRuby !== false
+      ? getRubyPinyin(value, symbolTheme, boardSize)
       : null;
 
   // Dynamic font sizing based on boardSize and symbolTheme

@@ -261,10 +261,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
               {[
                 { id: 'numbers' as SymbolTheme, name: '经典数字', preview: '1 2 3', desc: '标准数字' },
-                { id: 'animals' as SymbolTheme, name: '可爱萌宠', preview: '🐱🐶🐰', desc: '动物认知' },
-                { id: 'fruit' as SymbolTheme, name: '清爽蔬果', preview: '🍎🍌🍇', desc: '蔬果启蒙' },
                 { id: 'pinyin' as SymbolTheme, name: '拼音启蒙', preview: 'a o e', desc: '声韵母认知' },
-                { id: 'hanzi' as SymbolTheme, name: '东方汉字', preview: '春 夏 秋', desc: '国学汉字' },
+                { id: 'hanzi' as SymbolTheme, name: '东方汉字', preview: '春 夏 秋', desc: '国学四季' },
+                { id: 'animals' as SymbolTheme, name: '生肖萌宠', preview: '猫 狗 兔', desc: '识字排他' },
+                { id: 'fruit' as SymbolTheme, name: '极简几何', preview: '● ▲ ■', desc: '图形感知' },
               ].map((st) => {
                 const isSelected = (settings.symbolTheme || 'numbers') === st.id;
                 return (

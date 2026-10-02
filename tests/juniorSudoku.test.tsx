@@ -40,7 +40,7 @@ describe('Junior Sudoku & Multi-Size Integration Tests', () => {
     );
 
     // Click Junior tab
-    const juniorTab = screen.getByText('🌱 小知数·启蒙');
+    const juniorTab = screen.getByText('小知数·启蒙');
     fireEvent.click(juniorTab);
 
     // Verify 4x4 and 6x6 cards are visible
@@ -48,7 +48,7 @@ describe('Junior Sudoku & Multi-Size Integration Tests', () => {
     expect(screen.getByText('6×6 亲子进阶')).toBeDefined();
 
     // Verify skin selection buttons
-    const animalsBtn = screen.getByRole('button', { name: /可爱萌宠/ });
+    const animalsBtn = screen.getByRole('button', { name: /萌宠/ });
     expect(animalsBtn).toBeDefined();
     fireEvent.click(animalsBtn);
 
@@ -105,20 +105,20 @@ describe('Junior Sudoku & Multi-Size Integration Tests', () => {
     const gridcells = screen.getAllByRole('gridcell');
     expect(gridcells.length).toBe(16);
 
-    // Verify animal emoji displayed on board (cell 0,0 has value 1 which is 🐱)
-    expect(screen.getAllByText('🐱').length).toBeGreaterThan(0);
+    // Verify animal symbol displayed on board (cell 0,0 has value 1 which is 猫)
+    expect(screen.getAllByText('猫').length).toBeGreaterThan(0);
 
     // Verify NumberPad has only 4 buttons (for digits 1-4)
-    const catBtn = screen.getByRole('button', { name: /填入 🐱/ });
-    const dogBtn = screen.getByRole('button', { name: /填入 🐶/ });
-    const rabbitBtn = screen.getByRole('button', { name: /填入 🐰/ });
-    const pandaBtn = screen.getByRole('button', { name: /填入 🐼/ });
+    const catBtn = screen.getByRole('button', { name: /填入 猫/ });
+    const dogBtn = screen.getByRole('button', { name: /填入 狗/ });
+    const rabbitBtn = screen.getByRole('button', { name: /填入 兔/ });
+    const pandaBtn = screen.getByRole('button', { name: /填入 熊/ });
 
     expect(catBtn).toBeDefined();
     expect(dogBtn).toBeDefined();
     expect(rabbitBtn).toBeDefined();
     expect(pandaBtn).toBeDefined();
-    expect(screen.queryByRole('button', { name: /填入 🦊/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /填入 鹿/ })).toBeNull();
   });
 
   it('plays a full junior 4x4 game from App home and triggers friendly hints', async () => {
@@ -127,13 +127,13 @@ describe('Junior Sudoku & Multi-Size Integration Tests', () => {
     });
 
     // 1. Switch to Junior Tab
-    const juniorTab = screen.getByText('🌱 小知数·启蒙');
+    const juniorTab = screen.getByText('小知数·启蒙');
     await act(async () => {
       fireEvent.click(juniorTab);
     });
 
-    // 2. Click Fruit Theme
-    const fruitBtn = screen.getByRole('button', { name: /清爽蔬果/ });
+    // 2. Click Fruit/Geometric Theme
+    const fruitBtn = screen.getByRole('button', { name: /几何/ });
     await act(async () => {
       fireEvent.click(fruitBtn);
     });

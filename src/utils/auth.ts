@@ -28,12 +28,12 @@ import {
 } from './accountMerge';
 
 export const AVATAR_PRESETS: AvatarInfo[] = [
-  { id: 'ink', name: '墨客', icon: '🖋️', color: 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' },
-  { id: 'bamboo', name: '幽竹', icon: '🎋', color: 'bg-emerald-600 text-white' },
-  { id: 'wind', name: '清风', icon: '🍃', color: 'bg-teal-600 text-white' },
-  { id: 'aurora', name: '极光', icon: '✨', color: 'bg-sky-600 text-white' },
-  { id: 'nebula', name: '星云', icon: '🌌', color: 'bg-purple-600 text-white' },
-  { id: 'mountain', name: '晴峦', icon: '🏔️', color: 'bg-amber-700 text-white' },
+  { id: 'ink', name: '墨客', icon: 'ink', color: 'bg-slate-900 text-white dark:bg-white dark:text-slate-900' },
+  { id: 'bamboo', name: '幽竹', icon: 'bamboo', color: 'bg-emerald-600 text-white' },
+  { id: 'wind', name: '清风', icon: 'wind', color: 'bg-teal-600 text-white' },
+  { id: 'aurora', name: '极光', icon: 'aurora', color: 'bg-sky-600 text-white' },
+  { id: 'nebula', name: '星云', icon: 'nebula', color: 'bg-purple-600 text-white' },
+  { id: 'mountain', name: '晴峦', icon: 'mountain', color: 'bg-amber-700 text-white' },
 ];
 
 export const CURRENT_USER_KEY = 'zhishu_current_user_v1';

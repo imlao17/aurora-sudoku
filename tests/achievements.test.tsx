@@ -334,8 +334,8 @@ describe('Phase 3: Achievements & Statistics Suite', () => {
       render(<StatsModal isOpen={true} stats={mockStats} onClose={onClose} />);
 
       expect(screen.getByText('数据与荣誉墙')).toBeDefined();
-      expect(screen.getByText('📊 战绩数据看板')).toBeDefined();
-      expect(screen.getByText('🏆 成就徽章')).toBeDefined();
+      expect(screen.getByText('数据看板')).toBeDefined();
+      expect(screen.getByText('勋章荣誉')).toBeDefined();
 
       // Check medium stats
       expect(screen.getByText('02:25')).toBeDefined(); // bestTime: 145s = 02:25
@@ -373,7 +373,7 @@ describe('Phase 3: Achievements & Statistics Suite', () => {
       render(<StatsModal isOpen={true} stats={mockStats} onClose={onClose} />);
 
       // Switch to achievements tab
-      const achTabBtn = screen.getByText('🏆 成就徽章');
+      const achTabBtn = screen.getByText('勋章荣誉');
       fireEvent.click(achTabBtn);
 
       expect(screen.getByText('达成荣誉徽章自动解锁')).toBeDefined();
@@ -445,7 +445,7 @@ describe('Phase 3: Achievements & Statistics Suite', () => {
       expect(confetti).toHaveBeenCalled();
       expect(screen.getByText('初出茅庐')).toBeDefined();
       expect(screen.getByText('完成任意一局数独对局（开启数独之旅）')).toBeDefined();
-      expect(screen.getByText('🎉 成就解锁')).toBeDefined();
+      expect(screen.getByText('成就解锁')).toBeDefined();
 
       // Click "太棒了！"
       fireEvent.click(screen.getByText('太棒了！'));

@@ -91,8 +91,8 @@ export const NumberPad: React.FC<NumberPadProps> = memo(({
           const isMatched = selectedNumber === num;
           const symbol = getSymbolDisplay(num, symbolTheme, size);
           const rubyPinyin =
-            symbolTheme === 'hanzi' && showPinyinRuby !== false
-              ? getRubyPinyin(num, 'hanzi', size)
+            (symbolTheme === 'hanzi' || symbolTheme === 'animals') && showPinyinRuby !== false
+              ? getRubyPinyin(num, symbolTheme, size)
               : null;
 
           return (

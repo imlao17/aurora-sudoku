@@ -249,7 +249,7 @@ describe('React Components Test Suite', () => {
       expect(screen.getByText('通关局数')).toBeDefined();
 
       // Switch to achievements tab
-      const achTab = screen.getByText(/成就徽章/);
+      const achTab = screen.getByText(/勋章荣誉/);
       fireEvent.click(achTab);
       expect(screen.getByText('初出茅庐')).toBeDefined();
 

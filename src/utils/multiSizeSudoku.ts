@@ -35,21 +35,21 @@ export const SYMBOL_PRESETS: Record<
     },
   },
   animals: {
-    name: '可爱萌宠',
-    description: '小猫小狗小兔，给小动物排排队',
+    name: '生肖萌宠',
+    description: '汉字动物排他，童趣认字',
     symbols: {
-      4: ['🐱', '🐶', '🐰', '🐼'],
-      6: ['🐱', '🐶', '🐰', '🐼', '🦊', '🦁'],
-      9: ['🐱', '🐶', '🐰', '🐼', '🦊', '🦁', '🐯', '🐨', '🐵'],
+      4: ['猫', '狗', '兔', '熊'],
+      6: ['猫', '狗', '兔', '熊', '鹿', '鸟'],
+      9: ['猫', '狗', '兔', '熊', '鹿', '鸟', '鱼', '蝶', '马'],
     },
   },
   fruit: {
-    name: '清爽蔬果',
-    description: '苹果香蕉草莓，五彩缤纷好味道',
+    name: '极简几何',
+    description: '经典几何排他，图形感知',
     symbols: {
-      4: ['🍎', '🍌', '🍇', '🍓'],
-      6: ['🍎', '🍌', '🍇', '🍓', '🍊', '🍉'],
-      9: ['🍎', '🍌', '🍇', '🍓', '🍊', '🍉', '🍑', '🍍', '🍒'],
+      4: ['●', '▲', '■', '◆'],
+      6: ['●', '▲', '■', '◆', '▼', '◈'],
+      9: ['●', '▲', '■', '◆', '▼', '◈', '◉', '◎', '⬢'],
     },
   },
   hanzi: {
@@ -95,6 +95,16 @@ export const HANZI_RUBY_PINYIN_MAP: Record<string, string> = {
   柒: 'qī',
   捌: 'bā',
   玖: 'jiǔ',
+  // 生肖动物 (猫 狗 兔 熊 鹿 鸟 鱼 蝶 马)
+  猫: 'māo',
+  狗: 'gǒu',
+  兔: 'tù',
+  熊: 'xióng',
+  鹿: 'lù',
+  鸟: 'niǎo',
+  鱼: 'yú',
+  蝶: 'dié',
+  马: 'mǎ',
 };
 
 /**
@@ -119,10 +129,10 @@ export function getRubyPinyin(
   theme: SymbolTheme = 'hanzi',
   size: BoardSize = 9
 ): string | null {
-  if (theme === 'hanzi') {
+  if (theme === 'hanzi' || theme === 'animals') {
     let char = typeof characterOrValue === 'string' ? characterOrValue : '';
     if (typeof characterOrValue === 'number' && characterOrValue > 0) {
-      char = getSymbolDisplay(characterOrValue, 'hanzi', size);
+      char = getSymbolDisplay(characterOrValue, theme, size);
     }
     return HANZI_RUBY_PINYIN_MAP[char] || null;
   }

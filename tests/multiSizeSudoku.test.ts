@@ -69,13 +69,13 @@ describe('MultiSize Sudoku Engine (4x4, 6x6, 9x9)', () => {
 
   it('correctly maps symbol themes (animals, fruit, hanzi, numbers)', () => {
     // 4x4
-    expect(getSymbolDisplay(1, 'animals', 4)).toBe('🐱');
-    expect(getSymbolDisplay(2, 'animals', 4)).toBe('🐶');
-    expect(getSymbolDisplay(3, 'animals', 4)).toBe('🐰');
-    expect(getSymbolDisplay(4, 'animals', 4)).toBe('🐼');
+    expect(getSymbolDisplay(1, 'animals', 4)).toBe('猫');
+    expect(getSymbolDisplay(2, 'animals', 4)).toBe('狗');
+    expect(getSymbolDisplay(3, 'animals', 4)).toBe('兔');
+    expect(getSymbolDisplay(4, 'animals', 4)).toBe('熊');
 
-    expect(getSymbolDisplay(1, 'fruit', 4)).toBe('🍎');
-    expect(getSymbolDisplay(2, 'fruit', 4)).toBe('🍌');
+    expect(getSymbolDisplay(1, 'fruit', 4)).toBe('●');
+    expect(getSymbolDisplay(2, 'fruit', 4)).toBe('▲');
 
     expect(getSymbolDisplay(1, 'hanzi', 4)).toBe('春');
     expect(getSymbolDisplay(2, 'hanzi', 4)).toBe('夏');
@@ -182,7 +182,7 @@ describe('MultiSize Sudoku Engine (4x4, 6x6, 9x9)', () => {
     expect(hint?.row).toBe(0);
     expect(hint?.col).toBe(2);
     expect(hint?.value).toBe(3);
-    expect(hint?.message).toContain('第 1 横行只差一个【🐰】啦');
+    expect(hint?.message).toContain('第 1 横行只差一个【兔】啦');
   });
 
   it('validates SYMBOL_PRESETS presets and symbol counts', () => {

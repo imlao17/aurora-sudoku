@@ -864,7 +864,7 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                                   return (
                                     <div key={num} className="flex items-center justify-center leading-none">
                                       <span className="text-[7px] sm:text-[8px] font-extrabold text-rose-600 dark:text-rose-400 line-through bg-rose-100/90 dark:bg-rose-950/80 px-0.5 rounded leading-tight">
-                                        {num}✕
+                                        {num}
                                       </span>
                                     </div>
                                   );
@@ -933,9 +933,10 @@ export const TechniquesModal: React.FC<TechniquesModalProps> = ({
                   </div>
                   <button
                     onClick={() => setSelectedDemoCell(null)}
-                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs cursor-pointer ml-2"
+                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs cursor-pointer ml-2 flex items-center gap-1"
                   >
-                    ✕ 取消选中
+                    <X className="w-3 h-3 stroke-[1.5]" />
+                    <span>取消选中</span>
                   </button>
                 </div>
               )}
